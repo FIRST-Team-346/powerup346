@@ -40,14 +40,14 @@ public abstract class AutoRunner {
 	
 	public void run(Step _step) throws AutoTerminatedException {
 		isRunning();
-		_step.begin();
+//		_step.begin();
 		
-		while(isRunning() && !_step.isComplete()) {
-			_step.update();
-			waitTime(m_update_rate);
-		}
+//		while(isRunning() && !_step.isComplete()) {
+//			_step.update();
+//			waitTime(m_update_rate);
+//		}
 		
-		_step.complete();
+//		_step.complete();
 	}
 	
 	public void waitTime(double _seconds) {
