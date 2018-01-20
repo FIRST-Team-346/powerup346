@@ -1,18 +1,23 @@
 package org.usfirst.frc.team346.auto;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public abstract class AutoRunner {
 	protected boolean m_running = false;
 	protected double m_update_rate = 0.02;
-	
-	protected abstract void perform() throws AutoTerminatedException;
 	
 	public enum AutoPlan {
 		
 	}
 	
+	DriverStation sDriverStation;
+	static String mLayout;
+	
+	
 	public void run() {
 		m_running = true;
 		System.out.println("Auto Runner| booting up");
+		receiveLayout();
 		try {
 			perform();
 		}
@@ -22,10 +27,19 @@ public abstract class AutoRunner {
 		}
 		
 		complete();
-		System.out.println("Auto Runner| complete, terminated expectedly");
 	}
 	
+	private void receiveLayout() {
+		sDriverStation = DriverStation.getInstance();
+//		mLayout = sDriverStation.getGameSpecificMessage();
+	}
+	
+	protected void perform() throws AutoTerminatedException {
+		
+	};
+	
 	public void complete() {
+		System.out.println("Auto Runner| complete");
 	}
 	
 	public void terminate() {
