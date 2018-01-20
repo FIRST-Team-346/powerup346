@@ -1,12 +1,14 @@
-package com.team346.frc2018.auto;
-
-import com.team346.frc2018.auto.step.Step;
+package org.usfirst.frc.team346.auto;
 
 public abstract class AutoRunner {
 	protected boolean m_running = false;
 	protected double m_update_rate = 0.02;
 	
 	protected abstract void perform() throws AutoTerminatedException;
+	
+	public enum AutoPlan {
+		
+	}
 	
 	public void run() {
 		m_running = true;
@@ -38,8 +40,8 @@ public abstract class AutoRunner {
 		return isRunning();
 	}
 	
-	public void run(Step _step) throws AutoTerminatedException {
-		isRunning();
+//	public void run(Step _step) throws AutoTerminatedException {
+//		isRunning();
 //		_step.begin();
 		
 //		while(isRunning() && !_step.isComplete()) {
@@ -48,7 +50,7 @@ public abstract class AutoRunner {
 //		}
 		
 //		_step.complete();
-	}
+//	}
 	
 	public void waitTime(double _seconds) {
 		long initialTime = System.currentTimeMillis();

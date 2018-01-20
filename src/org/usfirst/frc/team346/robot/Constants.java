@@ -1,4 +1,6 @@
-package com.team346.frc2018;
+package org.usfirst.frc.team346.robot;
+
+import org.usfirst.frc.team346.auto.AutoRunner.AutoPlan;
 
 public class Constants {
 

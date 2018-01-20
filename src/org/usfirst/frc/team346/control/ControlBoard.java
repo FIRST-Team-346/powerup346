@@ -1,4 +1,4 @@
-package com.team346.frc2018;
+package org.usfirst.frc.team346.control;
 
 import edu.wpi.first.wpilibj.Joystick;
 

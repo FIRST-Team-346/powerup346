@@ -1,4 +1,4 @@
-package com.team346.frc2018.auto;
+package org.usfirst.frc.team346.auto;
 
 public class AutoTerminatedException extends Exception {
 
