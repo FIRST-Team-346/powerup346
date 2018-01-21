@@ -24,16 +24,12 @@ public class Drive implements Subsystem{
 	
 	private static Drive sDriveInstance = new Drive();
 	protected Drive() {
-		this.initialize();
+		this.initTalons();
+		this.initEncoders();
 	}
 	
 	public static Drive getInstance() {
 		return sDriveInstance;
-	}
-	
-	public void initialize() {
-		this.initTalons();
-		this.initEncoders();
 	}
 	
 	private void initTalons() {

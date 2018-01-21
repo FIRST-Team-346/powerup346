@@ -12,16 +12,12 @@ public class Gyro implements Subsystem {
 	
 	private static Gyro sGyroInstance = new Gyro();
 	protected Gyro() {
-		this.initialize();
+		this.mGyroscope = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+		this.mGyroscope.calibrate();
 	}
 	
 	public static Gyro getInstance() {
 		return sGyroInstance;
-	}
-	
-	public void initialize() {
-		this.mGyroscope = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-		this.mGyroscope.calibrate();
 	}
 	
 	public double getAngle() {

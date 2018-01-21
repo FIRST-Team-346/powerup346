@@ -16,14 +16,14 @@ public class Intake implements Subsystem {
 	
 	private static Intake intakeInstance = new Intake();
 	protected Intake() {
-		this.initialize();
+		this.initTalons();
 	}
 	
 	public static Intake getInstance() {
 		return intakeInstance;
 	}
 	
-	public void initialize() {
+	public void initTalons() {
 		this.leftIntake = new TalonSRX(0);
 		this.leftIntake.set(ControlMode.PercentOutput, 0);
 		this.leftIntake.setNeutralMode(NeutralMode.Brake);
