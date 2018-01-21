@@ -9,6 +9,13 @@ public class RobotMap {
 	
 	public static boolean kTuningState = false;
 	
+	public static int kDriveLeftMasterPort = 1;
+	public static int kDriveLeftSlave1Port = 2;
+	public static int kDriveLeftSlave2Port = 3;
+	public static int kDriveRightMasterPort = 4;
+	public static int kDriveRightSlave1Port = 5;
+	public static int kDriveRightSlave2Port = 6;
+	
 	public static double kDistanceVaultToSwitch;
 	public static double kDistanceSwitchToScale;
 	
@@ -33,12 +40,5 @@ public class RobotMap {
 	public static double kDriveRampRate;
 	public static double kDriveVoltageMin;
 	public static double kDriveVoltageMax;
-	
-	public static int kDriveLeftMasterPort = 1;
-	public static int kDriveLeftSlave1Port = 2;
-	public static int kDriveLeftSlave2Port = 3;
-	public static int kDriveRightMasterPort = 4;
-	public static int kDriveRightSlave1Port = 5;
-	public static int kDriveRightSlave2Port = 6;
 
 }

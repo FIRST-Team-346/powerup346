@@ -1,53 +1,47 @@
 package org.usfirst.frc.team346.subsystems;
 
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Gyro implements Subsystem {
 
-	public static Gyro gyroInstance = new Gyro();
+	private ADXRS450_Gyro mGyroscope;
 	
-	private ADXRS450_Gyro gyroscope;
+	private long mLastGyroTime;
 	
-	private long lastGyroTime;
-	
+	private static Gyro sGyroInstance = new Gyro();
 	protected Gyro() {
-		this.gyroscope = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
-		this.gyroscope.calibrate();		
+		this.initialize();
 	}
 	
 	public static Gyro getInstance() {
-		return gyroInstance;
+		return sGyroInstance;
+	}
+	
+	public void initialize() {
+		this.mGyroscope = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+		this.mGyroscope.calibrate();
 	}
 	
 	public double getAngle() {
-		return this.gyroscope.getAngle();
+		return this.mGyroscope.getAngle();
 	}
 	
 	public void zeroGyro() {
-		this.gyroscope.reset();
+		this.mGyroscope.reset();
 	}
 	
+	/**Prints gyroscope angle periodically, 0.5s to avoid greater drift.**/
 	public void publishData() {
-		//Only prints Gyroscope angle every 0.5 seconds to avoid angle drifting
-		if(System.currentTimeMillis() - this.lastGyroTime >= 100) {
+		if(System.currentTimeMillis() - this.mLastGyroTime >= 500) {
 			SmartDashboard.putNumber("Gyroscope Angle", this.getAngle());
-			this.lastGyroTime = System.currentTimeMillis();
+			this.mLastGyroTime = System.currentTimeMillis();
 		}
 	}
 
-	@Override
-	public void instantiate() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void disable() {
-		// TODO Auto-generated method stub
-		
+		this.mGyroscope.free();
 	}
 
 }

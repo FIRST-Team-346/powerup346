@@ -5,20 +5,25 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Intake implements Subsystem {
-
+	
+	private TalonSRX leftIntake, rightIntake;
+	
+	public enum IntakeMode {
+		FORWARD,
+		REVERSE,
+		OFF;
+	}
+	
 	private static Intake intakeInstance = new Intake();
-	
-	private TalonSRX leftIntake,rightIntake;
-	
 	protected Intake() {
-		this.instantiate();
+		this.initialize();
 	}
 	
 	public static Intake getInstance() {
 		return intakeInstance;
 	}
 	
-	public void instantiate() {
+	public void initialize() {
 		this.leftIntake = new TalonSRX(0);
 		this.leftIntake.set(ControlMode.PercentOutput, 0);
 		this.leftIntake.setNeutralMode(NeutralMode.Brake);
@@ -28,23 +33,30 @@ public class Intake implements Subsystem {
 		this.rightIntake.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void on() {
-		this.leftIntake.set(ControlMode.PercentOutput, 1);
-		this.rightIntake.set(ControlMode.PercentOutput, -1);
-	}
-	
-	public void off() {
-		this.leftIntake.set(ControlMode.PercentOutput, 0);
-		this.rightIntake.set(ControlMode.PercentOutput, 0);
+	public void set(IntakeMode _mode) {
+		switch(_mode) {
+			case FORWARD : {
+				this.leftIntake.set(ControlMode.PercentOutput, 1);
+				this.rightIntake.set(ControlMode.PercentOutput, -1);
+			}; break;
+			
+			case REVERSE : {
+				this.leftIntake.set(ControlMode.PercentOutput, -1);
+				this.rightIntake.set(ControlMode.PercentOutput, 1);
+			}; break;
+			
+			default : {
+				this.leftIntake.set(ControlMode.PercentOutput, 0);
+				this.rightIntake.set(ControlMode.PercentOutput, 0);
+			}; break;
+		}
 	}
 
-	@Override
 	public void disable() {
 		this.leftIntake.set(ControlMode.Disabled, 0);
 		this.rightIntake.set(ControlMode.Disabled, 0);
 	}
 
-	@Override
 	public void publishData() {
 		System.out.println("Left Intake " + this.leftIntake.getMotorOutputVoltage());
 		System.out.println("Right Intake " + this.rightIntake.getMotorOutputVoltage());

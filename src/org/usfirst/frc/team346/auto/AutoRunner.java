@@ -5,7 +5,6 @@ import org.usfirst.frc.team346.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoRunner {
-	private static AutoRunner sAutoRunnerInstance = new AutoRunner();
 	
 	private boolean mRunning = false;
 	private double mUpdateRate = 0.02;
@@ -15,6 +14,7 @@ public class AutoRunner {
 	
 	AutoPlan mAutoPlan;
 	
+	private static AutoRunner sAutoRunnerInstance = new AutoRunner();
 	protected AutoRunner() {
 		sDriverStation = DriverStation.getInstance();
 		mAutoPlan = RobotMap.mAutoPlan;
