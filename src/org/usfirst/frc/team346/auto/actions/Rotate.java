@@ -1,7 +1,7 @@
 package org.usfirst.frc.team346.auto.actions;
 
-import org.usfirst.frc.team346.subsystem.Drive;
-import org.usfirst.frc.team346.subsystem.Gyro;
+import org.usfirst.frc.team346.subsystems.Drive;
+import org.usfirst.frc.team346.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;

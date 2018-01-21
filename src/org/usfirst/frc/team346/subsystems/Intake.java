@@ -1,4 +1,4 @@
-package org.usfirst.frc.team346.subsystem;
+package org.usfirst.frc.team346.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

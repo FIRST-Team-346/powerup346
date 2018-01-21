@@ -1,4 +1,4 @@
-package org.usfirst.frc.team346.subsystem;
+package org.usfirst.frc.team346.subsystems;
 
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
