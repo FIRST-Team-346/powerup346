@@ -1,74 +1,89 @@
 package org.usfirst.frc.team346.auto;
 
+import org.usfirst.frc.team346.auto.plans.AutoPlan;
+import org.usfirst.frc.team346.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public abstract class AutoRunner {
-	protected boolean m_running = false;
-	protected double m_update_rate = 0.02;
+public class AutoRunner {
+	private static AutoRunner sAutoRunnerInstance = new AutoRunner();
 	
-	public enum AutoPlan {
-		
-	}
+	private boolean mRunning = false;
+	private double mUpdateRate = 0.02;
+	private String mLayout = "000";
 	
 	DriverStation sDriverStation;
-	static String mLayout;
 	
+	AutoPlan mAutoPlan;
+	
+	protected AutoRunner() {
+		sDriverStation = DriverStation.getInstance();
+		mAutoPlan = RobotMap.mAutoPlan;
+	}
+	
+	public AutoRunner getInstance() {
+		return sAutoRunnerInstance;
+	}
 	
 	public void run() {
-		m_running = true;
+		mRunning = true;
 		System.out.println("Auto Runner| booting up");
 		receiveLayout();
 		try {
 			perform();
 		}
 		catch(AutoTerminatedException e) {
-			System.out.println("Auto Runner| complete, terminated unexpectedly");
+			terminate();
 			return;
 		}
-		
 		complete();
+		return;
 	}
 	
 	private void receiveLayout() {
-		sDriverStation = DriverStation.getInstance();
-//		mLayout = sDriverStation.getGameSpecificMessage();
+		mLayout = sDriverStation.getGameSpecificMessage();
 	}
 	
-	protected void perform() throws AutoTerminatedException {
-		
-	};
-	
-	public void complete() {
-		System.out.println("Auto Runner| complete");
+	public String getLayout() {
+		if(mLayout == "000") {
+			receiveLayout();
+		}
+		return mLayout;
 	}
 	
-	public void terminate() {
-		m_running = false;
-	}
-	
-	public boolean isRunning() throws AutoTerminatedException {
-		if(!isRunning()) {
+	private void perform() throws AutoTerminatedException {
+		if(!isAuto()) {
 			throw new AutoTerminatedException();
 		}
-		
-		return isRunning();
+		System.out.println("Auto Runner| goal: " + mAutoPlan.getGoal());
+		System.out.println("Auto Runner| field layout: " + getLayout());
+		mAutoPlan.run();
 	}
 	
-//	public void run(Step _step) throws AutoTerminatedException {
-//		isRunning();
-//		_step.begin();
-		
-//		while(isRunning() && !_step.isComplete()) {
-//			_step.update();
-//			waitTime(m_update_rate);
-//		}
-		
-//		_step.complete();
-//	}
+	private void complete() {
+		System.out.println("Auto Runner| complete");
+		mRunning = false;
+	}
+	
+	private void terminate() {
+		System.out.println("Auto Runner| terminated unexpectedly");
+		complete();
+	}
+	
+	public boolean isAuto() {
+		if(sDriverStation.isDisabled() || !sDriverStation.isAutonomous()) {
+			System.out.println("Auto Runner| not autonomous mode");
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean isRunning() {
+		return mRunning;
+	}
 	
 	public void waitTime(double _seconds) {
 		long initialTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - initialTime < _seconds * 1000) {
+		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000) {
 		}
 	}
 }

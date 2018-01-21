@@ -5,12 +5,10 @@ package org.usfirst.frc.team346.subsystem;
 
 public interface Subsystem {
 
-	
-	public void initialize();
+	public void instantiate();
 	
 	public void disable();
-		
-	public void PublishData();
-		
 	
+	public void publishData();
+
 }

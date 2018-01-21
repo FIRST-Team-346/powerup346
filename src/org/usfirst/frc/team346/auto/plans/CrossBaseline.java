@@ -1,16 +1,13 @@
 package org.usfirst.frc.team346.auto.plans;
 
-public class CrossBaseline implements AutoPlan {
+public class CrossBaseline extends AutoPlan {
 
-	@Override
 	public String getGoal() {
-		return "Cross Baseline";
+		return "cross baseline";
 	}
 	
-	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		//TODO
 	}
 
 }

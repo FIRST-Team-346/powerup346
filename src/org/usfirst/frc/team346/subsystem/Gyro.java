@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Gyro{
+public class Gyro implements Subsystem {
 
 	public static Gyro gyroInstance = new Gyro();
 	
@@ -13,7 +13,7 @@ public class Gyro{
 	
 	private long lastGyroTime;
 	
-	public Gyro() {
+	protected Gyro() {
 		this.gyroscope = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 		this.gyroscope.calibrate();		
 	}
@@ -38,5 +38,16 @@ public class Gyro{
 		}
 	}
 
+	@Override
+	public void instantiate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disable() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -1,27 +1,44 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package org.usfirst.frc.team346.robot;
 
-/**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
- * to a variable name. This provides flexibility changing wiring, makes checking
- * the wiring easier and significantly reduces the number of magic numbers
- * floating around.
- */
-public class RobotMap {
-	
-	public static final int LEFT_DRIVE_MASTER_PORT = 1;
-	public static final int LEFT_DRIVE_SLAVE_1_PORT = 2;
-	public static final int LEFT_DRIVE_SLAVE_2_PORT = 3;
-	
-	public static final int RIGHT_DRIVE_MASTER_PORT = 4;
-	public static final int RIGHT_DRIVE_SLAVE_1_PORT = 5;
-	public static final int RIGHT_DRIVE_SLAVE_2_PORT = 6;
+import org.usfirst.frc.team346.auto.plans.AutoPlan;
+import org.usfirst.frc.team346.auto.plans.CrossBaseline;
 
+public class RobotMap {
+
+	public static final AutoPlan mAutoPlan = new CrossBaseline();
+	
+	public static boolean kTuningState = false;
+	
+	public static double kDistanceVaultToSwitch;
+	public static double kDistanceSwitchToScale;
+	
+	public static double kWheelDiameter;
+	public static double kDistanceCenterToBumperFront;
+	public static double kDistanceCenterToBumperBack;
+	public static double kDistanceCenterToBumperLeft;
+	public static double kDistanceCenterToBumperRight;
+	
+	public static double kDriveKP;
+	public static double kDriveKI;
+	public static double kDriveKD;
+	public static double kDriveKF;
+	
+	public static int kIntakeButton;
+	public static int kIntakeReverseButton;
+	public static int kSwitchDeployButton;
+	public static int kScaleDeployButton;
+	public static int kVaultDeployButton;
+	public static int kClimbButton;
+	
+	public static double kDriveRampRate;
+	public static double kDriveVoltageMin;
+	public static double kDriveVoltageMax;
+	
+	public static int kDriveLeftMasterPort = 1;
+	public static int kDriveLeftSlave1Port = 2;
+	public static int kDriveLeftSlave2Port = 3;
+	public static int kDriveRightMasterPort = 4;
+	public static int kDriveRightSlave1Port = 5;
+	public static int kDriveRightSlave2Port = 6;
 
 }

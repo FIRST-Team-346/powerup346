@@ -1,11 +1,19 @@
 package org.usfirst.frc.team346.auto.plans;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
-public interface AutoPlan {
+public class AutoPlan {
 	
-	public String getGoal();
+	public String getGoal() {
+		return "default goal";
+	}
 	
-	public void run();
+	public void run() {
+		System.out.println("default run");
+	}
+	
+	public void waitTime(double _seconds) {
+		long initialTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000) {
+		}
+	}
 	
 }

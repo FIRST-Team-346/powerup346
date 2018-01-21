@@ -25,14 +25,14 @@ public class Drive implements Subsystem{
 	}
 	
 	protected Drive() {
-		this.initialize();
+		this.instantiate();
 	}
 	
 	public static Drive getInstance() {
 		return driveInstance;
 	}
 	
-	public void initialize() {
+	public void instantiate() {
 		this.leftDriveMaster = new TalonSRX(1);
 		this.leftDriveMaster.set(ControlMode.PercentOutput, 0);
 		this.leftDriveMaster.setNeutralMode(NeutralMode.Brake);
@@ -126,7 +126,7 @@ public class Drive implements Subsystem{
 		this.rightDriveSlave1.set(ControlMode.Disabled, 0);
 	}
 	
-	public void PublishData() {
+	public void publishData() {
 		System.out.println(this.leftDriveMaster.getMotorOutputVoltage());
 		System.out.println(this.rightDriveMaster.getMotorOutputVoltage());
 	}
