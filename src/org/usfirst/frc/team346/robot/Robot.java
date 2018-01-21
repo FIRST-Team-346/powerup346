@@ -2,10 +2,14 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.AutoRunner;
 import org.usfirst.frc.team346.control.ControlBoard;
+import org.usfirst.frc.team346.subsystems.Climber;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
+import org.usfirst.frc.team346.subsystems.TurretShooter;
+import org.usfirst.frc.team346.subsystems.TurretTilter;
+import org.usfirst.frc.team346.subsystems.TurretTurner;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,6 +28,10 @@ public class Robot extends IterativeRobot{
 	public Drive sDrive;
 	public Gyro sGyro;
 	public Intake sIntake;
+	public TurretTurner sTurretTurner;
+	public TurretTilter sTurretTilter;
+	public TurretShooter sTurretShooter;
+	public Climber sClimber;
 	private Compressor sCompressor;
 	private AutoRunner sAutoRunner;
 	private ControlBoard sControlBoard;
@@ -40,6 +48,10 @@ public class Robot extends IterativeRobot{
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
 		this.sIntake = Intake.getInstance();
+		this.sTurretTurner = TurretTurner.getInstance();
+		this.sTurretTilter = TurretTilter.getInstance();
+		this.sTurretShooter = TurretShooter.getInstance();
+		this.sClimber = Climber.getInstance();
 		
 		this.sAutoRunner = AutoRunner.getInstance();
 		this.sControlBoard = ControlBoard.getInstance();
@@ -60,6 +72,9 @@ public class Robot extends IterativeRobot{
 		this.sDrive.publishData();
 		this.sGyro.publishData();
 		this.sIntake.publishData();
+		this.sTurretTurner.publishData();
+		this.sTurretTilter.publishData();
+		this.sClimber.publishData();
 	}
 
 	public void teleopInit() {
@@ -75,10 +90,18 @@ public class Robot extends IterativeRobot{
 	public void teleopPeriodic() {
 		this.sControlBoard.drive();
 		this.sControlBoard.checkIntake();
+		this.sControlBoard.checkTurner();
+		this.sControlBoard.checkTilter();
+		this.sControlBoard.checkShooter();
+		this.sControlBoard.checkClimber();
 		
 		this.sDrive.publishData();
 		this.sGyro.publishData();
 		this.sIntake.publishData();
+		this.sTurretTurner.publishData();
+		this.sTurretTilter.publishData();
+		this.sTurretShooter.publishData();
+		this.sClimber.publishData();
 	}
 	
 	public void zeroDevices() {

@@ -32,5 +32,21 @@ public class ControlBoard {
     public void checkIntake() {
     	//TODO
     }
+    
+    public void checkTurner() {
+    	//TODO
+    }
+    
+    public void checkTilter() {
+    	//TODO
+    }
+    
+    public void checkShooter() {
+    	//TODO
+    }
+    
+    public void checkClimber() {
+    	//TODO
+    }
 
 }

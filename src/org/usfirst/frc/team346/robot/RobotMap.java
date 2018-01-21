@@ -50,6 +50,16 @@ public class RobotMap {
 	public static final double kDriveVoltageMin = 0;
 	public static final double kDriveVoltageMax = 0;
 	
+//	Motion Magic values are in Native Units Per 100ms
+	public static final int kTurretTurnerCruiseVelocity = 0;
+	public static final int kTurretTurnerMaxAcceleration = 0;
+	
+	public static final int kTurretTilterCruiseVelocity = 0;
+	public static final int kTurretTilterMaxAcceleration = 0;
+
+	public static final int kTurretShooterCruiseVelocity = 0;
+	public static final int kTurretShooterMaxAcceleration = 0;
+	
 //	PHYSICAL REFERENCE VALUES-------------------------------------------------------
 	
 	public static final double kDistanceVaultToSwitch = 0;
