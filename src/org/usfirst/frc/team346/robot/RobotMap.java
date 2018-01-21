@@ -4,10 +4,14 @@ import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
 
 public class RobotMap {
+	
+//	BOT-WIDE UPDATES----------------------------------------------------------------
 
 	public static final AutoPlan mAutoPlan = new CrossBaseline();
 	
 	public static boolean kTuningState = false;
+	
+//	COMPONENT PORTS-----------------------------------------------------------------
 	
 	public static final int kDriveLeftMasterPort = 1;
 	public static final int kDriveLeftSlave1Port = 2;
@@ -16,11 +20,37 @@ public class RobotMap {
 	public static final int kDriveRightSlave1Port = 5;
 	public static final int kDriveRightSlave2Port = 6;
 	
+	public static final int kIntakeLeftPort = 7;
+	public static final int kIntakeRightPort = 8;
+	
+	public static final int kTurretTurnerPort = 9;
+	public static final int kTurretTilterPort = 10;
+	
+	public static final int kTurretShooterLeftPort = 11;
+	public static final int kTurretShooterRightPort = 12;
+	
+	public static final int kClimberPort = 13;
+	
+//	CONTROLLER PORTS/BUTTONS--------------------------------------------------------
+	
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
 	
 	public static final int kIntakeForwardButton = 0;
 	public static final int kIntakeReverseButton = 0;
+	
+//	PID/SUBSYSTEM VALUES------------------------------------------------------------
+	
+	public static final double kDriveKP = 0;
+	public static final double kDriveKI = 0;
+	public static final double kDriveKD = 0;
+	public static final double kDriveKF = 0;
+	
+	public static final double kDriveRampRate = 0;
+	public static final double kDriveVoltageMin = 0;
+	public static final double kDriveVoltageMax = 0;
+	
+//	PHYSICAL REFERENCE VALUES-------------------------------------------------------
 	
 	public static final double kDistanceVaultToSwitch = 0;
 	public static final double kDistanceSwitchToScale = 0;
@@ -31,13 +61,6 @@ public class RobotMap {
 	public static final double kDistanceCenterToBumperLeft = 0;
 	public static final double kDistanceCenterToBumperRight = 0;
 	
-	public static final double kDriveKP = 0;
-	public static final double kDriveKI = 0;
-	public static final double kDriveKD = 0;
-	public static final double kDriveKF = 0;
-	
-	public static final double kDriveRampRate = 0;
-	public static final double kDriveVoltageMin = 0;
-	public static final double kDriveVoltageMax = 0;
+//	--------------------------------------------------------------------------------
 
 }

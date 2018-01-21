@@ -1,5 +1,7 @@
 package org.usfirst.frc.team346.subsystems;
 
+import org.usfirst.frc.team346.robot.RobotMap;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -24,11 +26,11 @@ public class Intake implements Subsystem {
 	}
 	
 	public void initTalons() {
-		this.leftIntake = new TalonSRX(0);
+		this.leftIntake = new TalonSRX(RobotMap.kIntakeLeftPort);
 		this.leftIntake.set(ControlMode.PercentOutput, 0);
 		this.leftIntake.setNeutralMode(NeutralMode.Brake);
 		
-		this.rightIntake = new TalonSRX(1);
+		this.rightIntake = new TalonSRX(RobotMap.kIntakeRightPort);
 		this.rightIntake.set(ControlMode.PercentOutput, 0);
 		this.rightIntake.setNeutralMode(NeutralMode.Brake);
 	}
