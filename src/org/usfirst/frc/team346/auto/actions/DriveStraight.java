@@ -1,6 +1,7 @@
 package org.usfirst.frc.team346.auto.actions;
 
 import org.usfirst.frc.team346.subsystems.Drive;
+import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -116,7 +117,7 @@ public class DriveStraight{
 				leftDistancePID.disable();
 				rightDistancePID.disable();
 				
-				sDrive.drive(0, 0);
+				sDrive.drive(DriveMode.VELOCITY, 0, 0);
 				
 				System.out.println("Thread Killed");
 				System.out.println(sDrive.getPosition(Hand.kLeft) + "|" + sDrive.getPosition(Hand.kRight));
@@ -136,7 +137,7 @@ public class DriveStraight{
 						leftDistancePID.disable();
 						rightDistancePID.disable();
 						
-						this.sDrive.drive(0, 0);
+						this.sDrive.drive(DriveMode.VELOCITY, 0, 0);
 						
 						System.out.println("Driving Distance (Speed) Complete via Threshold");
 						System.out.println(sDrive.getPosition(Hand.kLeft) + "|" + sDrive.getPosition(Hand.kRight));
@@ -149,7 +150,7 @@ public class DriveStraight{
 				}
 			}
 			
-			this.sDrive.drive(leftSpeed, rightSpeed);
+			this.sDrive.drive(DriveMode.VELOCITY, leftSpeed, rightSpeed);
 //			this.publishData();
 		}
 		

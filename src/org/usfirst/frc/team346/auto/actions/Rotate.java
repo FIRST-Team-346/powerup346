@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.auto.actions;
 
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
@@ -52,10 +53,10 @@ public class Rotate {
 		this.angleOutput = new PIDOutput() {
 			public void pidWrite(double _output) {
 				if(angleSetpoint == 0) {
-					drive.drive(0, 0);
+					drive.drive(DriveMode.VELOCITY, 0, 0);
 				}
 				else {
-					drive.drive(1080 * _output * percentSpeed,-1080 * _output * percentSpeed);
+					drive.drive(DriveMode.VELOCITY, 1080 * _output * percentSpeed,-1080 * _output * percentSpeed);
 				}
 			}
 		};
@@ -71,11 +72,11 @@ public class Rotate {
 			if(driverStation.isAutonomous()) {
 				anglePID.disable();
 				
-				drive.drive(0, 0);
+				drive.drive(DriveMode.VELOCITY, 0, 0);
 				
 				System.out.println("Thread Killed");
 				System.out.println(drive.getPosition(Hand.kLeft) + "|" + drive.getPosition(Hand.kRight));
-				this.drive.disable();;
+				this.drive.disable();
 				return;
 			}
 			
@@ -90,11 +91,11 @@ public class Rotate {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
-						this.drive.drive(0, 0);
+						this.drive.drive(DriveMode.VELOCITY, 0, 0);
 						
 						System.out.println("Rotation to " + angleSetpoint + " Complete via Threshold");
 						System.out.println(gyro.getAngle());
-						this.drive.disable();;
+						this.drive.disable();
 						return;
 					}
 					else {

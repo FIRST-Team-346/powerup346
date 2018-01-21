@@ -1,17 +1,36 @@
 package org.usfirst.frc.team346.control;
 
+import org.usfirst.frc.team346.robot.Robot;
+import org.usfirst.frc.team346.robot.RobotMap;
+import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class ControlBoard {
 
-	private final Joystick mLeftStick;
-    private final Joystick mRightStick;
-    private final Joystick mButtons;
+	private ControllerXB mController;
+    private Joystick mButtonBoard;
+    private Robot sRobot;
 
-    public ControlBoard() {
-        mLeftStick = new Joystick(0);
-        mRightStick = new Joystick(1);
-        mButtons = new Joystick(2);
+    private static ControlBoard sControlBoardInstance = new ControlBoard();
+    protected ControlBoard() {
+        this.mController = new ControllerXB(RobotMap.kXboxControllerPort);
+        this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
+        this.sRobot = Robot.getInstance();
+    }
+    
+    public static ControlBoard getInstance() {
+    	return sControlBoardInstance;
+    }
+    
+    public void drive() {
+    	this.sRobot.sDrive.drive(DriveMode.PERCENT, this.mController.getY(Hand.kLeft), this.mController.getY(Hand.kRight));
+    }
+    
+    public void checkIntake() {
+    	//TODO
     }
 
 }

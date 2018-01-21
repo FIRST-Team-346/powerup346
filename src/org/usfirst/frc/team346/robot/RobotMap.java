@@ -9,36 +9,35 @@ public class RobotMap {
 	
 	public static boolean kTuningState = false;
 	
-	public static int kDriveLeftMasterPort = 1;
-	public static int kDriveLeftSlave1Port = 2;
-	public static int kDriveLeftSlave2Port = 3;
-	public static int kDriveRightMasterPort = 4;
-	public static int kDriveRightSlave1Port = 5;
-	public static int kDriveRightSlave2Port = 6;
+	public static final int kDriveLeftMasterPort = 1;
+	public static final int kDriveLeftSlave1Port = 2;
+	public static final int kDriveLeftSlave2Port = 3;
+	public static final int kDriveRightMasterPort = 4;
+	public static final int kDriveRightSlave1Port = 5;
+	public static final int kDriveRightSlave2Port = 6;
 	
-	public static double kDistanceVaultToSwitch;
-	public static double kDistanceSwitchToScale;
+	public static final int kXboxControllerPort = 0;
+	public static final int kButtonBoardPort = 1;
 	
-	public static double kWheelDiameter;
-	public static double kDistanceCenterToBumperFront;
-	public static double kDistanceCenterToBumperBack;
-	public static double kDistanceCenterToBumperLeft;
-	public static double kDistanceCenterToBumperRight;
+	public static final int kIntakeForwardButton = 0;
+	public static final int kIntakeReverseButton = 0;
 	
-	public static double kDriveKP;
-	public static double kDriveKI;
-	public static double kDriveKD;
-	public static double kDriveKF;
+	public static final double kDistanceVaultToSwitch = 0;
+	public static final double kDistanceSwitchToScale = 0;
 	
-	public static int kIntakeButton;
-	public static int kIntakeReverseButton;
-	public static int kSwitchDeployButton;
-	public static int kScaleDeployButton;
-	public static int kVaultDeployButton;
-	public static int kClimbButton;
+	public static final double kWheelDiameter = 0;
+	public static final double kDistanceCenterToBumperFront = 0;
+	public static final double kDistanceCenterToBumperBack = 0;
+	public static final double kDistanceCenterToBumperLeft = 0;
+	public static final double kDistanceCenterToBumperRight = 0;
 	
-	public static double kDriveRampRate;
-	public static double kDriveVoltageMin;
-	public static double kDriveVoltageMax;
+	public static final double kDriveKP = 0;
+	public static final double kDriveKI = 0;
+	public static final double kDriveKD = 0;
+	public static final double kDriveKF = 0;
+	
+	public static final double kDriveRampRate = 0;
+	public static final double kDriveVoltageMin = 0;
+	public static final double kDriveVoltageMax = 0;
 
 }

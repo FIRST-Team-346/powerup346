@@ -20,7 +20,7 @@ public class AutoRunner {
 		mAutoPlan = RobotMap.mAutoPlan;
 	}
 	
-	public AutoRunner getInstance() {
+	public static AutoRunner getInstance() {
 		return sAutoRunnerInstance;
 	}
 	

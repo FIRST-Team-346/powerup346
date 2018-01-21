@@ -1,7 +1,13 @@
 package org.usfirst.frc.team346.robot;
 
+import org.usfirst.frc.team346.auto.AutoRunner;
+import org.usfirst.frc.team346.control.ControlBoard;
 import org.usfirst.frc.team346.subsystems.Drive;
+import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
+import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Intake;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -14,42 +20,70 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * project.
  */
 public class Robot extends IterativeRobot{
-		
-	private Drive s_drive;
 	
-	private DriverStation driverStation = DriverStation.getInstance();
+	public Drive sDrive;
+	public Gyro sGyro;
+	public Intake sIntake;
+	private Compressor sCompressor;
+	private AutoRunner sAutoRunner;
+	private ControlBoard sControlBoard;
+	private DriverStation sDriverStation;
 	
-
+	private static Robot sRobotInstance = new Robot();
+	protected Robot() {
+	}
+	public static Robot getInstance() {
+		return sRobotInstance;
+	}
 	
 	public void robotInit() {
-		s_drive = Drive.getInstance();
+		this.sDrive = Drive.getInstance();
+		this.sGyro = Gyro.getInstance();
+		this.sIntake = Intake.getInstance();
+		
+		this.sAutoRunner = AutoRunner.getInstance();
+		this.sControlBoard = ControlBoard.getInstance();
+		this.sDriverStation = DriverStation.getInstance();
+		
+		this.sCompressor = new Compressor();
+	    this.sCompressor.start();
 	}
-
-
 	
 	public void autonomousInit() {
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(0));
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(1));
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(2));
+		System.out.println("Autonomous Init| begun");
+		this.zeroDevices();
+		this.sAutoRunner.run();
+		System.out.println("Autonomous Init| complete");
 	}
 
 	public void autonomousPeriodic() {
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(0));
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(1));
-//		System.out.println(driverStation.getGameSpecificMessage().charAt(2));
+		this.sDrive.publishData();
+		this.sGyro.publishData();
+		this.sIntake.publishData();
 	}
 
-
-	
-	
 	public void teleopInit() {
+		System.out.println("Teleop Init| begun");
+		this.sCompressor.start();
+		this.zeroDevices();
+		this.sDrive.drive(DriveMode.VELOCITY, 0, 0);
 		
+		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
+		System.out.println("Teleop Init| complete");
 	}
 
-	
-	@Override
 	public void teleopPeriodic() {
+		this.sControlBoard.drive();
+		this.sControlBoard.checkIntake();
+		
+		this.sDrive.publishData();
+		this.sGyro.publishData();
+		this.sIntake.publishData();
+	}
 	
+	public void zeroDevices() {
+		this.sGyro.zeroGyro();
+		this.sDrive.zeroEncoders();
 	}
 
 }

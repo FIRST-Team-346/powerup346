@@ -160,6 +160,15 @@ public class Drive implements Subsystem{
 		SmartDashboard.putNumber("DriveRightPosition", this.getPosition(Hand.kRight));
 	}
 	
+	public void zeroEncoders() {
+		this.mDriveLeftMaster.setSelectedSensorPosition(0, 0, 0);
+		this.mDriveLeftSlave1.setSelectedSensorPosition(0, 0, 0);
+		this.mDriveLeftSlave2.setSelectedSensorPosition(0, 0, 0);
+		this.mDriveRightMaster.setSelectedSensorPosition(0, 0, 0);
+		this.mDriveRightSlave1.setSelectedSensorPosition(0, 0, 0);
+		this.mDriveRightSlave2.setSelectedSensorPosition(0, 0, 0);
+	}
+	
 	public void disable() {
 		this.mDriveLeftMaster.set(ControlMode.Disabled, 0);
 		this.mDriveLeftSlave1.set(ControlMode.Disabled, 0);
