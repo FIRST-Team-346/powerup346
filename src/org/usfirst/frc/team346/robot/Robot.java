@@ -33,6 +33,7 @@ public class Robot extends IterativeRobot{
 	public TurretShooter sTurretShooter;
 	public Climber sClimber;
 	private Compressor sCompressor;
+	
 	private AutoRunner sAutoRunner;
 	private ControlBoard sControlBoard;
 	private DriverStation sDriverStation;
@@ -107,6 +108,10 @@ public class Robot extends IterativeRobot{
 	public void zeroDevices() {
 		this.sGyro.zeroGyro();
 		this.sDrive.zeroEncoders();
+	}
+	
+	public void zeroGyro() {
+		this.sGyro.zeroGyro();
 	}
 
 }

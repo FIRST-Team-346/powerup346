@@ -22,6 +22,7 @@ public class Gyro implements Subsystem {
 	
 	public double getAngle() {
 		return this.mGyroscope.getAngle();
+		//TODO fix angle between 0 and 360 or -180 and 180
 	}
 	
 	public void zeroGyro() {

@@ -41,16 +41,25 @@ public class RobotMap {
 	
 //	PID/SUBSYSTEM VALUES------------------------------------------------------------
 	
-	public static final double kDriveKP = 0;
-	public static final double kDriveKI = 0;
-	public static final double kDriveKD = 0;
-	public static final double kDriveKF = 0;
+	public static final double kDriveFollowLeftKP = 0;
+	public static final double kDriveFollowLeftKI = 0;
+	public static final double kDriveFollowLeftKD = 0;
+	public static final double kDriveFollowLeftKF = 0;
+	
+	public static final double kDriveFollowRightKP = 0;
+	public static final double kDriveFollowRightKI = 0;
+	public static final double kDriveFollowRightKD = 0;
+	public static final double kDriveFollowRightKF = 0;
+	
+	public static final double kDriveFollowCourseErrorScaler = 0;
 	
 	public static final double kDriveRampRate = 0;
 	public static final double kDriveVoltageMin = 0;
 	public static final double kDriveVoltageMax = 0;
 	
-//	Motion Magic values are in Native Units Per 100ms
+	public static final double kDriveFollowCruiseVelocityRPM = 0;
+	
+	//Motion Magic values are in Native Units Per 100ms
 	public static final int kTurretTurnerCruiseVelocity = 0;
 	public static final int kTurretTurnerMaxAcceleration = 0;
 	
