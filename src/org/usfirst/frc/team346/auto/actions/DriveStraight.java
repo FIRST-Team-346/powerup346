@@ -28,8 +28,8 @@ public class DriveStraight{
 	private double leftSpeed,rightSpeed;
 	private double angleKP;
 	
-	public DriveStraight(double distance, double _percentSpeed, double _angle, double _timeOutTime, double _tolerance) {
-		this.distance = distance;
+	public DriveStraight(double _distance, double _percentSpeed, double _angle, double _timeOutTime, double _tolerance) {
+		this.distance = _distance;
 		this.angleSetpoint = _angle;
 		this.percentSpeed = _percentSpeed;
 		this.timeOutTime = _timeOutTime;
@@ -52,7 +52,7 @@ public class DriveStraight{
 			}
 			@Override
 			public double pidGet() {
-				return sDrive.getPosition(Hand.kLeft);
+				return sDrive.getLeftPosition();
 			}
 			@Override
 			public PIDSourceType getPIDSourceType() {
@@ -66,7 +66,7 @@ public class DriveStraight{
 			}
 			@Override
 			public double pidGet() {
-				return sDrive.getPosition(Hand.kRight);
+				return sDrive.getRightPosition();
 				
 			}
 			@Override
@@ -79,10 +79,14 @@ public class DriveStraight{
 			public void pidWrite(double _output){
 				angleDifference = sGyro.getAngle() - angleSetpoint;
 				if(distance >= 0) {
-					leftSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
+//					leftSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
+					System.out.println("O" + (double)_output);
+					leftSpeed = _output;
+
 				}
 				else {
-					leftSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
+//					leftSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
+					leftSpeed = _output;
 				}
 			}
 		};
@@ -90,21 +94,27 @@ public class DriveStraight{
 		this.rightOutput = new PIDOutput(){
 			public void pidWrite(double _output){
 				if(distance >= 0) {
-					rightSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
+					//rightSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
+					rightSpeed = _output;
 				}
 				else {
-					rightSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
+//					rightSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
+					rightSpeed = _output;
 				}
 			}
 		};
 		
-		leftDistancePID = new PIDController(0, 0, 0, leftSource, leftOutput, 0.02);
-		rightDistancePID = new PIDController(0, 0, 0, rightSource, rightOutput, 0.02);
+		leftDistancePID = new PIDController(0.22, 0, 4, leftSource, leftOutput, 0.02);
+		rightDistancePID = new PIDController(0.22, 0, 4, rightSource, rightOutput, 0.02);
 	}
 
 	public void enablePID() {
 		this.leftDistancePID.enable();
+		this.leftDistancePID.setSetpoint(distance);
+		
 		this.rightDistancePID.enable();
+		this.rightDistancePID.setSetpoint(distance);
+
 	}
 	
 	public void runPID() {
@@ -113,19 +123,19 @@ public class DriveStraight{
 		boolean l_inThreshold = false;
 		System.out.println("Driving distance speed: " + distance);
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
-			if(driverStation.isAutonomous()) {
+			if(!driverStation.isAutonomous()) {
 				leftDistancePID.disable();
 				rightDistancePID.disable();
 				
 				sDrive.drive(DriveMode.VELOCITY, 0, 0);
 				
 				System.out.println("Thread Killed");
-				System.out.println(sDrive.getPosition(Hand.kLeft) + "|" + sDrive.getPosition(Hand.kRight));
+				System.out.println(sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
 				this.sDrive.disable();;
 				return;
 			}
 			
-			if(Math.abs((sDrive.getPosition(Hand.kLeft)+sDrive.getPosition(Hand.kRight))/2 - distance) < tolerance) {
+			if(Math.abs((sDrive.getLeftPosition()+sDrive.getRightPosition())/2 - distance) < tolerance) {
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
 					//TODO: Test if this helps/works
@@ -133,14 +143,14 @@ public class DriveStraight{
 					l_inThreshold = true;
 				}
 				else if(System.currentTimeMillis() - l_thresholdStartTime >= timeOutTime) {
-					if(Math.abs((sDrive.getPosition(Hand.kLeft) + sDrive.getPosition(Hand.kRight))/2 - distance) < tolerance) {
+					if(Math.abs((sDrive.getLeftPosition() + sDrive.getRightPosition())/2 - distance) < tolerance) {
 						leftDistancePID.disable();
 						rightDistancePID.disable();
 						
 						this.sDrive.drive(DriveMode.VELOCITY, 0, 0);
 						
 						System.out.println("Driving Distance (Speed) Complete via Threshold");
-						System.out.println(sDrive.getPosition(Hand.kLeft) + "|" + sDrive.getPosition(Hand.kRight));
+						System.out.println(sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
 						this.sDrive.disable();;
 						return;
 					}
@@ -150,9 +160,11 @@ public class DriveStraight{
 				}
 			}
 			
-			this.sDrive.drive(DriveMode.VELOCITY, leftSpeed, rightSpeed);
+			this.sDrive.drive(DriveMode.PERCENT, leftSpeed, rightSpeed);
 //			this.publishData();
 		}
+		System.out.println("Drive completed via timeout");
+		System.out.println("Drove : " + sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
 		
 		this.disablePID();
 	}

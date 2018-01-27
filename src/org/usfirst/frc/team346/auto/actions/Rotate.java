@@ -56,7 +56,7 @@ public class Rotate {
 					drive.drive(DriveMode.VELOCITY, 0, 0);
 				}
 				else {
-					drive.drive(DriveMode.VELOCITY, 1080 * _output * percentSpeed,-1080 * _output * percentSpeed);
+					drive.drive(DriveMode.VELOCITY, 1200. * _output * percentSpeed, 1200. * _output * percentSpeed);
 				}
 			}
 		};
@@ -69,13 +69,13 @@ public class Rotate {
 		boolean l_inThreshold = false;
 		System.out.println("Rotating to: " + angleSetpoint);
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
-			if(driverStation.isAutonomous()) {
+			if(!driverStation.isAutonomous()) {
 				anglePID.disable();
 				
 				drive.drive(DriveMode.VELOCITY, 0, 0);
 				
 				System.out.println("Thread Killed");
-				System.out.println(drive.getPosition(Hand.kLeft) + "|" + drive.getPosition(Hand.kRight));
+				System.out.println(drive.getLeftPosition() + "|" + drive.getRightPosition());
 				this.drive.disable();
 				return;
 			}
@@ -83,8 +83,6 @@ public class Rotate {
 			if(Math.abs(gyro.getAngle() - angleSetpoint) < tolerance) {
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
-					//TODO: Test if this helps/works
-//					this.s_robot.s_drive.setGear(GearMode.SLOW_GEAR);
 					l_inThreshold = true;
 				}
 				else if(System.currentTimeMillis() - l_thresholdStartTime >= timeOutTime) {
@@ -106,6 +104,10 @@ public class Rotate {
 			
 			this.anglePID.enable();
 		}
+		this.disablePID();
+		
+		System.out.println("Rotate completed via timeout");
+		System.out.println("Current angle: " + this.gyro.getAngle());
 	}
 	
 	public void disablePID(){

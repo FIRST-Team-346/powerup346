@@ -5,30 +5,27 @@ import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class ControlBoard {
 
-	private ControllerXB mController;
-    private Joystick mButtonBoard;
-    private Robot sRobot;
-
-    private static ControlBoard sControlBoardInstance = new ControlBoard();
-    protected ControlBoard() {
-        this.mController = new ControllerXB(RobotMap.kXboxControllerPort);
-        this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
-        this.sRobot = Robot.getInstance();
-    }
+	private Robot sRobot;
+	private Joystick mController;
+	private Joystick mButtonBoard;
+	    
+	private final int LEFT_STICK = 1, RIGHT_STICK = 5;
+	
+	public ControlBoard(Robot _robot) {
+		this.sRobot = _robot;
+		this.mController = new Joystick(RobotMap.kXboxControllerPort);
+		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
+	}
     
-    public static ControlBoard getInstance() {
-    	return sControlBoardInstance;
-    }
-    
-    public void drive() {
-    	this.sRobot.sDrive.drive(DriveMode.PERCENT, this.mController.getY(Hand.kLeft), this.mController.getY(Hand.kRight));
-    }
-    
+	public void drive() {
+//		this.sRobot.sDrive.drive(DriveMode.PERCENT, this.mController.getRawAxis(LEFT_STICK), this.mController.getRawAxis(RIGHT_STICK));
+		this.sRobot.sDrive.drive(DriveMode.VELOCITY, this.mController.getRawAxis(LEFT_STICK)*1200, this.mController.getRawAxis(RIGHT_STICK)*1200);
+//		this.sRobot.sDrive.drive(DriveMode.THROTTLE_TURN, this.mController.getRawAxis(RIGHT_STICK), this.mController.getRawAxis(LEFT_STICK));
+	}
+	
     public void checkIntake() {
     	//TODO
     }

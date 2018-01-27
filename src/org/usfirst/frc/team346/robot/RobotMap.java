@@ -2,12 +2,14 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
+import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
+import org.usfirst.frc.team346.auto.plans.SwitchCube;
 
 public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan mAutoPlan = new CrossBaseline();
+	public static final AutoPlan kAutoPlan = new DriveFollowTest();
 	
 	public static boolean kTuningState = false;
 	
@@ -15,8 +17,8 @@ public class RobotMap {
 	
 	public static final int kDriveLeftMasterPort = 1;
 	public static final int kDriveLeftSlave1Port = 2;
-	public static final int kDriveLeftSlave2Port = 3;
-	public static final int kDriveRightMasterPort = 4;
+	public static final int kDriveLeftSlave2Port = 4;
+	public static final int kDriveRightMasterPort = 3;
 	public static final int kDriveRightSlave1Port = 5;
 	public static final int kDriveRightSlave2Port = 6;
 	
@@ -35,29 +37,43 @@ public class RobotMap {
 	
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
+	public static final double kThrottleTurnRotationStrength = 0.8;
 	
 	public static final int kIntakeForwardButton = 0;
 	public static final int kIntakeReverseButton = 0;
 	
 //	PID/SUBSYSTEM VALUES------------------------------------------------------------
 	
-	public static final double kDriveFollowLeftKP = 0;
-	public static final double kDriveFollowLeftKI = 0;
-	public static final double kDriveFollowLeftKD = 0;
-	public static final double kDriveFollowLeftKF = 0;
+	public static final double kDriveVelLeftP = 0;
+	public static final double kDriveVelLeftI = 0;
+	public static final double kDriveVelLeftD = 0;
+	public static final double kDriveVelLeftF = 0.5;
 	
-	public static final double kDriveFollowRightKP = 0;
-	public static final double kDriveFollowRightKI = 0;
-	public static final double kDriveFollowRightKD = 0;
-	public static final double kDriveFollowRightKF = 0;
+	public static final double kDriveVelRightP = 0;
+	public static final double kDriveVelRightI = 0;
+	public static final double kDriveVelRightD = 0;
+	public static final double kDriveVelRightF = 0.5;
 	
-	public static final double kDriveFollowCourseErrorScaler = 0;
+	public static final double kDrivePosLeftP = 0;
+	public static final double kDrivePosLeftI = 0;
+	public static final double kDrivePosLeftD = 0;
+	public static final double kDrivePosLeftF = 0;
+	
+	public static final double kDrivePosRightP = 0;
+	public static final double kDrivePosRightI = 0;
+	public static final double kDrivePosRightD = 0;
+	public static final double kDrivePosRightF = 0;
+	
+	public static final double kDriveFollowErrorScaler = 1.;
+	public static final double kDriveFollowVelSetpoint = 0.5 * 1200.;
+	public static final double kDriveFollowUpdateRate = 0.05;
+	
+	public static final double kDriveFollowP = 0;
+	public static final double kDriveFollowI = 0;
+	public static final double kDriveFollowD = 0;
+	public static final double kDriveFollowF = 0;
 	
 	public static final double kDriveRampRate = 0;
-	public static final double kDriveVoltageMin = 0;
-	public static final double kDriveVoltageMax = 0;
-	
-	public static final double kDriveFollowCruiseVelocityRPM = 0;
 	
 	//Motion Magic values are in Native Units Per 100ms
 	public static final int kTurretTurnerCruiseVelocity = 0;

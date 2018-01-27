@@ -1,76 +1,73 @@
 package org.usfirst.frc.team346.auto;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
+import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoRunner {
 	
 	private boolean mRunning = false;
-	private double mUpdateRate = 0.02;
 	private String mLayout = "000";
+	private Robot sRobot;
 	
 	DriverStation sDriverStation;
 	
 	AutoPlan mAutoPlan;
 	
-	private static AutoRunner sAutoRunnerInstance = new AutoRunner();
-	protected AutoRunner() {
-		sDriverStation = DriverStation.getInstance();
-		mAutoPlan = RobotMap.mAutoPlan;
-	}
-	
-	public static AutoRunner getInstance() {
-		return sAutoRunnerInstance;
+	public AutoRunner(Robot _robot) {
+		this.sDriverStation = DriverStation.getInstance();
+		this.mAutoPlan = RobotMap.kAutoPlan;
+		this.sRobot = _robot;
 	}
 	
 	public void run() {
-		mRunning = true;
+		this.mRunning = true;
 		System.out.println("Auto Runner| booting up");
-		receiveLayout();
+		this.receiveLayout();
 		try {
-			perform();
+			this.perform();
 		}
 		catch(AutoTerminatedException e) {
-			terminate();
+			this.terminate();
 			return;
 		}
-		complete();
+		this.complete();
 		return;
 	}
 	
 	private void receiveLayout() {
-		mLayout = sDriverStation.getGameSpecificMessage();
+		this.mLayout = this.sDriverStation.getGameSpecificMessage();
 	}
 	
 	public String getLayout() {
-		if(mLayout == "000") {
-			receiveLayout();
+		if(this.mLayout == "000") {
+			this.receiveLayout();
 		}
-		return mLayout;
+		return this.mLayout;
 	}
 	
 	private void perform() throws AutoTerminatedException {
 		if(!isAuto()) {
 			throw new AutoTerminatedException();
 		}
-		System.out.println("Auto Runner| goal: " + mAutoPlan.getGoal());
-		System.out.println("Auto Runner| field layout: " + getLayout());
-		mAutoPlan.run();
+		System.out.println("Auto Runner| goal: " + this.mAutoPlan.getGoal());
+		System.out.println("Auto Runner| field layout: " + this.getLayout());
+		this.mAutoPlan.run(this.sRobot);
 	}
 	
 	private void complete() {
 		System.out.println("Auto Runner| complete");
-		mRunning = false;
+		this.mRunning = false;
 	}
 	
 	private void terminate() {
 		System.out.println("Auto Runner| terminated unexpectedly");
-		complete();
+		this.complete();
 	}
 	
 	public boolean isAuto() {
-		if(sDriverStation.isDisabled() || !sDriverStation.isAutonomous()) {
+		if(this.sDriverStation.isDisabled() || !this.sDriverStation.isAutonomous()) {
 			System.out.println("Auto Runner| not autonomous mode");
 			return false;
 		}
@@ -82,8 +79,8 @@ public class AutoRunner {
 	}
 	
 	public void waitTime(double _seconds) {
-		long initialTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000) {
+		long lInitialTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - lInitialTime < Math.abs(_seconds) * 1000) {
 		}
 	}
 }

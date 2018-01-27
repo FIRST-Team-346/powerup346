@@ -33,16 +33,13 @@ public class Robot extends IterativeRobot{
 	public TurretShooter sTurretShooter;
 	public Climber sClimber;
 	private Compressor sCompressor;
+	private DriverStation sDriverStation;
 	
 	private AutoRunner sAutoRunner;
 	private ControlBoard sControlBoard;
-	private DriverStation sDriverStation;
 	
-	private static Robot sRobotInstance = new Robot();
-	protected Robot() {
-	}
-	public static Robot getInstance() {
-		return sRobotInstance;
+	public Robot() {
+		this.robotInit();
 	}
 	
 	public void robotInit() {
@@ -53,13 +50,13 @@ public class Robot extends IterativeRobot{
 		this.sTurretTilter = TurretTilter.getInstance();
 		this.sTurretShooter = TurretShooter.getInstance();
 		this.sClimber = Climber.getInstance();
-		
-		this.sAutoRunner = AutoRunner.getInstance();
-		this.sControlBoard = ControlBoard.getInstance();
 		this.sDriverStation = DriverStation.getInstance();
 		
 		this.sCompressor = new Compressor();
 	    this.sCompressor.start();
+		
+		this.sAutoRunner = new AutoRunner(this);
+		this.sControlBoard = new ControlBoard(this);
 	}
 	
 	public void autonomousInit() {
@@ -82,7 +79,7 @@ public class Robot extends IterativeRobot{
 		System.out.println("Teleop Init| begun");
 		this.sCompressor.start();
 		this.zeroDevices();
-		this.sDrive.drive(DriveMode.VELOCITY, 0, 0);
+		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
 		
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		System.out.println("Teleop Init| complete");

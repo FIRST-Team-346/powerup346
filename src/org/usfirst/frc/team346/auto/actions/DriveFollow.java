@@ -5,7 +5,6 @@ import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -15,140 +14,149 @@ public class DriveFollow {
 
 	private Robot sRobot;
 	
-	private PIDSource mLeftSource, mRightSource;
-	private PIDOutput mLeftOutput, mRightOutput;
-	private PIDController mLeftPID, mRightPID;
+	private PIDSource mCourseSource;
+	private PIDOutput mCourseOutput;
+	private PIDController mCoursePID;
 	
-	private long mTimePrev, mTime;
-	private double mHeadingPrev, mHeading;
-	private double mPositionPrev, mPosition;
-	private double mDeltaT, mDeltaD, mDeltaH;
-	private double mDeltaCourseTravelled, mCourseTravelled, mDeltaCourseError, mCourseError;
-	private double mErrorArea, mErrorAreaTotal;
+	private final int DELTA = 0, PREV = 1, CURR = 2, TOTAL = 3;
+	private long[] mTime = {0,0,0};
+	private double[] mHeading = {0};
+	private double[] mDistance = {0,0,0};
+	
+	private double[] mCourseTraveled = {0,0};
+	private double[] mCourseError = {0,0};
+	private double[] mCourseArea = {0,0};
 	
 	private double mVelSetpoint, mDistanceSetpoint;
-	private double mLeftSetVel, mRightSetVel;
+	private double mLeftVel, mRightVel;
+	
+	private long mStartTime;
 	
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
 	 * as well as the correct heading along the course.**/
-	public DriveFollow() {
-		sRobot = Robot.getInstance();
+	public DriveFollow(Robot _robot) {
+		sRobot = _robot;
+		mStartTime = System.currentTimeMillis();
 	}
 	
 	/**This method to be used only for following straight lines, thus only a distance is required.**/
 	public void followLine(double _distance) {
 		mDistanceSetpoint = _distance;
-		mVelSetpoint = RobotMap.kDriveFollowCruiseVelocityRPM;
+		mVelSetpoint = RobotMap.kDriveFollowVelSetpoint;
 		
 		//Zeros the gyro and drive at the beginning of a course and sets "previous" values to startup values.
 		sRobot.zeroDevices();
 		updateFinal();
 		
-		createPID();
+		createCoursePID();
+		mCoursePID.setSetpoint(mDistanceSetpoint);
 		enablePID();
 	}
 	
 	/**This method is run every cycle, calculating the error and adjusting the drive accordingly.**/
-	public void updateCycle() {
+	public void updateCycle(double _courseOutput) {
 		updateStart();
-		setDriveToFollow();
+		setDriveToFollow(_courseOutput);
 		updateFinal();
+		checkCompletion();
 	}
 	
 	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.**/
 	private void updateStart() {
-		mTime = System.currentTimeMillis();
-		mHeading = sRobot.sGyro.getAngle();
-		mPosition = 1/2*(sRobot.sDrive.getPosition(Hand.kLeft) + sRobot.sDrive.getPosition(Hand.kRight));
+		mTime[CURR] = System.currentTimeMillis();
+		mTime[DELTA] = mTime[CURR] - mTime[PREV];
 		
-		mDeltaT = mTime - mTimePrev;
-		mDeltaD = mPosition - mPositionPrev;
-		mDeltaH = mHeading;		//TODO: figure out how to find the actual heading off course, not the deltaH since last cycle
+		mHeading[DELTA] = sRobot.sGyro.getAngle();
 		
-		mDeltaCourseTravelled = mDeltaD * Math.cos(Math.toRadians(mDeltaH));	//course arc-length travelled so far
-		mCourseTravelled += mDeltaCourseTravelled;
-		mDeltaCourseError = mDeltaD * Math.sin(Math.toRadians(mDeltaH));		//perpendicular error away from course
-		mCourseError += mDeltaCourseError;
+		mDistance[CURR] = 1./2. * (sRobot.sDrive.getLeftPosition() + sRobot.sDrive.getRightPosition());
+		mDistance[DELTA] = mDistance[CURR] - mDistance[PREV];
 		
-		mErrorArea = 1/2*mDeltaD*mDeltaD * Math.sin(Math.toRadians(mDeltaH)) * Math.cos(Math.toRadians(mDeltaH));
-		mErrorAreaTotal += mErrorArea;		//TODO:  this only reflects the triangular error total, NOT including the rectangular error total
+		mCourseTraveled[DELTA] = mDistance[DELTA] * Math.cos(Math.toRadians(mHeading[DELTA]));	//course arc-length travelled so far
+		mCourseTraveled[TOTAL] += mCourseTraveled[DELTA];
+		
+		mCourseError[DELTA] = mDistance[DELTA] * Math.sin(Math.toRadians(mHeading[DELTA]));		//perpendicular error away from course
+		mCourseError[TOTAL] += mCourseError[DELTA];
+		
+		mCourseArea[DELTA] = 1./2. * mDistance[DELTA]*mDistance[DELTA] * Math.sin(Math.toRadians(mHeading[DELTA])) * Math.cos(Math.toRadians(mHeading[DELTA]));
+		mCourseArea[TOTAL] += mCourseArea[DELTA];		//this only reflects the triangular error total
+		
+		System.out.println("lD:" + sRobot.sDrive.getLeftPosition() + " rD:" + sRobot.sDrive.getRightPosition() + " cD:" + mDistance[CURR]);
+		System.out.println("dT:" + mTime[DELTA] + " dH:" + mHeading[DELTA] + " dD:" + mDistance[DELTA]);
+		System.out.println("cT:" + mCourseTraveled[TOTAL] + " cE:" + mCourseError[TOTAL]);
+	}
+	
+	private void setDriveToFollow(double _courseOutput) {
+		//assuming driving forward
+		mLeftVel = _courseOutput * mVelSetpoint;
+		mRightVel = _courseOutput * mVelSetpoint;
+		
+		if(mCourseError[TOTAL] >= 0) {
+			mLeftVel = _courseOutput * mVelSetpoint + mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScaler;
+		}
+		else if(mCourseError[TOTAL] < 0) {
+			mRightVel = _courseOutput * mVelSetpoint - mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScaler;
+		}
+		
+		System.out.println("lV:" + mLeftVel + " rV:" + mRightVel);
+		sRobot.sDrive.drive(DriveMode.VELOCITY, mLeftVel, mRightVel);
 	}
 	
 	/**To be run at the end of each cycle to inform the next cycle of the previous values.**/
 	private void updateFinal() {
 //		TODO: test mTimePrev = (long)DriverStation.getInstance().getMatchTime();
-		mTimePrev = System.currentTimeMillis();
-		mHeadingPrev = sRobot.sGyro.getAngle();
-		mPositionPrev = 1/2*(sRobot.sDrive.getPosition(Hand.kLeft) + sRobot.sDrive.getPosition(Hand.kRight));
-	}
-	
-	private void setDriveToFollow() {
-		//assuming driving forward
-		if(mCourseError > 0) {
-			mLeftSetVel = mLeftSetVel - mCourseError/mDeltaT * RobotMap.kDriveFollowCourseErrorScaler;
-		}
-		else if(mCourseError < 0) {
-			mRightSetVel = mRightSetVel + mCourseError/mDeltaT * RobotMap.kDriveFollowCourseErrorScaler;
-		}
-		sRobot.sDrive.drive(DriveMode.VELOCITY, mLeftSetVel, mRightSetVel);
+		mTime[PREV] = mTime[CURR];
+		mDistance[PREV] = mDistance[CURR];
 	}
 	
 	private void checkCompletion() {
-		//TODO: check if the course has been completed
+		if(Math.abs(mDistanceSetpoint - mCourseTraveled[TOTAL]) < 0.5) {
+			System.out.println("Drive Follow| within 0.5 of setpoint");
+			disablePID();
+		}
+		if(System.currentTimeMillis() - mStartTime > 5000 || DriverStation.getInstance().isDisabled()) {
+			System.out.println("Drive Follow| timeout");
+			disablePID();
+		}
 	}
 	
-	private void createPID() {
-		mLeftSource = new PIDSource() {
+	private void createCoursePID() {
+		System.out.println("Auto Runner| creating course PIDC");
+		
+		mCourseSource = new PIDSource() {
+			@Override
 			public void setPIDSourceType(PIDSourceType pidSource) { }
+			@Override
 			public PIDSourceType getPIDSourceType() {
 				return PIDSourceType.kDisplacement;
 			}
+			@Override
 			public double pidGet() {
-				//TODO: replace this with deltaX
-				return sRobot.sDrive.getPosition(Hand.kLeft);
+				return mCourseTraveled[TOTAL];
 			}
 		};
 		
-		mRightSource = new PIDSource() {
-			public void setPIDSourceType(PIDSourceType pidSource) { }
-			public PIDSourceType getPIDSourceType() {
-				return PIDSourceType.kDisplacement;
-			}
-			public double pidGet() {
-				//TODO: replace this with deltaX
-				return sRobot.sDrive.getPosition(Hand.kRight);
-			}
-		};
-		
-		/**Sets the left velocity output to a fraction of its velocity setpoint based on remaining distance.**/
-		mLeftOutput = new PIDOutput() {
+		/**Sets the drive velocity outputs to a fraction of their velocity setpoint based on remaining distance.**/
+		mCourseOutput = new PIDOutput() {
+			@Override
 			public void pidWrite(double _output) {
-				mLeftSetVel = mVelSetpoint * _output;
+				System.out.println("pidWrite:" + _output);
+				updateCycle(_output);
 			}
 		};
 		
-		/**Sets the right velocity output to a fraction of its velocity setpoint based on remaining distance.**/
-		mRightOutput = new PIDOutput() {
-			public void pidWrite(double _output) {
-				mRightSetVel = mVelSetpoint * _output;
-			}
-		};
-		
-		mLeftPID = new PIDController(RobotMap.kDriveFollowLeftKP, RobotMap.kDriveFollowLeftKI, RobotMap.kDriveFollowLeftKD, RobotMap.kDriveFollowLeftKF,
-									 mLeftSource, mLeftOutput, 0.02);
-		mRightPID = new PIDController(RobotMap.kDriveFollowRightKP, RobotMap.kDriveFollowRightKI, RobotMap.kDriveFollowRightKD, RobotMap.kDriveFollowRightKF,
-									  mRightSource, mRightOutput, 0.02);
+		mCoursePID = new PIDController(RobotMap.kDriveFollowP, RobotMap.kDriveFollowI, RobotMap.kDriveFollowD, RobotMap.kDriveFollowF,
+									   mCourseSource, mCourseOutput, RobotMap.kDriveFollowUpdateRate);
 	}
 	
 	private void enablePID() {
-		mLeftPID.enable();
-		mRightPID.enable();
+		System.out.println("Auto Runner| enabling course PIDC");
+		mCoursePID.enable();
 	}
 	
 	private void disablePID() {
-		mLeftPID.disable();
-		mRightPID.disable();
+		System.out.println("Auto Runner| disabling course PIDC");
+		mCoursePID.free();
 	}
 
 }

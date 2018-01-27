@@ -1,12 +1,14 @@
 package org.usfirst.frc.team346.auto.plans;
 
+import org.usfirst.frc.team346.robot.Robot;
+
 public class AutoPlan {
 	
 	public String getGoal() {
 		return "default goal";
 	}
 	
-	public void run() {
+	public void run(Robot _robot) {
 		System.out.println("default run");
 	}
 	
