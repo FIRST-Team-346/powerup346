@@ -15,15 +15,15 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 1;
-	public static final int kDriveLeftSlave1Port = 2;
-	public static final int kDriveLeftSlave2Port = 4;
-	public static final int kDriveRightMasterPort = 3;
-	public static final int kDriveRightSlave1Port = 5;
-	public static final int kDriveRightSlave2Port = 6;
+	public static final int kDriveLeftMasterPort = 27;
+	public static final int kDriveLeftSlave1Port = 13;
+	public static final int kDriveLeftSlave2Port = 7;
+	public static final int kDriveRightMasterPort = 25;
+	public static final int kDriveRightSlave1Port = 14;
+	public static final int kDriveRightSlave2Port = 17;
 	
-	public static final int kIntakeLeftPort = 7;
-	public static final int kIntakeRightPort = 8;
+	public static final int kIntakeLeftPort = 20;
+	public static final int kIntakeRightPort = 9;
 	
 	public static final int kTurretTurnerPort = 9;
 	public static final int kTurretTilterPort = 10;
