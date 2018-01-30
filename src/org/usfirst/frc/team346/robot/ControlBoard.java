@@ -1,7 +1,5 @@
-package org.usfirst.frc.team346.control;
+package org.usfirst.frc.team346.robot;
 
-import org.usfirst.frc.team346.robot.Robot;
-import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.Joystick;

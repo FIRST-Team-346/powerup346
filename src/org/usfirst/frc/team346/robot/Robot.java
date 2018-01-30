@@ -1,7 +1,6 @@
 package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.AutoRunner;
-import org.usfirst.frc.team346.control.ControlBoard;
 import org.usfirst.frc.team346.subsystems.Climber;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
