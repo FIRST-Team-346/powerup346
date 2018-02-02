@@ -22,9 +22,7 @@ public class Drive implements Subsystem{
 	public enum DriveMode {
 		PERCENT,
 		VELOCITY,
-		POSITION,
-		THROTTLE_TURN,
-		DIFFERENTIAL;
+		POSITION;
 	}
 	
 	private static Drive sDriveInstance = new Drive();
@@ -42,30 +40,45 @@ public class Drive implements Subsystem{
 		this.mDriveLeftMaster = new TalonSRX(RobotMap.kDriveLeftMasterPort);
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, 0);
 		this.mDriveLeftMaster.setNeutralMode(NeutralMode.Brake);
+		this.mDriveLeftMaster.overrideLimitSwitchesEnable(true);
+		this.mDriveLeftMaster.overrideSoftLimitsEnable(true);
 		
 		this.mDriveLeftSlave1 = new TalonSRX(RobotMap.kDriveLeftSlave1Port);
 		this.mDriveLeftSlave1.set(ControlMode.Follower, RobotMap.kDriveLeftMasterPort);
 		this.mDriveLeftSlave1.setNeutralMode(NeutralMode.Brake);
 		this.mDriveLeftSlave1.follow(mDriveLeftMaster);
+		this.mDriveLeftSlave1.overrideLimitSwitchesEnable(true);
+		this.mDriveLeftSlave1.overrideSoftLimitsEnable(true);
 		
 		this.mDriveLeftSlave2 = new TalonSRX(RobotMap.kDriveLeftSlave2Port);
 		this.mDriveLeftSlave2.set(ControlMode.Follower, RobotMap.kDriveLeftMasterPort);
 		this.mDriveLeftSlave2.setNeutralMode(NeutralMode.Brake);
 		this.mDriveLeftSlave2.follow(mDriveLeftMaster);
+		this.mDriveLeftSlave2.overrideLimitSwitchesEnable(true);
+		this.mDriveLeftSlave2.overrideSoftLimitsEnable(true);
 		
 		this.mDriveRightMaster = new TalonSRX(RobotMap.kDriveRightMasterPort);
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, 0);
 		this.mDriveRightMaster.setNeutralMode(NeutralMode.Brake);
+		this.mDriveRightMaster.overrideLimitSwitchesEnable(true);
+		this.mDriveRightMaster.overrideSoftLimitsEnable(true);
 		
 		this.mDriveRightSlave1 = new TalonSRX(RobotMap.kDriveRightSlave1Port);
 		this.mDriveRightSlave1.set(ControlMode.Follower, RobotMap.kDriveRightMasterPort);
 		this.mDriveRightSlave1.setNeutralMode(NeutralMode.Brake);
 		this.mDriveRightSlave1.follow(mDriveRightMaster);
+		this.mDriveRightSlave1.overrideLimitSwitchesEnable(true);
+		this.mDriveRightSlave1.overrideSoftLimitsEnable(true);
 		
 		this.mDriveRightSlave2 = new TalonSRX(RobotMap.kDriveRightSlave2Port);
 		this.mDriveRightSlave2.set(ControlMode.Follower, RobotMap.kDriveRightMasterPort);
 		this.mDriveRightSlave2.setNeutralMode(NeutralMode.Brake);		
 		this.mDriveRightSlave2.follow(mDriveRightMaster);
+		this.mDriveRightSlave2.overrideLimitSwitchesEnable(true);
+		this.mDriveRightSlave2.overrideSoftLimitsEnable(true);
+		
+		this.setLeftMaxVoltage(12.);
+		this.setRightMaxVoltage(12.);
 	}
 	
 	/**Initializes the encoders on the master CANTalons.**/
@@ -96,8 +109,8 @@ public class Drive implements Subsystem{
 			}; break;
 		
 			case VELOCITY: {
-				this.mDriveLeftMaster.set(ControlMode.Velocity, _left *1024./60./10.);
-				this.mDriveRightMaster.set(ControlMode.Velocity, -(_right) *1024./60./10.);
+				this.setLeftVelocityRPM(_left);
+				this.setLeftVelocityRPM(_right);
 			}; break;
 			
 			case POSITION : {
@@ -111,23 +124,31 @@ public class Drive implements Subsystem{
 		}
 	}
 	
-	public void driveThrottleTurn(DriveMode _mode, double _throttle, double _turn) {
+	public void driveThrottleTurn(double _throttle, double _turn) {
 		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
-		switch(_mode) {
-			case PERCENT : {
-				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
-				this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle) + this.mTurn);
-			}; break;
-			
-			case VELOCITY: {
-				this.mDriveLeftMaster.set(ControlMode.Velocity, (_throttle + this.mTurn) *1024./60./10.);
-				this.mDriveRightMaster.set(ControlMode.Velocity, (-(_throttle) + this.mTurn) *1024./60./10.);
-			}; break;
-			
-			default : {
-				System.out.println("Drive:ThrottleTurn command unsuccessful: invalid drive mode specified.");
-			}; break;
-		}
+		
+		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
+		this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle + this.mTurn));
+	}
+	
+	public void setLeftVelocityRPM(double _rpm) {
+		int lSetpoint = (int)(_rpm *1024./60./10.);
+		this.mDriveLeftMaster.set(ControlMode.Velocity, lSetpoint);
+	}
+	
+	public void setRightVelocityRPM(double _rpm) {
+		int lSetpoint = (int)(_rpm *-1024./60./10.);
+		this.mDriveRightMaster.set(ControlMode.Velocity, lSetpoint);
+	}
+	
+	public void setLeftMaxVoltage(double _leftVolt) {
+		this.mDriveLeftMaster.configPeakOutputForward(_leftVolt, 0);
+		this.mDriveLeftMaster.configPeakOutputReverse(-_leftVolt, 0);
+	}
+	
+	public void setRightMaxVoltage(double _rightVolt) {
+		this.mDriveRightMaster.configPeakOutputForward(_rightVolt, 0);
+		this.mDriveRightMaster.configPeakOutputReverse(-_rightVolt, 0);
 	}
 	
 	public void publishData() {
@@ -158,11 +179,15 @@ public class Drive implements Subsystem{
 	}
 	
 	public double getLeftVoltage() {
-		return this.mDriveLeftMaster.getMotorOutputVoltage();
+		return (this.mDriveLeftMaster.getMotorOutputVoltage() +
+				this.mDriveLeftSlave1.getMotorOutputVoltage() +
+				this.mDriveLeftSlave2.getMotorOutputVoltage()) /3.;
 	}
 	
 	public double getRightVoltage() {
-		return this.mDriveRightMaster.getMotorOutputVoltage() *-1.;
+		return (this.mDriveRightMaster.getMotorOutputVoltage() +
+				this.mDriveRightSlave1.getMotorOutputVoltage() +
+				this.mDriveRightSlave2.getMotorOutputVoltage()) /-3.;
 	}
 	
 	public double getLeftPercent() {

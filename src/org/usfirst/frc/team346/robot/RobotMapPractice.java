@@ -5,25 +5,25 @@ import org.usfirst.frc.team346.auto.plans.CrossBaseline;
 import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
 import org.usfirst.frc.team346.auto.plans.SwitchCube;
 
-public class RobotMap {
+public class RobotMapPractice {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
 	public static final AutoPlan kAutoPlan = new DriveFollowTest();
 	
-	public static boolean kPracticeBot = false;
+	public static boolean kPracticeBot = true;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 27;
-	public static final int kDriveLeftSlave1Port = 13;
-	public static final int kDriveLeftSlave2Port = 7;
-	public static final int kDriveRightMasterPort = 26;
-	public static final int kDriveRightSlave1Port = 18;
-	public static final int kDriveRightSlave2Port = 17;
+	public static final int kDriveLeftMasterPort = 1;
+	public static final int kDriveLeftSlave1Port = 2;
+	public static final int kDriveLeftSlave2Port = 4;
+	public static final int kDriveRightMasterPort = 3;
+	public static final int kDriveRightSlave1Port = 5;
+	public static final int kDriveRightSlave2Port = 6;
 	
-	public static final int kIntakeLeftPort = 9;
-	public static final int kIntakeRightPort = 20;
+	public static final int kIntakeLeftPort = 21;
+	public static final int kIntakeRightPort = 24;
 	
 	public static final int kTurretTurnerPort = 9;
 	public static final int kTurretTilterPort = 10;
@@ -69,25 +69,14 @@ public class RobotMap {
 	public static final double kDriveFollowVelSetpoint = 0.6 * 1200.;
 	public static final double kDriveFollowUpdateRate = 0.05;
 	
-	public static final double kDriveFollowP = 0;
+	public static final double kDriveFollowP = 0.5;
 	public static final double kDriveFollowI = 0;
-	public static final double kDriveFollowD = 0;
+	public static final double kDriveFollowD = 0.5;
 	public static final double kDriveFollowF = 0;
 	
 	public static final double kDriveRampRate = 0;
 	
-	public static final double kShooterLeftP = 0;
-	public static final double kShooterLeftI = 0;
-	public static final double kShooterLeftD = 0;
-	public static final double kShooterLeftF = 0.5;
-	
-	public static final double kShooterRightP = 0;
-	public static final double kShooterRightI = 0;
-	public static final double kShooterRightD = 0;
-	public static final double kShooterRightF = 0.5;
-	
-	public static final double kShooterLeftSetpointRPM = 1000.;
-	public static final double kShooterRightSetpointRPM = 1000.;
+	public static final double KMinDriveOutput = 0.09;
 	
 	//Motion Magic values are in Native Units Per 100ms
 	public static final int kTurretTurnerCruiseVelocity = 0;
@@ -96,11 +85,8 @@ public class RobotMap {
 	public static final int kTurretTilterCruiseVelocity = 0;
 	public static final int kTurretTilterMaxAcceleration = 0;
 
-	public static final int kShooterLeftCruiseVelocity = 0;
-	public static final int kShooterLeftMaxAcceleration = 0;
-	
-	public static final int kShooterRightCruiseVelocity = 0;
-	public static final int kShooterRightMaxAcceleration = 0;
+	public static final int kTurretShooterCruiseVelocity = 0;
+	public static final int kTurretShooterMaxAcceleration = 0;
 	
 //	PHYSICAL REFERENCE VALUES-------------------------------------------------------
 	

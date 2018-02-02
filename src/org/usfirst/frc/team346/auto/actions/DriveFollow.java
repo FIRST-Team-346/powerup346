@@ -18,26 +18,32 @@ public class DriveFollow {
 	private PIDOutput mCourseOutput;
 	private PIDController mCoursePID;
 	
-	private final int DELTA = 0, PREV = 1, CURR = 2, TOTAL = 3;
-	private long[] mTime = {0,0,0};
+	private final int DELTA = 0, PREV = 1, CURR = 2;
+	private double[] mTime = {0,0,0};
 	private double[] mHeading = {0};
 	private double[] mDistance = {0,0,0};
 	
+	private final int TOTAL = 1;
 	private double[] mCourseTraveled = {0,0};
 	private double[] mCourseError = {0,0};
+	private double[] mCourseRemaining = {0,0};
 	private double[] mCourseArea = {0,0};
 	
 	private double mVelSetpoint, mDistanceSetpoint;
 	private double mLeftVel, mRightVel;
 	
-	private long mStartTime;
+	private double mStartTime;
+	private double mCountdown;
+	private boolean mCountdownStarted;
+	private int mPrintCount = 0;
 	
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
 	 * as well as the correct heading along the course.**/
 	public DriveFollow(Robot _robot) {
 		sRobot = _robot;
-		mStartTime = System.currentTimeMillis();
+		mStartTime = System.currentTimeMillis()/1000.;
+		mCountdownStarted = false;
 	}
 	
 	/**This method to be used only for following straight lines, thus only a distance is required.**/
@@ -64,7 +70,7 @@ public class DriveFollow {
 	
 	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.**/
 	private void updateStart() {
-		mTime[CURR] = System.currentTimeMillis();
+		mTime[CURR] = System.currentTimeMillis()/1000.;
 		mTime[DELTA] = mTime[CURR] - mTime[PREV];
 		
 		mHeading[DELTA] = sRobot.sGyro.getAngle();
@@ -81,24 +87,59 @@ public class DriveFollow {
 		mCourseArea[DELTA] = 1./2. * mDistance[DELTA]*mDistance[DELTA] * Math.sin(Math.toRadians(mHeading[DELTA])) * Math.cos(Math.toRadians(mHeading[DELTA]));
 		mCourseArea[TOTAL] += mCourseArea[DELTA];		//this only reflects the triangular error total
 		
-		System.out.println("lD:" + sRobot.sDrive.getLeftPosition() + " rD:" + sRobot.sDrive.getRightPosition() + " cD:" + mDistance[CURR]);
-		System.out.println("dT:" + mTime[DELTA] + " dH:" + mHeading[DELTA] + " dD:" + mDistance[DELTA]);
-		System.out.println("cT:" + mCourseTraveled[TOTAL] + " cE:" + mCourseError[TOTAL]);
+		mCourseRemaining[TOTAL] = mDistanceSetpoint - mCourseTraveled[TOTAL];
+		
+		mPrintCount++;
+		if(mPrintCount == 0.5/RobotMap.kDriveFollowUpdateRate) {
+			System.out.println("lD:" + sRobot.sDrive.getLeftPosition() + " rD:" + sRobot.sDrive.getRightPosition() + " cD:" + mDistance[CURR]);
+			System.out.println("dT:" + mTime[DELTA] + " dH:" + mHeading[DELTA] + " dD:" + mDistance[DELTA]);
+			System.out.println("cT:" + mCourseTraveled[TOTAL] + " cE:" + mCourseError[TOTAL] + " cR:" + mCourseRemaining[TOTAL]);
+		}
+		else if(mPrintCount > 0.5/RobotMap.kDriveFollowUpdateRate) {
+			mPrintCount = 0;
+		}
 	}
 	
 	private void setDriveToFollow(double _courseOutput) {
-		//assuming driving forward
+		if(mCourseRemaining[TOTAL] < 2. && mCourseRemaining[TOTAL] >= 0) {
+			mVelSetpoint = 0.2*1200.;
+		}
+		else if(mCourseRemaining[TOTAL] > -2. && mCourseRemaining[TOTAL] <= 0) {
+			mVelSetpoint = 0.3*1200.;
+		}
 		mLeftVel = _courseOutput * mVelSetpoint;
 		mRightVel = _courseOutput * mVelSetpoint;
 		
-		if(mCourseError[TOTAL] >= 0) {
-			mLeftVel = _courseOutput * mVelSetpoint + mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScaler;
+		if(mCourseError[TOTAL] > 1.) {
+			mCourseError[TOTAL] = 1.;
 		}
-		else if(mCourseError[TOTAL] < 0) {
-			mRightVel = _courseOutput * mVelSetpoint - mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScaler;
+		if(mCourseError[TOTAL] < -1.) {
+			mCourseError[TOTAL] = -1.;
+		}
+		if(_courseOutput >= 0) {
+			if(mCourseError[TOTAL] >= 0) {
+//				mRightVel = _courseOutput * mVelSetpoint + mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
+				mRightVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
+			}
+			else if(mCourseError[TOTAL] < 0) {
+//				mLeftVel = _courseOutput * mVelSetpoint - mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
+				mLeftVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
+			}
+		}
+		else if(_courseOutput < 0) {
+			if(mCourseError[TOTAL] >= 0) {
+//				mRightVel = _courseOutput * mVelSetpoint - mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
+				mRightVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
+			}
+			else if(mCourseError[TOTAL] < 0) {
+//				mLeftVel = _courseOutput * mVelSetpoint + mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
+				mLeftVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
+			}
 		}
 		
-		System.out.println("lV:" + mLeftVel + " rV:" + mRightVel);
+		if(mPrintCount == 0.5/RobotMap.kDriveFollowUpdateRate) {
+			System.out.println("lV:" + mLeftVel + " rV:" + mRightVel + "\n");
+		}
 		sRobot.sDrive.drive(DriveMode.VELOCITY, mLeftVel, mRightVel);
 	}
 	
@@ -110,18 +151,30 @@ public class DriveFollow {
 	}
 	
 	private void checkCompletion() {
-		if(Math.abs(mDistanceSetpoint - mCourseTraveled[TOTAL]) < 0.5) {
-			System.out.println("Drive Follow| within 0.5 of setpoint");
-			disablePID();
-		}
-		if(System.currentTimeMillis() - mStartTime > 5000 || DriverStation.getInstance().isDisabled()) {
+		if(System.currentTimeMillis()/1000. - mStartTime > 10. || DriverStation.getInstance().isDisabled()) {
 			System.out.println("Drive Follow| timeout");
 			disablePID();
+			setDriveToFollow(0);
+		}
+		else if(Math.abs(mDistanceSetpoint - mCourseTraveled[TOTAL]) < 0.5) {
+			if(!mCountdownStarted) {
+				System.out.println("Countdown started");
+				mCountdown = System.currentTimeMillis()/1000.;
+				mCountdownStarted = true;
+			}
+			if(System.currentTimeMillis()/1000. - mCountdown > 0.25) {
+				System.out.println("Drive Follow| complete");
+				disablePID();
+				setDriveToFollow(0);
+			}
+		}
+		else if(System.currentTimeMillis()/1000. - mCountdown > 0.25) {
+			mCountdownStarted = false;
 		}
 	}
 	
 	private void createCoursePID() {
-		System.out.println("Auto Runner| creating course PIDC");
+		System.out.println("Drive Follow| creating course PIDC");
 		
 		mCourseSource = new PIDSource() {
 			@Override
@@ -140,7 +193,6 @@ public class DriveFollow {
 		mCourseOutput = new PIDOutput() {
 			@Override
 			public void pidWrite(double _output) {
-				System.out.println("pidWrite:" + _output);
 				updateCycle(_output);
 			}
 		};
@@ -150,12 +202,12 @@ public class DriveFollow {
 	}
 	
 	private void enablePID() {
-		System.out.println("Auto Runner| enabling course PIDC");
+		System.out.println("Drive Follow| enabling course PIDC");
 		mCoursePID.enable();
 	}
 	
 	private void disablePID() {
-		System.out.println("Auto Runner| disabling course PIDC");
+		System.out.println("Drive Follow| disabling course PIDC");
 		mCoursePID.free();
 	}
 

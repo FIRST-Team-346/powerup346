@@ -8,59 +8,42 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Intake implements Subsystem {
 	
-	private TalonSRX leftIntake, rightIntake;
+	private TalonSRX mLeftIntake, mRightIntake;
 	
-	public enum IntakeMode {
-		FORWARD,
-		REVERSE,
-		OFF;
+	private static Intake sIntakeInstance = new Intake();
+	public static Intake getInstance() {
+		return sIntakeInstance;
 	}
 	
-	private static Intake intakeInstance = new Intake();
 	protected Intake() {
 		this.initTalons();
 	}
 	
-	public static Intake getInstance() {
-		return intakeInstance;
-	}
-	
 	public void initTalons() {
-		this.leftIntake = new TalonSRX(RobotMap.kIntakeLeftPort);
-		this.leftIntake.set(ControlMode.PercentOutput, 0);
-		this.leftIntake.setNeutralMode(NeutralMode.Brake);
+		this.mLeftIntake = new TalonSRX(RobotMap.kIntakeLeftPort);
+		this.mLeftIntake.set(ControlMode.PercentOutput, 0);
+		this.mLeftIntake.setNeutralMode(NeutralMode.Brake);
 		
-		this.rightIntake = new TalonSRX(RobotMap.kIntakeRightPort);
-		this.rightIntake.set(ControlMode.PercentOutput, 0);
-		this.rightIntake.setNeutralMode(NeutralMode.Brake);
+		this.mRightIntake = new TalonSRX(RobotMap.kIntakeRightPort);
+		this.mRightIntake.set(ControlMode.PercentOutput, 0);
+		this.mRightIntake.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void set(IntakeMode _mode) {
-		switch(_mode) {
-			case FORWARD : {
-				this.leftIntake.set(ControlMode.PercentOutput, 1);
-				this.rightIntake.set(ControlMode.PercentOutput, -1);
-			}; break;
-			
-			case REVERSE : {
-				this.leftIntake.set(ControlMode.PercentOutput, -1);
-				this.rightIntake.set(ControlMode.PercentOutput, 1);
-			}; break;
-			
-			default : {
-				this.leftIntake.set(ControlMode.PercentOutput, 0);
-				this.rightIntake.set(ControlMode.PercentOutput, 0);
-			}; break;
-		}
+	public void setLeftSpeed(double _leftSpeed) {
+		this.mLeftIntake.set(ControlMode.PercentOutput, _leftSpeed);
 	}
 
+	public void setRightSpeed(double _rightSpeed) {
+		this.mRightIntake.set(ControlMode.PercentOutput, -(_rightSpeed));
+	}
+	
 	public void disable() {
-		this.leftIntake.set(ControlMode.Disabled, 0);
-		this.rightIntake.set(ControlMode.Disabled, 0);
+		this.mLeftIntake.set(ControlMode.Disabled, 0);
+		this.mRightIntake.set(ControlMode.Disabled, 0);
 	}
 
 	public void publishData() {
-		System.out.println("Left Intake " + this.leftIntake.getMotorOutputVoltage());
-		System.out.println("Right Intake " + this.rightIntake.getMotorOutputVoltage());
+		System.out.println("LeftIntakeVoltage:" + this.mLeftIntake.getMotorOutputVoltage());
+		System.out.println("RightIntakeVoltage:" + this.mRightIntake.getMotorOutputVoltage());
 	}
 }

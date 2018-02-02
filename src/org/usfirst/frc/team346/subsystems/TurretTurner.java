@@ -15,18 +15,20 @@ public class TurretTurner implements Subsystem {
 	private double mTurnerSetpoint;
 	
 	private static TurretTurner sTurretTurnerInstance = new TurretTurner();
-	protected TurretTurner() {
-		initTalon();
-	}
-	
 	public static TurretTurner getInstance() {
 		return sTurretTurnerInstance;
+	}
+	
+	protected TurretTurner() {
+		initTalon();
 	}
 	
 	private void initTalon() {
 		this.mTurner = new TalonSRX(RobotMap.kTurretTurnerPort);
 		this.mTurner.set(ControlMode.MotionMagic, 0);
 		this.mTurner.setNeutralMode(NeutralMode.Brake);
+		this.mTurner.overrideLimitSwitchesEnable(true);
+		this.mTurner.overrideSoftLimitsEnable(true);
 		
 		this.mTurner.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
 		
@@ -57,12 +59,22 @@ public class TurretTurner implements Subsystem {
 		this.mTurner.set(ControlMode.MotionMagic, this.mTurnerSetpoint);
 	}
 	
-	public double getPosition() {
-		return this.mTurner.getSelectedSensorPosition(0);
+	public void setCruiseVelocityRPM(double _rpm) {
+		int lSetpoint = (int)(_rpm *1024./60./10.);
+		this.mTurner.configMotionCruiseVelocity(lSetpoint, 0);
+	}
+	
+	public void setMaxAccelerationRPM(double _rpm) {
+		int lSetpoint = (int)(_rpm *1024./60./10.);
+		this.mTurner.configMotionAcceleration(lSetpoint, 0);
 	}
 	
 	public double getSetpoint() {
 		return this.mTurnerSetpoint;
+	}
+	
+	public double getPosition() {
+		return this.mTurner.getSelectedSensorPosition(0);
 	}
 	
 	public double getVelocity() {
