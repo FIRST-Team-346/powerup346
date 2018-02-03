@@ -53,7 +53,7 @@ public class AutoRunner {
 		}
 		System.out.println("Auto Runner| goal: " + this.mAutoPlan.getGoal());
 		System.out.println("Auto Runner| field layout: " + this.getLayout());
-		this.mAutoPlan.run(this.sRobot);
+		this.mAutoPlan.run(this.sRobot, this.getLayout());
 	}
 	
 	private void complete() {

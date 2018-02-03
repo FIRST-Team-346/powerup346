@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
-public class DriveFollow {
+public class DriveFollowAccelProfile {
 
 	private Robot sRobot;
 	
@@ -22,6 +22,7 @@ public class DriveFollow {
 	private double[] mTime = {0,0,0};
 	private double[] mHeading = {0};
 	private double[] mDistance = {0,0,0};
+	private double[] mVelocity = {0,0,0};
 	
 	private final int TOTAL = 1;
 	private double[] mCourseTraveled = {0,0};
@@ -29,7 +30,7 @@ public class DriveFollow {
 	private double[] mCourseRemaining = {0,0};
 	private double[] mCourseArea = {0,0};
 	
-	private double mVelSetpoint, mDistanceSetpoint;
+	private double mAccelSetpoint, mVelSetpoint, mDistanceSetpoint;
 	private double mLeftVel, mRightVel;
 	
 	private double mStartTime;
@@ -40,7 +41,7 @@ public class DriveFollow {
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
 	 * as well as the correct heading along the course.**/
-	public DriveFollow(Robot _robot) {
+	public DriveFollowAccelProfile(Robot _robot) {
 		sRobot = _robot;
 		mStartTime = System.currentTimeMillis()/1000.;
 		mCountdownStarted = false;
@@ -50,6 +51,7 @@ public class DriveFollow {
 	public void followLine(double _distance) {
 		mDistanceSetpoint = _distance;
 		mVelSetpoint = RobotMap.kDriveFollowVelSetpoint;
+		mAccelSetpoint = RobotMap.kDriveFollowAccelSetpoint;
 		
 		//Zeros the gyro and drive at the beginning of a course and sets "previous" values to startup values.
 		sRobot.zeroDevices();
@@ -77,6 +79,9 @@ public class DriveFollow {
 		
 		mDistance[CURR] = 1./2. * (sRobot.sDrive.getLeftPosition() + sRobot.sDrive.getRightPosition());
 		mDistance[DELTA] = mDistance[CURR] - mDistance[PREV];
+		
+		mVelocity[CURR] = 1./2. * (sRobot.sDrive.getLeftVelocity() + sRobot.sDrive.getRightVelocity());
+		mVelocity[DELTA] = mVelocity[CURR] - mVelocity[PREV];
 		
 		mCourseTraveled[DELTA] = mDistance[DELTA] * Math.cos(Math.toRadians(mHeading[DELTA]));	//course arc-length travelled so far
 		mCourseTraveled[TOTAL] += mCourseTraveled[DELTA];
@@ -152,6 +157,7 @@ public class DriveFollow {
 //		TODO: test mTimePrev = (long)DriverStation.getInstance().getMatchTime();
 		mTime[PREV] = mTime[CURR];
 		mDistance[PREV] = mDistance[CURR];
+		mVelocity[PREV] = mVelocity[CURR];
 	}
 	
 	private void checkCompletion() {
@@ -213,6 +219,10 @@ public class DriveFollow {
 	private void disablePID() {
 		System.out.println("Drive Follow| disabling course PIDC");
 		mCoursePID.free();
+	}
+	
+	private double sigmoid(double _x) {
+		return 1./(1.+Math.pow(Math.E, -_x));
 	}
 	
 	private double reverseSigmoid(double _x) {

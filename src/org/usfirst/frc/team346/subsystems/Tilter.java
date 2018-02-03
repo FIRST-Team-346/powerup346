@@ -44,8 +44,8 @@ public class Tilter implements Subsystem {
 		
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
 		
-		this.mTilter.configMotionAcceleration(RobotMap.kTilterMaxAcceleration, 0);
-		this.mTilter.configMotionCruiseVelocity(RobotMap.kTilterCruiseVelocity, 0);
+		this.mTilter.configMotionAcceleration(RobotMap.kTilterMaxAccelerationRPM, 0);
+		this.mTilter.configMotionCruiseVelocity(RobotMap.kTilterCruiseVelocityRPM, 0);
 	}
 	
 	public void setPos(TiltPos _position) {

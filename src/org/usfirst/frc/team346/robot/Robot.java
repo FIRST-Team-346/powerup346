@@ -41,9 +41,9 @@ public class Robot extends IterativeRobot{
 	}
 	
 	public void robotInit() {
-//		this.sDrive = Drive.getInstance();
-//		this.sGyro = Gyro.getInstance();
-		this.sIntake = Intake.getInstance();
+		this.sDrive = Drive.getInstance();
+		this.sGyro = Gyro.getInstance();
+//		this.sIntake = Intake.getInstance();
 //		this.sTilter = Tilter.getInstance();
 //		this.sShooter = Shooter.getInstance();
 //		this.sClimber = Climber.getInstance();
@@ -64,10 +64,13 @@ public class Robot extends IterativeRobot{
 	}
 
 	public void autonomousPeriodic() {
-//		this.sDrive.publishData();
-//		this.sGyro.publishData();
-//		this.sIntake.publishData();
-//		this.sTurretTilter.publishData();
+		if((int)(System.currentTimeMillis() /1000.) %2 == 0) {
+			this.sDrive.publishData();
+			this.sGyro.publishData();
+//			this.sIntake.publishData();
+//			this.sTilter.publishData();
+//			this.sShooter.publishData();
+		}
 	}
 
 	public void teleopInit() {
@@ -81,19 +84,21 @@ public class Robot extends IterativeRobot{
 	}
 
 	public void teleopPeriodic() {
-//		this.sControlBoard.drive();
+		this.sControlBoard.drive();
 //		this.sControlBoard.checkIntake();
-		this.sControlBoard.checkLoader();
+//		this.sControlBoard.checkLoader();
 //		this.sControlBoard.checkTilter();
 //		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimber();
 		
-//		this.sDrive.publishData();
-//		this.sGyro.publishData();
-//		this.sIntake.publishData();
-//		this.sTurretTilter.publishData();
-//		this.sTurretShooter.publishData();
-//		this.sClimber.publishData();
+		if((int)(System.currentTimeMillis() /1000.) %2 == 0) {
+//			this.sDrive.publishData();
+//			this.sGyro.publishData();
+//			this.sIntake.publishData();
+//			this.sTilter.publishData();
+//			this.sShooter.publishData();
+//			this.sClimber.publishData();	
+		}
 	}
 	
 	public void zeroDevices() {

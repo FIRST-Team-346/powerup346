@@ -19,9 +19,11 @@ public class ControlBoard {
 	
 	private Preferences mPreference;
 	    
+	@SuppressWarnings("unused")
 	private final int LEFT_STICK_X = 0, LEFT_STICK_Y = 1,
 					  RIGHT_STICK_X = 2, RIGHT_STICK_Y = 5,
 					  LEFT_TRIGGER_AXIS = 3, RIGHT_TRIGGER_AXIS = 4;
+	@SuppressWarnings("unused")
 	private final int SQUARE = 1, X = 2, CIRCLE = 3, TRIANGLE = 4,
 					  LEFT_SHOULDER = 5, RIGHT_SHOULDER = 6,
 					  LEFT_TRIGGER_BUTTON = 7, RIGHT_TRIGGER_BUTTON = 8,

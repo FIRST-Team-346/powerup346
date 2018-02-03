@@ -14,7 +14,7 @@ public class Shooter implements Subsystem {
 	private TalonSRX mLeftShooter;
 	private TalonSRX mRightShooter;
 	private double mLeftSetpointRPM, mRightSetpointRPM;
-	private double mLeftMaxAccel, mRightMaxAccel;
+	private double mSecondsFromNeutralToFull = 1.0;
 	
 	private static Shooter sTurretShooterInstance = new Shooter();
 	public static Shooter getInstance() {
@@ -29,18 +29,18 @@ public class Shooter implements Subsystem {
 		this.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
 		this.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
 		
-		this.setRightMaxAccelerationRPM(RobotMap.kShooterRightMaxAcceleration);
-		this.setLeftMaxAccelerationRPM(RobotMap.kShooterLeftMaxAcceleration);
+		this.mLeftShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
+		this.mRightShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 	}
 	
 	private void initTalons() {
-		this.mLeftShooter = new TalonSRX(RobotMap.kTurretShooterLeftPort);
+		this.mLeftShooter = new TalonSRX(RobotMap.kShooterLeftPort);
 		this.mLeftShooter.set(ControlMode.Velocity, 0);
 		this.mLeftShooter.setNeutralMode(NeutralMode.Coast);
 		this.mLeftShooter.overrideLimitSwitchesEnable(true);
 		this.mLeftShooter.overrideSoftLimitsEnable(true);
 		
-		this.mRightShooter = new TalonSRX(RobotMap.kTurretShooterRightPort);
+		this.mRightShooter = new TalonSRX(RobotMap.kShooterRightPort);
 		this.mRightShooter.set(ControlMode.Velocity, 0);
 		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 		this.mRightShooter.overrideLimitSwitchesEnable(true);
@@ -54,14 +54,14 @@ public class Shooter implements Subsystem {
 	
 	private void initPIDs() {
 		this.mLeftShooter.config_kP(0, RobotMap.kShooterLeftP, 0);
-		this.mLeftShooter.config_kI(0, RobotMap.kDriveVelLeftI, 0);
-		this.mLeftShooter.config_kD(0, RobotMap.kDriveVelLeftD, 0);
-		this.mLeftShooter.config_kF(0, RobotMap.kDriveVelLeftF, 0);
+		this.mLeftShooter.config_kI(0, RobotMap.kShooterLeftI, 0);
+		this.mLeftShooter.config_kD(0, RobotMap.kShooterLeftD, 0);
+		this.mLeftShooter.config_kF(0, RobotMap.kShooterLeftF, 0);
 		
-		this.mRightShooter.config_kP(0, RobotMap.kDriveVelRightP, 0);
-		this.mRightShooter.config_kI(0, RobotMap.kDriveVelRightI, 0);
-		this.mRightShooter.config_kD(0, RobotMap.kDriveVelRightD, 0);
-		this.mRightShooter.config_kF(0, RobotMap.kDriveVelRightF, 0);
+		this.mRightShooter.config_kP(0, RobotMap.kShooterRightP, 0);
+		this.mRightShooter.config_kI(0, RobotMap.kShooterRightI, 0);
+		this.mRightShooter.config_kD(0, RobotMap.kShooterRightD, 0);
+		this.mRightShooter.config_kF(0, RobotMap.kShooterRightF, 0);
 	}
 	
 	public void setLeftSetpointRPM(double _rpm) {
@@ -82,16 +82,6 @@ public class Shooter implements Subsystem {
 	public void setOff() {
 		this.mLeftShooter.set(ControlMode.Velocity, 0);
 		this.mRightShooter.set(ControlMode.Velocity, 0);
-	}
-	
-	public void setLeftMaxAccelerationRPM(double _rpmps) {
-		this.mLeftMaxAccel = _rpmps;
-		//TODO: actually use this accel to moderate change in velocity
-	}
-	
-	public void setRightMaxAccelerationRPM(double _rpmps) {
-		this.mRightMaxAccel = _rpmps;
-		//TODO: actually use this accel to moderate change in velocity
 	}
 
 	public void disable() {

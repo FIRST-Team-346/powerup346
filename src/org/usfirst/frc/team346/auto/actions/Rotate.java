@@ -24,18 +24,19 @@ public class Rotate {
 	
 	private DriverStation driverStation = DriverStation.getInstance();
 	
-	public Rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
-		angleSetpoint = _angle;
-		percentSpeed = _percentSpeed;
-		timeOutTime  = _timeOutTime;
-		tolerance = _tolerance;
-		
+	public Rotate() {
 		drive = Drive.getInstance();
 		gyro = Gyro.getInstance();	
 		
 		this.createPID();
 		this.runPID();
-		
+	}
+	
+	public void rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
+		angleSetpoint = _angle;
+		percentSpeed = _percentSpeed;
+		timeOutTime  = _timeOutTime;
+		tolerance = _tolerance;
 	}
 	
 	private void createPID() {

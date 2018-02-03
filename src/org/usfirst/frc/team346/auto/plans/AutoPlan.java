@@ -8,7 +8,7 @@ public class AutoPlan {
 		return "default goal";
 	}
 	
-	public void run(Robot _robot) {
+	public void run(Robot _robot, String _layout) {
 		System.out.println("default run");
 	}
 	

@@ -16,8 +16,8 @@ public class Drive implements Subsystem{
 	private TalonSRX mDriveRightMaster, mDriveRightSlave1, mDriveRightSlave2;
 	
 	private final int PID_VEL = 0, PID_POS = 1;
-	
 	private double mTurn;
+	private double mSecondsFromNeutralToFull = 0.25;
 	
 	public enum DriveMode {
 		PERCENT,
@@ -79,6 +79,11 @@ public class Drive implements Subsystem{
 		
 		this.setLeftMaxVoltage(12.);
 		this.setRightMaxVoltage(12.);
+		
+		this.mDriveLeftMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
+		this.mDriveRightMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
+		this.mDriveLeftMaster.configOpenloopRamp(this.mSecondsFromNeutralToFull, 0);
+		this.mDriveRightMaster.configOpenloopRamp(this.mSecondsFromNeutralToFull, 0);
 	}
 	
 	/**Initializes the encoders on the master CANTalons.**/
@@ -128,7 +133,50 @@ public class Drive implements Subsystem{
 		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
-		this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle + this.mTurn));
+		this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle) + this.mTurn);
+	}
+	
+	public void driveDifferential(DriveMode _mode, double _left, double _right) {
+		if(_mode == DriveMode.VELOCITY) {
+			_left /= 1200.;
+			_right /= 1200.;
+		}
+		
+		int lNotchCount = 3;
+		if(_left >= 0) {
+			_left = (double)((int)((_left * lNotchCount) + 0.5))/lNotchCount;
+		}
+		else if(_left < 0) {
+			_left = (double)((int)((_left * lNotchCount) - 0.5))/lNotchCount;
+		}
+		
+		if(_right >= 0) {
+			_right = (double)((int)((_right * lNotchCount) + 0.5))/lNotchCount;
+		}
+		else if(_right < 0) {
+			_right = (double)((int)((_right * lNotchCount) - 0.5))/lNotchCount;
+		}
+		
+		if(_mode == DriveMode.VELOCITY) {
+			_left *= 1200.;
+			_right *= 1200.;
+		}
+		
+		switch(_mode) {
+			case PERCENT : {
+				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _left);
+				this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_right));
+			}; break;
+		
+			case VELOCITY: {
+				this.mDriveLeftMaster.set(ControlMode.Velocity, _left *1024./60./10.);
+				this.mDriveRightMaster.set(ControlMode.Velocity, -(_right) *1024./60./10.);
+			}; break;
+			
+			default : {
+				System.out.println("Drive command unsuccessful: invalid drive mode specified.");
+			}; break;
+		}
 	}
 	
 	public void setLeftVelocityRPM(double _rpm) {
