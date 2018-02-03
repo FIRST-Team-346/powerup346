@@ -14,7 +14,8 @@ public class ControlBoard {
 	private Joystick mController;
 	private Joystick mButtonBoard;
 	
-	private boolean mThrottleTurnMode = false;
+	private boolean mIsThrottleTurnMode = false;
+	private boolean mIsShooterOn = false;
 	
 	private Preferences mPreference;
 	    
@@ -36,16 +37,11 @@ public class ControlBoard {
 	}
     
 	public void drive() {
-		if(this.mController.getRawButton(LEFT_CLICK)) {
-			if(this.mThrottleTurnMode) {
-				this.mThrottleTurnMode = false;
-			}
-			else {
-				this.mThrottleTurnMode = true;
-			}
+		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
+			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
 		}
 		
-		if(this.mThrottleTurnMode) {
+		if(this.mIsThrottleTurnMode) {
 			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
 		else {
@@ -92,7 +88,25 @@ public class ControlBoard {
 	}
 	
 	public void checkShooter() {
+		if(this.mController.getRawButtonPressed(CIRCLE)) {
+			this.mIsShooterOn = !this.mIsShooterOn;
+		}
 		
+		if(this.mIsShooterOn) {
+			this.sRobot.sShooter.setOn();
+		}
+		else {
+			this.sRobot.sShooter.setOff();
+		}
+	}
+	
+	public void checkClimber() {
+		if(this.mController.getRawButton(TRIANGLE)) {
+			this.sRobot.sClimber.setOn();
+		}
+		else {
+			this.sRobot.sClimber.setOff();
+		}
 	}
 
 }
