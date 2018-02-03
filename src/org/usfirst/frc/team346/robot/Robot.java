@@ -7,7 +7,7 @@ import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
 import org.usfirst.frc.team346.subsystems.Shooter;
-import org.usfirst.frc.team346.subsystems.TurretTilter;
+import org.usfirst.frc.team346.subsystems.Tilter;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,9 +27,9 @@ public class Robot extends IterativeRobot{
 	public Drive sDrive;
 	public Gyro sGyro;
 	public Intake sIntake;
-//	public TurretTilter sTurretTilter;
-//	public TurretShooter sTurretShooter;
-//	public Climber sClimber;
+	public Tilter sTilter;
+	public Shooter sShooter;
+	public Climber sClimber;
 	private Compressor sCompressor;
 	private DriverStation sDriverStation;
 	
@@ -41,16 +41,16 @@ public class Robot extends IterativeRobot{
 	}
 	
 	public void robotInit() {
-		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
+//		this.sDrive = Drive.getInstance();
+//		this.sGyro = Gyro.getInstance();
 		this.sIntake = Intake.getInstance();
-//		this.sTurretTilter = TurretTilter.getInstance();
-//		this.sTurretShooter = TurretShooter.getInstance();
+//		this.sTilter = Tilter.getInstance();
+//		this.sShooter = Shooter.getInstance();
 //		this.sClimber = Climber.getInstance();
 		this.sDriverStation = DriverStation.getInstance();
 		
-		this.sCompressor = new Compressor();
-	    this.sCompressor.start();
+//		this.sCompressor = new Compressor();
+//	    this.sCompressor.start();
 		
 		this.sAutoRunner = new AutoRunner(this);
 		this.sControlBoard = new ControlBoard(this);
@@ -64,32 +64,33 @@ public class Robot extends IterativeRobot{
 	}
 
 	public void autonomousPeriodic() {
-		this.sDrive.publishData();
-		this.sGyro.publishData();
-		this.sIntake.publishData();
+//		this.sDrive.publishData();
+//		this.sGyro.publishData();
+//		this.sIntake.publishData();
 //		this.sTurretTilter.publishData();
 	}
 
 	public void teleopInit() {
 		System.out.println("Teleop Init| begun");
-		this.sCompressor.start();
-		this.zeroDevices();
-		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+//		this.sCompressor.start();
+//		this.zeroDevices();
+//		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
 		
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		System.out.println("Teleop Init| complete");
 	}
 
 	public void teleopPeriodic() {
-		this.sControlBoard.drive();
-		this.sControlBoard.checkIntake();
+//		this.sControlBoard.drive();
+//		this.sControlBoard.checkIntake();
+		this.sControlBoard.checkLoader();
 //		this.sControlBoard.checkTilter();
 //		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimber();
 		
-		this.sDrive.publishData();
-		this.sGyro.publishData();
-		this.sIntake.publishData();
+//		this.sDrive.publishData();
+//		this.sGyro.publishData();
+//		this.sIntake.publishData();
 //		this.sTurretTilter.publishData();
 //		this.sTurretShooter.publishData();
 //		this.sClimber.publishData();

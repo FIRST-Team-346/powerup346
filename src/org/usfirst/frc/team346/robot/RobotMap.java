@@ -22,11 +22,15 @@ public class RobotMap {
 	public static final int kDriveRightSlave1Port = 18;
 	public static final int kDriveRightSlave2Port = 17;
 	
-	public static final int kIntakeLeftPort = 9;
-	public static final int kIntakeRightPort = 20;
+	public static final int kIntakeLeftPort = 21;
+	public static final int kIntakeRightPort = 24;
+	public static final int kLoaderLeftPort = 21;
+	public static final int kLoaderRightPort = 24;
+	public static final int kOuttakeLeftPort = 0;
+	public static final int kOuttakeRightPort = 0;
 	
 	public static final int kTurretTurnerPort = 9;
-	public static final int kTurretTilterPort = 10;
+	public static final int kTilterPort = 10;
 	
 	public static final int kTurretShooterLeftPort = 11;
 	public static final int kTurretShooterRightPort = 12;
@@ -93,8 +97,8 @@ public class RobotMap {
 	public static final int kTurretTurnerCruiseVelocity = 0;
 	public static final int kTurretTurnerMaxAcceleration = 0;
 	
-	public static final int kTurretTilterCruiseVelocity = 0;
-	public static final int kTurretTilterMaxAcceleration = 0;
+	public static final int kTilterCruiseVelocity = 0;
+	public static final int kTilterMaxAcceleration = 0;
 
 	public static final int kShooterLeftCruiseVelocity = 0;
 	public static final int kShooterLeftMaxAcceleration = 0;

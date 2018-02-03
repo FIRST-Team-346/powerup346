@@ -73,10 +73,10 @@ public class Shooter implements Subsystem {
 	}
 	
 	public void setOn() {
-		int lLeftSetpointNU = (int)(this.mLeftSetpointRPM *1024./60./10.);
-		int lRightSetpointNU = (int)(this.mRightSetpointRPM *-1024./60./10.);
-		this.mLeftShooter.set(ControlMode.Velocity, lLeftSetpointNU);
-		this.mRightShooter.set(ControlMode.Velocity, lRightSetpointNU);
+		int lLeftSetpointNu = (int)(this.mLeftSetpointRPM *1024./60./10.);
+		int lRightSetpointNu = (int)(this.mRightSetpointRPM *-1024./60./10.);
+		this.mLeftShooter.set(ControlMode.Velocity, lLeftSetpointNu);
+		this.mRightShooter.set(ControlMode.Velocity, lRightSetpointNu);
 	}
 	
 	public void setOff() {
@@ -84,13 +84,13 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.set(ControlMode.Velocity, 0);
 	}
 	
-	public void setLeftMaxAccelerationRPM(double _rpmm) {
-		this.mLeftMaxAccel = _rpmm;
+	public void setLeftMaxAccelerationRPM(double _rpmps) {
+		this.mLeftMaxAccel = _rpmps;
 		//TODO: actually use this accel to moderate change in velocity
 	}
 	
-	public void setRightMaxAccelerationRPM(double _rpmm) {
-		this.mRightMaxAccel = _rpmm;
+	public void setRightMaxAccelerationRPM(double _rpmps) {
+		this.mRightMaxAccel = _rpmps;
 		//TODO: actually use this accel to moderate change in velocity
 	}
 
@@ -100,8 +100,8 @@ public class Shooter implements Subsystem {
 	}
 
 	public void publishData() {
-		SmartDashboard.putNumber("LeftShooterRPM:", this.mLeftShooter.getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("RightShooterRPM:", this.mRightShooter.getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("LeftShooterRPM", this.mLeftShooter.getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("RightShooterRPM", this.mRightShooter.getSelectedSensorVelocity(0));
 	}
 	
 }
