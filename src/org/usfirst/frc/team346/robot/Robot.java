@@ -43,9 +43,9 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void robotInit() {
-		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
-//		this.sIntake = Intake.getInstance();
+//		this.sDrive = Drive.getInstance();
+//		this.sGyro = Gyro.getInstance();
+		this.sIntake = Intake.getInstance();
 //		this.sTilter = Tilter.getInstance();
 //		this.sShooter = Shooter.getInstance();
 //		this.sClimber = Climber.getInstance();
@@ -84,15 +84,17 @@ public class Robot extends IterativeRobot {
 //		this.sCompressor.start();
 		this.zeroDevices();
 //		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+//		this.sDrive.setNominal(0);
 		
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		System.out.println("Teleop Init| complete");
 	}
 
 	public void teleopPeriodic() {
-		this.sControlBoard.drive();
-//		this.sControlBoard.checkIntake();
+//		this.sControlBoard.drive();
+		this.sControlBoard.checkIntake();
 //		this.sControlBoard.checkLoader();
+//		this.sControlBoard.checkOuttake();
 //		this.sControlBoard.checkTilter();
 //		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimber();
@@ -100,8 +102,8 @@ public class Robot extends IterativeRobot {
 		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
 			this.mPreviousTime = System.currentTimeMillis()/1000.;
 			
-			this.sDrive.publishData();
-			this.sGyro.publishData();
+//			this.sDrive.publishData();
+//			this.sGyro.publishData();
 //			this.sIntake.publishData();
 //			this.sTilter.publishData();
 //			this.sShooter.publishData();
@@ -110,12 +112,12 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void zeroDevices() {
-		this.sGyro.zeroGyro();
-		this.sDrive.zeroEncoders();
+//		this.sGyro.zeroGyro();
+//		this.sDrive.zeroEncoders();
 	}
 	
 	public void zeroGyro() {
-		this.sGyro.zeroGyro();
+//		this.sGyro.zeroGyro();
 	}
 
 }

@@ -77,9 +77,6 @@ public class Drive implements Subsystem{
 		this.mDriveRightSlave2.overrideLimitSwitchesEnable(true);
 		this.mDriveRightSlave2.overrideSoftLimitsEnable(true);
 		
-		this.setLeftMaxVoltage(12.);
-		this.setRightMaxVoltage(12.);
-		
 		this.mDriveLeftMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveRightMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveLeftMaster.configOpenloopRamp(this.mSecondsFromNeutralToFull, 0);
@@ -189,16 +186,6 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.set(ControlMode.Velocity, lSetpoint);
 	}
 	
-	public void setLeftMaxVoltage(double _leftVolt) {
-		this.mDriveLeftMaster.configPeakOutputForward(_leftVolt, 0);
-		this.mDriveLeftMaster.configPeakOutputReverse(-_leftVolt, 0);
-	}
-	
-	public void setRightMaxVoltage(double _rightVolt) {
-		this.mDriveRightMaster.configPeakOutputForward(_rightVolt, 0);
-		this.mDriveRightMaster.configPeakOutputReverse(-_rightVolt, 0);
-	}
-	
 	public void publishData() {
 		this.publishVoltage();
 //		this.publishPercent();
@@ -262,6 +249,13 @@ public class Drive implements Subsystem{
 		return this.mDriveRightMaster.getSelectedSensorPosition(0) /-1024.;
 	}
 	
+	public void setNominal(double _limit){
+		this.mDriveLeftMaster.configNominalOutputForward(_limit, 0);
+		this.mDriveLeftMaster.configNominalOutputReverse(_limit, 0);
+		this.mDriveRightMaster.configNominalOutputForward(_limit, 0);
+		this.mDriveRightMaster.configNominalOutputReverse(_limit, 0);
+	}
+	
 	public void zeroEncoders() {
 		this.mDriveLeftMaster.setSelectedSensorPosition(0, 0, 0);
 		this.mDriveLeftSlave1.setSelectedSensorPosition(0, 0, 0);
@@ -269,6 +263,8 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.setSelectedSensorPosition(0, 0, 0);
 		this.mDriveRightSlave1.setSelectedSensorPosition(0, 0, 0);
 		this.mDriveRightSlave2.setSelectedSensorPosition(0, 0, 0);
+		
+		this.setNominal(0);
 	}
 	
 	public void disable() {

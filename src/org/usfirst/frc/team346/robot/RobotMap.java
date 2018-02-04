@@ -24,15 +24,16 @@ public class RobotMap {
 	public static final int kDriveRightSlave1Port = 5;//18
 	public static final int kDriveRightSlave2Port = 8;//17
 	
-	public static final int kIntakeLeftPort = 21;
-	public static final int kIntakeRightPort = 24;
+	public static final int kIntakeLeftPort = 20;
+	public static final int kIntakeRightPort = 9;
+	
 	public static final int kLoaderLeftPort = 21;
 	public static final int kLoaderRightPort = 24;
+	
 	public static final int kOuttakeLeftPort = 0;
 	public static final int kOuttakeRightPort = 0;
 	
-	public static final int kTurretTurnerPort = 9;
-	public static final int kTilterPort = 10;
+	public static final int kTilterPort = 25;
 	
 	public static final int kShooterLeftPort = 11;
 	public static final int kShooterRightPort = 12;

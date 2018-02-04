@@ -32,21 +32,21 @@ public class Intake implements Subsystem {
 		this.mRightIntake.set(ControlMode.PercentOutput, 0);
 		this.mRightIntake.setNeutralMode(NeutralMode.Brake);
 		
-		this.mLeftLoader = new TalonSRX(RobotMap.kLoaderLeftPort);
-		this.mLeftLoader.set(ControlMode.PercentOutput, 0);
-		this.mLeftLoader.setNeutralMode(NeutralMode.Brake);
-		
-		this.mRightLoader = new TalonSRX(RobotMap.kLoaderRightPort);
-		this.mRightLoader.set(ControlMode.PercentOutput, 0);
-		this.mRightLoader.setNeutralMode(NeutralMode.Brake);
-		
-		this.mLeftOuttake = new TalonSRX(RobotMap.kOuttakeLeftPort);
-		this.mLeftOuttake.set(ControlMode.PercentOutput, 0);
-		this.mLeftOuttake.setNeutralMode(NeutralMode.Brake);
-		
-		this.mRightOuttake = new TalonSRX(RobotMap.kOuttakeRightPort);
-		this.mRightOuttake.set(ControlMode.PercentOutput, 0);
-		this.mRightOuttake.setNeutralMode(NeutralMode.Brake);
+//		this.mLeftLoader = new TalonSRX(RobotMap.kLoaderLeftPort);
+//		this.mLeftLoader.set(ControlMode.PercentOutput, 0);
+//		this.mLeftLoader.setNeutralMode(NeutralMode.Brake);
+//		
+//		this.mRightLoader = new TalonSRX(RobotMap.kLoaderRightPort);
+//		this.mRightLoader.set(ControlMode.PercentOutput, 0);
+//		this.mRightLoader.setNeutralMode(NeutralMode.Brake);
+//		
+//		this.mLeftOuttake = new TalonSRX(RobotMap.kOuttakeLeftPort);
+//		this.mLeftOuttake.set(ControlMode.PercentOutput, 0);
+//		this.mLeftOuttake.setNeutralMode(NeutralMode.Brake);
+//		
+//		this.mRightOuttake = new TalonSRX(RobotMap.kOuttakeRightPort);
+//		this.mRightOuttake.set(ControlMode.PercentOutput, 0);
+//		this.mRightOuttake.setNeutralMode(NeutralMode.Brake);
 	}
 	
 	public void setLeftIntakeSpeed(double _leftSpeed) {

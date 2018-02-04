@@ -16,6 +16,7 @@ public class Tilter implements Subsystem {
 	
 	private double mNativeUnitMin, mNativeUnitMax, mAngleMin, mAngleMax;
 	private double mPrevVel = 0, mPrevAccel = 0, mPrevTime = 0;
+	private final double kCodesPerRev = 4096;
 	
 	public enum TiltPos {
 		SWITCH_CLOSE,
@@ -31,6 +32,7 @@ public class Tilter implements Subsystem {
 	
 	protected Tilter() {
 		initTalon();
+		initPID();
 		
 		this.mPrevTime = System.currentTimeMillis() /1000.;
 	}
@@ -42,37 +44,41 @@ public class Tilter implements Subsystem {
 		this.mTilter.overrideLimitSwitchesEnable(true);
 		this.mTilter.overrideSoftLimitsEnable(true);
 		
-		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 5);
 		
 		this.mTilter.configMotionAcceleration(RobotMap.kTilterMaxAccelerationRPM, 0);
 		this.mTilter.configMotionCruiseVelocity(RobotMap.kTilterCruiseVelocityRPM, 0);
 	}
 	
+	private void initPID() {
+		this.mTilter.config_kF(0, 1023. /(102. *this.kCodesPerRev/60./10.), 0);
+	}
+	
 	public void setPos(TiltPos _position) {
 		switch(_position) {
 			case SWITCH_CLOSE : {
-				this.set(0);
+				this.setSetpointDegrees(0);
 			}; break;
 			
 			case SWITCH_FAR : {
-				this.set(0);
+				this.setSetpointDegrees(0);
 			};  break;
 			
 			case SCALE_CLOSE : {
-				this.set(0);
+				this.setSetpointDegrees(0);
 			}; break;
 			
 			case SCALE_FAR : {
-				this.set(0);
+				this.setSetpointDegrees(0);
 			}; break;
 			
 			default : {
-				this.set(0);
+				this.setSetpointDegrees(0);
 			}; break;
 		}
 	}
 	
-	public void set(double _degrees) {
+	public void setSetpointDegrees(double _degrees) {
 		//TODO: Test
 		if(_degrees < this.mAngleMin) {
 			System.out.println("Set tilter inside (min,max) to avoid unexpected results.");
@@ -93,14 +99,27 @@ public class Tilter implements Subsystem {
 		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
 	}
 	
+	public void setSetpointNu(double _nu) {
+		this.mTilterSetpoint = _nu;
+		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
+	}
+	
 	public void setCruiseVelocityRPM(double _rpm) {
-		int lSetpoint = (int)(_rpm *1024./60./10.);
+		int lSetpoint = (int)(_rpm *this.kCodesPerRev/60./10.);
 		this.mTilter.configMotionCruiseVelocity(lSetpoint, 0);
 	}
 	
-	public void setMaxAccelerationRPM(double _rpm) {
-		int lSetpoint = (int)(_rpm *1024./60./10.);
+	public void setMaxAccelerationRPM(double _rpmPs) {
+		int lSetpoint = (int)(_rpmPs *this.kCodesPerRev/60./10.);
 		this.mTilter.configMotionAcceleration(lSetpoint, 0);
+	}
+	
+	public void setCruiseVelocityNu(int _nu) {
+		this.mTilter.configMotionCruiseVelocity(_nu, 0);
+	}
+	
+	public void setMaxAccelerationNu(int _nuPs) {
+		this.mTilter.configMotionAcceleration(_nuPs, 0);
 	}
 	
 	public double getSetpoint() {
