@@ -9,12 +9,12 @@ public class AutoPlan {
 	}
 	
 	public void run(Robot _robot, String _layout) {
-		System.out.println("default run");
+		System.out.println("default run; check that your run takes the _layout parameter");
 	}
 	
 	public void waitTime(double _seconds) {
 		long initialTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000) {
+		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000.) {
 		}
 	}
 	

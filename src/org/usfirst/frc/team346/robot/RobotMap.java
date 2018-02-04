@@ -10,7 +10,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new Test();
+	public static final AutoPlan kAutoPlan = new DriveFollowTest();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -78,8 +78,8 @@ public class RobotMap {
 	public static final double kDriveFollowF = 0;
 
 	public static final double kDriveFollowErrorScalerMultiplier = 10.;
-	public static final double kDriveFollowErrorScalerDivider = 0.35;
-	public static final double kDriveFollowVelSetpoint = 0.6 * 1200.;
+	public static final double kDriveFollowErrorScalerDivider = 0.5;
+	public static final double kDriveFollowVelSetpoint = 0.8 * 1200.;
 	public static final double kDriveFollowAccelSetpoint = 0.;
 	public static final double kDriveFollowUpdateRate = 0.05;
 	

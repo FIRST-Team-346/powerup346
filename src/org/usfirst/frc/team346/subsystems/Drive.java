@@ -88,9 +88,9 @@ public class Drive implements Subsystem{
 	
 	/**Initializes the encoders on the master CANTalons.**/
 	private void initEncoders() {
-		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
 		
-		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
 	}
 	
 	/**Initializes the PID values on the master encoders.**/
@@ -115,7 +115,7 @@ public class Drive implements Subsystem{
 		
 			case VELOCITY: {
 				this.setLeftVelocityRPM(_left);
-				this.setLeftVelocityRPM(_right);
+				this.setRightVelocityRPM(_right);
 			}; break;
 			
 			case POSITION : {

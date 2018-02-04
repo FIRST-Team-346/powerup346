@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.properties file in the
  * project.
  */
-public class Robot extends IterativeRobot{
+public class Robot extends IterativeRobot {
 	
 	public Drive sDrive;
 	public Gyro sGyro;
@@ -35,6 +35,8 @@ public class Robot extends IterativeRobot{
 	
 	private AutoRunner sAutoRunner;
 	private ControlBoard sControlBoard;
+	
+	private double mPreviousTime;
 	
 	public Robot() {
 		this.robotInit();
@@ -54,6 +56,8 @@ public class Robot extends IterativeRobot{
 		
 		this.sAutoRunner = new AutoRunner(this);
 		this.sControlBoard = new ControlBoard(this);
+		
+		this.mPreviousTime = System.currentTimeMillis()/1000.;
 	}
 	
 	public void autonomousInit() {
@@ -64,7 +68,9 @@ public class Robot extends IterativeRobot{
 	}
 
 	public void autonomousPeriodic() {
-		if((int)(System.currentTimeMillis() /1000.) %2 == 0) {
+		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
+			this.mPreviousTime = System.currentTimeMillis()/1000.;
+			
 			this.sDrive.publishData();
 			this.sGyro.publishData();
 //			this.sIntake.publishData();
@@ -76,7 +82,7 @@ public class Robot extends IterativeRobot{
 	public void teleopInit() {
 		System.out.println("Teleop Init| begun");
 //		this.sCompressor.start();
-//		this.zeroDevices();
+		this.zeroDevices();
 //		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
 		
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
@@ -91,9 +97,11 @@ public class Robot extends IterativeRobot{
 //		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimber();
 		
-		if((int)(System.currentTimeMillis() /1000.) %2 == 0) {
-//			this.sDrive.publishData();
-//			this.sGyro.publishData();
+		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
+			this.mPreviousTime = System.currentTimeMillis()/1000.;
+			
+			this.sDrive.publishData();
+			this.sGyro.publishData();
 //			this.sIntake.publishData();
 //			this.sTilter.publishData();
 //			this.sShooter.publishData();

@@ -22,6 +22,7 @@ public class DriveFollow {
 	private double[] mTime = {0,0,0};
 	private double[] mHeading = {0};
 	private double[] mDistance = {0,0,0};
+	private double[] mVelocity = {0,0,0};
 	
 	private final int TOTAL = 1;
 	private double[] mCourseTraveled = {0,0};
@@ -32,6 +33,10 @@ public class DriveFollow {
 	private double mVelSetpoint, mDistanceSetpoint;
 	private double mLeftVel, mRightVel;
 	
+	private final double kTimeOutSeconds = 10.;
+	private final double kThresholdSeconds = 0.25;
+	private final double kThresholdFeet = 0.5;
+	private final double kThresholdRPM = 50;
 	private double mStartTime;
 	private double mCountdown;
 	private boolean mCountdownStarted;
@@ -63,9 +68,19 @@ public class DriveFollow {
 	/**This method is run every cycle, calculating the error and adjusting the drive accordingly.**/
 	public void updateCycle(double _courseOutput) {
 		updateStart();
-		setDriveToFollow(_courseOutput);
+		
+		double lSigmoidOutput = reverseModSigmoid(mDistanceSetpoint, mCourseTraveled[TOTAL]);
+		
+//		setDriveToFollow(_courseOutput);
+		setDriveToFollow(lSigmoidOutput);
+		
 		updateFinal();
-		checkCompletion();
+		checkDisabled();
+		
+		if(mCourseRemaining[TOTAL] < mDistanceSetpoint /2.) {
+//			checkCompletion();
+			checkCompletionVelocity();	
+		}
 	}
 	
 	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.**/
@@ -77,6 +92,9 @@ public class DriveFollow {
 		
 		mDistance[CURR] = 1./2. * (sRobot.sDrive.getLeftPosition() + sRobot.sDrive.getRightPosition());
 		mDistance[DELTA] = mDistance[CURR] - mDistance[PREV];
+		
+		mVelocity[CURR] = 1./2. * (sRobot.sDrive.getLeftVelocity() + sRobot.sDrive.getRightPosition());
+		mVelocity[DELTA] = mVelocity[CURR] - mVelocity[PREV];
 		
 		mCourseTraveled[DELTA] = mDistance[DELTA] * Math.cos(Math.toRadians(mHeading[DELTA]));	//course arc-length travelled so far
 		mCourseTraveled[TOTAL] += mCourseTraveled[DELTA];
@@ -90,12 +108,12 @@ public class DriveFollow {
 		mCourseRemaining[TOTAL] = mDistanceSetpoint - mCourseTraveled[TOTAL];
 		
 		mPrintCount++;
-		if(mPrintCount == 0.5/RobotMap.kDriveFollowUpdateRate) {
-			System.out.println("lD:" + sRobot.sDrive.getLeftPosition() + " rD:" + sRobot.sDrive.getRightPosition() + " cD:" + mDistance[CURR]);
-			System.out.println("dT:" + mTime[DELTA] + " dH:" + mHeading[DELTA] + " dD:" + mDistance[DELTA]);
-			System.out.println("cT:" + mCourseTraveled[TOTAL] + " cE:" + mCourseError[TOTAL] + " cR:" + mCourseRemaining[TOTAL]);
+		if(mPrintCount == 0.25/RobotMap.kDriveFollowUpdateRate) {
+//			System.out.println("lD:" + sRobot.sDrive.getLeftPosition() + " rD:" + sRobot.sDrive.getRightPosition() + " cD:" + mDistance[CURR]);
+			System.out.println("dT:" + mTime[DELTA] + " dH:" + mHeading[DELTA] + " cD:" + mDistance[CURR] + " cV:" + mVelocity[CURR]);
+			System.out.println("acT:" + mCourseTraveled[TOTAL] + " ccE:" + mCourseError[TOTAL] + " acR:" + mCourseRemaining[TOTAL]);
 		}
-		else if(mPrintCount > 0.5/RobotMap.kDriveFollowUpdateRate) {
+		else if(mPrintCount > 0.25/RobotMap.kDriveFollowUpdateRate) {
 			mPrintCount = 0;
 		}
 	}
@@ -125,7 +143,7 @@ public class DriveFollow {
 			else if(mCourseError[TOTAL] < 0) {
 //				mLeftVel = _courseOutput * mVelSetpoint - mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
 				mLeftVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
-				mRightVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(mCourseError[TOTAL]));
+//				mRightVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(mCourseError[TOTAL]));
 			}
 		}
 		else if(_courseOutput < 0) {
@@ -137,12 +155,17 @@ public class DriveFollow {
 			else if(mCourseError[TOTAL] < 0) {
 //				mLeftVel = _courseOutput * mVelSetpoint + mCourseError[TOTAL]/mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
 				mLeftVel = _courseOutput * mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(mCourseError[TOTAL])));
-				mRightVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(mCourseError[TOTAL]));
+//				mRightVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(mCourseError[TOTAL]));
 			}
 		}
 		
-		if(mPrintCount == 0.5/RobotMap.kDriveFollowUpdateRate) {
-			System.out.println("lV:" + mLeftVel + " rV:" + mRightVel + "\n");
+		if(mCountdownStarted) {
+			mLeftVel = 0.;
+			mRightVel = 0.;
+		}
+		
+		if(mPrintCount == 0.25/RobotMap.kDriveFollowUpdateRate) {
+			System.out.println("pidOP:" + _courseOutput + " lV:" + mLeftVel + " rV:" + mRightVel);
 		}
 		sRobot.sDrive.drive(DriveMode.VELOCITY, mLeftVel, mRightVel);
 	}
@@ -155,25 +178,62 @@ public class DriveFollow {
 	}
 	
 	private void checkCompletion() {
-		if(System.currentTimeMillis()/1000. - mStartTime > 10. || DriverStation.getInstance().isDisabled()) {
-			System.out.println("Drive Follow| timeout");
-			disablePID();
-			setDriveToFollow(0);
-		}
-		else if(Math.abs(mDistanceSetpoint - mCourseTraveled[TOTAL]) < 0.5) {
+		checkDisabled();
+		if(Math.abs(mDistanceSetpoint - mCourseTraveled[TOTAL]) < kThresholdFeet) {
 			if(!mCountdownStarted) {
 				System.out.println("Countdown started");
 				mCountdown = System.currentTimeMillis()/1000.;
 				mCountdownStarted = true;
 			}
-			if(System.currentTimeMillis()/1000. - mCountdown > 0.25) {
+			if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
 				System.out.println("Drive Follow| complete");
 				disablePID();
 				setDriveToFollow(0);
+				
+				//TODO delete this after test
+				long initialTime = System.currentTimeMillis();
+				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
+				}
+				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
 			}
 		}
-		else if(System.currentTimeMillis()/1000. - mCountdown > 0.25) {
+		else if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
 			mCountdownStarted = false;
+		}
+	}
+	
+	private void checkCompletionVelocity() {
+		checkDisabled();
+		if(Math.abs(mVelocity[CURR]) < kThresholdRPM) {
+			if(!mCountdownStarted) {
+				System.out.println("Velocity countdown started");
+				mCountdown = System.currentTimeMillis()/1000.;
+				mCountdownStarted = true;
+			}
+			if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
+				System.out.println("Drive Follow| complete");
+				disablePID();
+				setDriveToFollow(0);
+				
+				//TODO delete this after test
+				long initialTime = System.currentTimeMillis();
+				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
+				}
+				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
+			}
+		}
+		else if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
+			System.out.println("Velocity countdown aborted");
+			mCountdown = System.currentTimeMillis()/1000.;
+			mCountdownStarted = false;
+		}
+	}
+	
+	private void checkDisabled() {
+		if(System.currentTimeMillis()/1000. - mStartTime > kTimeOutSeconds || DriverStation.getInstance().isDisabled()) {
+			System.out.println("Drive Follow| timeout");
+			disablePID();
+			setDriveToFollow(0);
 		}
 	}
 	
@@ -216,7 +276,13 @@ public class DriveFollow {
 	}
 	
 	private double reverseSigmoid(double _x) {
-		return 1./(1.+Math.pow(Math.E, _x));
+		return 1. /(1. + Math.pow(Math.E, _x ));
+	}
+	
+	private double reverseModSigmoid(double _width, double _x) {
+		double lWidthScaler = 12. /_width;
+		double lTranslator = _width /2.;
+		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x - lTranslator) ));
 	}
 
 }
