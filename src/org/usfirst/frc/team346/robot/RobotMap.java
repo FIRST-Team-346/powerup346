@@ -17,37 +17,50 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 1;//27
-	public static final int kDriveLeftSlave1Port = 2;//13
-	public static final int kDriveLeftSlave2Port = 4;//7
-	public static final int kDriveRightMasterPort = 3;//26
-	public static final int kDriveRightSlave1Port = 5;//18
-	public static final int kDriveRightSlave2Port = 8;//17
+	public static final int kDriveLeftMasterPort = 27;			//27-01
+	public static final int kDriveLeftSlave1Port = 13;			//13-02
+	public static final int kDriveLeftSlave2Port = 7;			//07-04
+	public static final int kDriveRightMasterPort = 26;			//26-03
+	public static final int kDriveRightSlave1Port = 18;			//18-05
+	public static final int kDriveRightSlave2Port = 17;			//17-08
 	
-	public static final int kIntakeLeftPort = 20;
-	public static final int kIntakeRightPort = 9;
+	public static final int kIntakeLeftPort = 20;				//20-
+	public static final int kIntakeRightPort = 41;				//41-
 	
-	public static final int kLoaderLeftPort = 21;
-	public static final int kLoaderRightPort = 24;
+	public static final int kLoaderLeftPort = 15;				//15-
+	public static final int kLoaderRightPort = 19;				//19-
 	
-	public static final int kOuttakeLeftPort = 0;
-	public static final int kOuttakeRightPort = 0;
+	public static final int kOuttakeLeftPort = 23;				//23-
+	public static final int kOuttakeRightPort = 14;				//14-
 	
-	public static final int kTilterPort = 25;
+	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 11;
-	public static final int kShooterRightPort = 12;
+	public static final int kShooterLeftPort = 24;				//24-
+	public static final int kShooterRightPort = 9;				//09-
 	
-	public static final int kClimberPort = 13;
+	public static final int kClimberPort = 0;					//
 	
-//	CONTROLLER PORTS/BUTTONS--------------------------------------------------------
+	public static final int kShooterBlockForwardAirPort = 0;
+	public static final int kShooterBlockReverseAirPort = 0;
+	
+//	;CONTROLLER PORTS/BUTTONS--------------------------------------------------------
 	
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
 	public static final double kThrottleTurnRotationStrength = 0.8;
 	
-	public static final int kIntakeForwardButton = 0;
-	public static final int kIntakeReverseButton = 0;
+	public static final int kButton1 = 1;
+	public static final int kButton2 = 2;
+	public static final int kButton3 = 3;
+	public static final int kButton4 = 4;
+	public static final int kButton5 = 5;
+	public static final int kButton6 = 6;
+	public static final int kButton7 = 7;
+	public static final int kButton8 = 8;
+	public static final int kButton9 = 9;
+	public static final int kButton10 = 10;
+	public static final int kButton11 = 11;
+	public static final int kButton12 = 12;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	

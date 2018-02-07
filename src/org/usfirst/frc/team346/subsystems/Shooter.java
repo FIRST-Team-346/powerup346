@@ -83,6 +83,14 @@ public class Shooter implements Subsystem {
 		this.mLeftShooter.set(ControlMode.Velocity, 0);
 		this.mRightShooter.set(ControlMode.Velocity, 0);
 	}
+	
+	public void setLeftPercent(double _percent) {
+		this.mLeftShooter.set(ControlMode.PercentOutput, _percent);
+	}
+	
+	public void setRightPercent(double _percent) {
+		this.mRightShooter.set(ControlMode.PercentOutput, -_percent);
+	}
 
 	public void disable() {
 		this.mLeftShooter.set(ControlMode.Disabled, 0);

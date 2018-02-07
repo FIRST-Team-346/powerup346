@@ -6,7 +6,10 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
+import org.usfirst.frc.team346.subsystems.Loader;
+import org.usfirst.frc.team346.subsystems.Outtake;
 import org.usfirst.frc.team346.subsystems.Shooter;
+import org.usfirst.frc.team346.subsystems.ShooterBlock;
 import org.usfirst.frc.team346.subsystems.Tilter;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -27,8 +30,11 @@ public class Robot extends IterativeRobot {
 	public Drive sDrive;
 	public Gyro sGyro;
 	public Intake sIntake;
+	public Outtake sOuttake;
+	public Loader sLoader;
 	public Tilter sTilter;
 	public Shooter sShooter;
+//	public ShooterBlock sShooterBlock;
 	public Climber sClimber;
 	private Compressor sCompressor;
 	private DriverStation sDriverStation;
@@ -43,11 +49,14 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void robotInit() {
-//		this.sDrive = Drive.getInstance();
+		this.sDrive = Drive.getInstance();
 //		this.sGyro = Gyro.getInstance();
 		this.sIntake = Intake.getInstance();
-//		this.sTilter = Tilter.getInstance();
-//		this.sShooter = Shooter.getInstance();
+		this.sOuttake = Outtake.getInstance();
+		this.sLoader = Loader.getInstance();
+		this.sTilter = Tilter.getInstance();
+		this.sShooter = Shooter.getInstance();
+//		this.sShooterBlock = ShooterBlock.getInstance();
 //		this.sClimber = Climber.getInstance();
 		this.sDriverStation = DriverStation.getInstance();
 		
@@ -91,12 +100,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-//		this.sControlBoard.drive();
+		this.sControlBoard.drive();
 		this.sControlBoard.checkIntake();
-//		this.sControlBoard.checkLoader();
-//		this.sControlBoard.checkOuttake();
-//		this.sControlBoard.checkTilter();
-//		this.sControlBoard.checkShooter();
+		this.sControlBoard.checkLoader();
+		this.sControlBoard.checkOuttake();
+		this.sControlBoard.checkTilter();
+		this.sControlBoard.checkShooter();
+//		this.sControlBoard.checkShooterBlock();
 //		this.sControlBoard.checkClimber();
 		
 		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
@@ -105,11 +115,16 @@ public class Robot extends IterativeRobot {
 //			this.sDrive.publishData();
 //			this.sGyro.publishData();
 //			this.sIntake.publishData();
-//			this.sTilter.publishData();
+			this.sTilter.publishData();
 //			this.sShooter.publishData();
 //			this.sClimber.publishData();	
 		}
 	}
+	
+	  public void disabledPeriodic() {
+		  this.sControlBoard.disableLocks();
+	  }
+
 	
 	public void zeroDevices() {
 //		this.sGyro.zeroGyro();

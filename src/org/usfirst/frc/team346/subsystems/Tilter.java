@@ -14,11 +14,13 @@ public class Tilter implements Subsystem {
 	private TalonSRX mTilter;
 	private double mTilterSetpoint;
 	
-	private double mNativeUnitMin, mNativeUnitMax, mAngleMin, mAngleMax;
+	private double mNativeUnitMin = 2611, mNativeUnitMax = 2874, mAngleMin, mAngleMax;
 	private double mPrevVel = 0, mPrevAccel = 0, mPrevTime = 0;
-	private final double kCodesPerRev = 4096;
+	private final double kCodesPerRev = 1024;
+	private double mMaxVel = 50, mMaxAccel = 100;
 	
 	public enum TiltPos {
+		NEUTRAL,
 		SWITCH_CLOSE,
 		SWITCH_FAR,
 		SCALE_CLOSE,
@@ -44,36 +46,47 @@ public class Tilter implements Subsystem {
 		this.mTilter.overrideLimitSwitchesEnable(true);
 		this.mTilter.overrideSoftLimitsEnable(true);
 		
-		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 5);
+		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
+		this.mTilter.setInverted(true);
 		
 		this.mTilter.configMotionAcceleration(RobotMap.kTilterMaxAccelerationRPM, 0);
 		this.mTilter.configMotionCruiseVelocity(RobotMap.kTilterCruiseVelocityRPM, 0);
 	}
 	
 	private void initPID() {
-		this.mTilter.config_kF(0, 1023. /(102. *this.kCodesPerRev/60./10.), 0);
+		this.mTilter.config_kP(0, 0.5, 0);
+		this.mTilter.config_kF(0, 1023./(102.*this.kCodesPerRev/60./10.), 0);
+	}
+	
+	public void setMotorPercent(double _percent) {
+		this.mTilter.set(ControlMode.PercentOutput, _percent);
 	}
 	
 	public void setPos(TiltPos _position) {
 		switch(_position) {
 			case SWITCH_CLOSE : {
 				this.setSetpointDegrees(0);
+				this.setSetpointNu(0);
 			}; break;
 			
 			case SWITCH_FAR : {
 				this.setSetpointDegrees(0);
+				this.setSetpointNu(0);
 			};  break;
 			
 			case SCALE_CLOSE : {
 				this.setSetpointDegrees(0);
+				this.setSetpointNu(0);
 			}; break;
 			
 			case SCALE_FAR : {
 				this.setSetpointDegrees(0);
+				this.setSetpointNu(0);
 			}; break;
 			
 			default : {
 				this.setSetpointDegrees(0);
+				this.setSetpointNu(0);
 			}; break;
 		}
 	}
@@ -134,6 +147,24 @@ public class Tilter implements Subsystem {
 		return this.mTilter.getSelectedSensorVelocity(0);
 	}
 	
+	public double getMaxVel() {
+		double lCurrentVel = this.getVelocity();
+		
+		if(Math.abs(lCurrentVel) > Math.abs(this.mMaxVel)) {
+			this.mMaxVel = Math.abs(lCurrentVel);
+		}
+		return this.mMaxVel;
+	}
+	
+	public double getMaxAccel() {
+		double lCurrentAccel = this.getAcceleration();
+		
+		if(Math.abs(lCurrentAccel) > Math.abs(this.mMaxAccel)) {
+			this.mMaxAccel = Math.abs(lCurrentAccel);
+		}
+		return this.mMaxAccel;
+	}
+	
 	public double getAcceleration() {
 		//TODO: check
 		double lAccel = this.mPrevAccel;
@@ -146,14 +177,14 @@ public class Tilter implements Subsystem {
 		return lAccel;
 	}
 
-	public void disable() {
-		this.mTilter.set(ControlMode.Disabled, 0);
-	}
-
 	public void publishData() {
 		SmartDashboard.putNumber("TilterPosition", this.getPosition());
 		SmartDashboard.putNumber("TilterVelocity", this.getVelocity());
 		SmartDashboard.putNumber("TilterAcceleration", this.getAcceleration());
+	}
+	
+	public void disable() {
+		this.mTilter.set(ControlMode.Disabled, 0);
 	}
 	
 }
