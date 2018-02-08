@@ -17,7 +17,7 @@ public class Tilter implements Subsystem {
 	private double mNativeUnitMin = 2611, mNativeUnitMax = 2874, mAngleMin, mAngleMax;
 	private double mPrevVel = 0, mPrevAccel = 0, mPrevTime = 0;
 	private final double kCodesPerRev = 1024;
-	private double mMaxVel = 50, mMaxAccel = 100;
+	private double mMaxVel = 83, mMaxAccel = 100;
 	
 	public enum TiltPos {
 		NEUTRAL,
@@ -48,14 +48,22 @@ public class Tilter implements Subsystem {
 		
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
 		this.mTilter.setInverted(true);
+		this.mTilter.setSensorPhase(true);
 		
 		this.mTilter.configMotionAcceleration(RobotMap.kTilterMaxAccelerationRPM, 0);
 		this.mTilter.configMotionCruiseVelocity(RobotMap.kTilterCruiseVelocityRPM, 0);
 	}
 	
 	private void initPID() {
-		this.mTilter.config_kP(0, 0.5, 0);
-		this.mTilter.config_kF(0, 1023./(102.*this.kCodesPerRev/60./10.), 0);
+		this.mTilter.config_kP(0, 9, 0);
+		this.mTilter.config_kF(0, 1023./(this.mMaxVel), 0);
+	}
+	
+	public void setPID(double _P, double _I, double _D) {
+		this.mTilter.config_kP(0, _P, 0);
+		this.mTilter.config_kI(0, _I, 0);
+		this.mTilter.config_kD(0, _D, 0);
+		this.mTilter.config_kF(0, 1023./(this.mMaxVel), 0);
 	}
 	
 	public void setMotorPercent(double _percent) {
@@ -181,6 +189,7 @@ public class Tilter implements Subsystem {
 		SmartDashboard.putNumber("TilterPosition", this.getPosition());
 		SmartDashboard.putNumber("TilterVelocity", this.getVelocity());
 		SmartDashboard.putNumber("TilterAcceleration", this.getAcceleration());
+//		System.out.println(this.getMaxVel());
 	}
 	
 	public void disable() {

@@ -18,7 +18,7 @@ public class ControlBoard {
 	private boolean mIsThrottleTurnMode = false;
 	private boolean mIsShooterOn = false;
 	
-	private Preferences mPreference;
+	private Preferences pref;
 	private DriverStation mDriverStation;
 	    
 	@SuppressWarnings("unused")
@@ -37,7 +37,7 @@ public class ControlBoard {
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
 		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
 		
-		this.mPreference = Preferences.getInstance();
+		this.pref = Preferences.getInstance();
 		this.mDriverStation = DriverStation.getInstance();
 	}
     
@@ -53,7 +53,7 @@ public class ControlBoard {
 			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 //			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*1200, -this.mController.getRawAxis(RIGHT_STICK_Y)*1200);
 //			this.sRobot.sDrive.driveDifferential(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-//			this.sRobot.sDrive.drive(DriveMode.PERCENT, this.mPreference.getDouble("minVL", 0), -this.mPreference.getDouble("minVL", 0));
+//			this.sRobot.sDrive.drive(DriveMode.PERCENT, this.pref.getDouble("minVL", 0), -this.pref.getDouble("minVL", 0));
 		}
 	}
     
@@ -79,16 +79,25 @@ public class ControlBoard {
 //    	}
 		
 		if(this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
-			this.sRobot.sIntake.setLeftIntakeSpeed(0.75);
-			this.sRobot.sIntake.setRightIntakeSpeed(0.75);
+			this.sRobot.sIntake.setLeftIntakeSpeed(0.25);
+			this.sRobot.sIntake.setRightIntakeSpeed(0.25);
+			this.sRobot.sLoader.setLeftLoaderSpeed(.5);
+			this.sRobot.sLoader.setRightLoaderSpeed(.5);
+			this.sRobot.sShooter.setLeftPercent(-0.1);
+			this.sRobot.sShooter.setRightPercent(-0.1);
+			
 		}
 		else if(this.mController.getRawButton(LEFT_SHOULDER)) {
 			this.sRobot.sIntake.setLeftIntakeSpeed(-0.75);
 			this.sRobot.sIntake.setRightIntakeSpeed(-0.75);
+			this.sRobot.sLoader.setLeftLoaderSpeed(1.0);
+			this.sRobot.sLoader.setRightLoaderSpeed(1.0);
 		}
 		else {
 			this.sRobot.sIntake.setLeftIntakeSpeed(0.0);
 			this.sRobot.sIntake.setRightIntakeSpeed(0.0);
+			this.sRobot.sLoader.setLeftLoaderSpeed(0.0);
+			this.sRobot.sLoader.setRightLoaderSpeed(0.0);
     	}
     }
 	
@@ -102,8 +111,8 @@ public class ControlBoard {
 			this.sRobot.sLoader.setRightLoaderSpeed(1.0);
 		}
 		else {
-			this.sRobot.sLoader.setLeftLoaderSpeed(0.0);
-			this.sRobot.sLoader.setRightLoaderSpeed(0.0);
+//			this.sRobot.sLoader.setLeftLoaderSpeed(0.0);
+//			this.sRobot.sLoader.setRightLoaderSpeed(0.0);
 		}
 	}
 	
@@ -131,16 +140,24 @@ public class ControlBoard {
 //		}
 		
 		if(this.mController.getPOV(0) == 0) {
-			this.sRobot.sTilter.setSetpointNu(this.mPreference.getDouble("tiltPosNu", 0));
-			this.sRobot.sTilter.setCruiseVelocityNu(this.mPreference.getInt("tiltVelNu", 0));
-			this.sRobot.sTilter.setMaxAccelerationNu(this.mPreference.getInt("tiltAccelNu", 0));
+			this.sRobot.sTilter.setSetpointNu(this.pref.getDouble("tiltPosNu", 0));
+			this.sRobot.sTilter.setCruiseVelocityNu(this.pref.getInt("tiltVelNu", 0));
+			this.sRobot.sTilter.setMaxAccelerationNu(this.pref.getInt("tiltAccelNu", 0));
+			this.sRobot.sTilter.setPID(this.pref.getDouble("tiltP", 0), this.pref.getDouble("tiltI", 0), this.pref.getDouble("tiltD", 0));
+		}
+		else if(this.mController.getPOV(0)==180) {
+			this.sRobot.sTilter.setSetpointNu(540);
+			this.sRobot.sTilter.setCruiseVelocityNu(this.pref.getInt("tiltVelNu", 0));
+			this.sRobot.sTilter.setMaxAccelerationNu(this.pref.getInt("tiltAccelNu", 0));
+			this.sRobot.sTilter.setPID(this.pref.getDouble("tiltP", 0), this.pref.getDouble("tiltI", 0), this.pref.getDouble("tiltD", 0));
 		}
 		else {
 		
 			if(this.mController.getRawButton(SELECT)) {
-				this.sRobot.sTilter.setMotorPercent(-0.4);
+				this.sRobot.sTilter.setMotorPercent(-1);
 			}
 			else if(this.mController.getRawButton(START)) {
+				this.sRobot.sTilter.setMotorPercent(1);
 			}
 			else {
 				this.sRobot.sTilter.setMotorPercent(0.0);
@@ -159,13 +176,15 @@ public class ControlBoard {
 			this.sRobot.sShooter.setRightPercent(1.0);
 		}
 		else if(this.mController.getRawButton(SQUARE)) {
-			this.sRobot.sShooter.setLeftPercent(-0.25);
-			this.sRobot.sShooter.setRightPercent(-0.25);
+			this.sRobot.sShooter.setLeftPercent(-0.5);
+			this.sRobot.sShooter.setRightPercent(-0.5);
 		}
 		else {
-//			this.sRobot.sShooter.setOff();
+//			thi.sRobot.sShooter.setOff();
+			if(!this.mController.getRawButton(LEFT_TRIGGER_BUTTON)){
 			this.sRobot.sShooter.setLeftPercent(0.0);
 			this.sRobot.sShooter.setRightPercent(0.0);
+			}
 		}
 	}
 	
