@@ -31,12 +31,20 @@ public class Intake implements Subsystem {
 		this.mRightIntake.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void setLeftIntakeSpeed(double _leftSpeed) {
+	public void setLeftIntakeSpeedIn(double _leftSpeed) {
+		this.mLeftIntake.set(ControlMode.PercentOutput, -_leftSpeed);
+	}
+
+	public void setRightIntakeSpeedIn(double _rightSpeed) {
+		this.mRightIntake.set(ControlMode.PercentOutput, _rightSpeed);
+	}
+	
+	public void setLeftIntakeSpeedOut(double _leftSpeed) {
 		this.mLeftIntake.set(ControlMode.PercentOutput, _leftSpeed);
 	}
 
-	public void setRightIntakeSpeed(double _rightSpeed) {
-		this.mRightIntake.set(ControlMode.PercentOutput, -(_rightSpeed));
+	public void setRightIntakeSpeedOut(double _rightSpeed) {
+		this.mRightIntake.set(ControlMode.PercentOutput, -_rightSpeed);
 	}
 	
 	public void disable() {

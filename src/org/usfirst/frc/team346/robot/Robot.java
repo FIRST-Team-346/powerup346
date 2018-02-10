@@ -9,13 +9,11 @@ import org.usfirst.frc.team346.subsystems.Intake;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
 import org.usfirst.frc.team346.subsystems.Shooter;
-import org.usfirst.frc.team346.subsystems.ShooterBlock;
 import org.usfirst.frc.team346.subsystems.Tilter;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -34,15 +32,17 @@ public class Robot extends IterativeRobot {
 	public Loader sLoader;
 	public Tilter sTilter;
 	public Shooter sShooter;
-//	public ShooterBlock sShooterBlock;
 	public Climber sClimber;
+	
+	@SuppressWarnings("unused")
 	private Compressor sCompressor;
 	private DriverStation sDriverStation;
 	
-	private AutoRunner sAutoRunner;
 	private ControlBoard sControlBoard;
+	private AutoRunner sAutoRunner;
 	
 	private double mPreviousTime;
+	private final double kUpdateRateMillis = 100;
 	
 	public Robot() {
 		this.robotInit();
@@ -50,52 +50,45 @@ public class Robot extends IterativeRobot {
 	
 	public void robotInit() {
 		this.sDrive = Drive.getInstance();
-//		this.sGyro = Gyro.getInstance();
+		this.sGyro = Gyro.getInstance();
+		
 		this.sIntake = Intake.getInstance();
 		this.sOuttake = Outtake.getInstance();
 		this.sLoader = Loader.getInstance();
+		
 		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
-//		this.sShooterBlock = ShooterBlock.getInstance();
+		
 //		this.sClimber = Climber.getInstance();
-		this.sDriverStation = DriverStation.getInstance();
 		
 //		this.sCompressor = new Compressor();
-//	    this.sCompressor.start();
+		this.sDriverStation = DriverStation.getInstance();
 		
-		this.sAutoRunner = new AutoRunner(this);
 		this.sControlBoard = new ControlBoard(this);
+		this.sAutoRunner = new AutoRunner(this);
 		
-		this.mPreviousTime = System.currentTimeMillis()/1000.;
+		this.mPreviousTime = System.currentTimeMillis();
 	}
 	
 	public void autonomousInit() {
 		System.out.println("Autonomous Init| begun");
 		this.zeroDevices();
+		
 		this.sAutoRunner.run();
+		
 		System.out.println("Autonomous Init| complete");
 	}
 
 	public void autonomousPeriodic() {
-		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
-			this.mPreviousTime = System.currentTimeMillis()/1000.;
-			
-			this.sDrive.publishData();
-			this.sGyro.publishData();
-//			this.sIntake.publishData();
-//			this.sTilter.publishData();
-//			this.sShooter.publishData();
-		}
+		this.publishData();
 	}
 
 	public void teleopInit() {
 		System.out.println("Teleop Init| begun");
-//		this.sCompressor.start();
-		this.zeroDevices();
-//		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
-//		this.sDrive.setNominal(0);
-		
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
+		this.zeroDevices();
+//		this.sCompressor.start();
+		
 		System.out.println("Teleop Init| complete");
 	}
 
@@ -109,30 +102,44 @@ public class Robot extends IterativeRobot {
 //		this.sControlBoard.checkShooterBlock();
 //		this.sControlBoard.checkClimber();
 		
-		if(System.currentTimeMillis()/1000. - this.mPreviousTime > 0.1) {
-			this.mPreviousTime = System.currentTimeMillis()/1000.;
+		this.publishData();
+	}
+	
+	public void publishData() {
+		if(System.currentTimeMillis() - this.mPreviousTime > this.kUpdateRateMillis) {
+			this.mPreviousTime = System.currentTimeMillis();
 			
-//			this.sDrive.publishData();
-//			this.sGyro.publishData();
-//			this.sIntake.publishData();
-			this.sTilter.publishData();
-//			this.sShooter.publishData();
-//			this.sClimber.publishData();	
+			if(this.sDriverStation.isAutonomous()) {
+				this.sDrive.publishData();
+				this.sGyro.publishData();
+			}
+			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
+				this.sDrive.publishData();
+				this.sGyro.publishData();
+//				this.sIntake.publishData();
+//				this.sOuttake.publishData();
+//				this.sLoader.publishData();
+				this.sTilter.publishData();
+//				this.sShooter.publishData();
+//				this.sClimber.publishData();
+			}
 		}
 	}
 	
-	  public void disabledPeriodic() {
-		  this.sControlBoard.disableLocks();
-	  }
-
-	
-	public void zeroDevices() {
-//		this.sGyro.zeroGyro();
-//		this.sDrive.zeroEncoders();
+	public void disabledInit() {
+		this.zeroDevices();
+		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
+		this.sTilter.disable();
+		this.sShooter.disable();
+		
 	}
 	
-	public void zeroGyro() {
-//		this.sGyro.zeroGyro();
+	public void zeroDevices() {
+		this.sGyro.zeroGyro();
+		this.sDrive.zeroEncoders();
+		
+		this.sDrive.setNominal(0);
+		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
 	}
 
 }

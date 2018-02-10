@@ -49,18 +49,21 @@ public class RobotMap {
 	public static final int kButtonBoardPort = 1;
 	public static final double kThrottleTurnRotationStrength = 0.8;
 	
-	public static final int kButton1 = 1;
-	public static final int kButton2 = 2;
+	public static final int kButton1IntakeIn = 1;
+	public static final int kButton2OuttakeForward = 2;
 	public static final int kButton3 = 3;
-	public static final int kButton4 = 4;
-	public static final int kButton5 = 5;
-	public static final int kButton6 = 6;
-	public static final int kButton7 = 7;
-	public static final int kButton8 = 8;
-	public static final int kButton9 = 9;
-	public static final int kButton10 = 10;
+	public static final int kButton4TilterScaleFar = 4;
+	public static final int kButton5IntakeOut = 5;
+	public static final int kButton6OuttakeReverse = 6;
+	public static final int kButton7TilterDisable = 7;
+	public static final int kButton8TilterScaleClose = 8;
+	public static final int kButton9ShooterOn = 9;
+	public static final int kButton10ShooterOff = 10;
 	public static final int kButton11 = 11;
-	public static final int kButton12 = 12;
+	public static final int kButton12TilterSwitchFar = 12;
+	public static final int kButton13 = 13;
+	public static final int kButton14Climb = 14;
+	public static final int kButton15TilterSwitchClose = 15;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
@@ -114,8 +117,27 @@ public class RobotMap {
 	public static final int kShooterLeftMaxAcceleration = 0;
 	public static final int kShooterRightMaxAcceleration = 0;
 	
-	public static final int kTilterCruiseVelocityRPM = 0;
-	public static final int kTilterMaxAccelerationRPM = 0;
+//	TILTER SUBSYSTEM VALUES---------------------------------------------------------
+	
+	public static final boolean kTiltUpIsPositive = true;
+	
+	public static final int kTiltPosRange = 260;
+	public static final int kTiltPosNeutral = 336;
+	public static final int kTiltPosNeutralToPOSITION1 = 50;
+	public static final int kTiltPosNeutralToPOSITION2 = 100;
+	public static final int kTiltPosNeutralToPOSITION3 = 150;
+	public static final int kTiltPosNeutralToPOSITION4 = 200;
+	
+	public static final int kTilterDesiredVelocityNu = 0;
+	public static final int kTilterDesiredAccelerationNu = 0;
+	
+	public static final int kTilterMaxVelocityNu = 0;
+	public static final int kTilterMaxAccelerationNu = 0;
+	
+	public static final double kTilterP = 12.0;
+	public static final double kTilterI = 0.0;
+	public static final double kTilterD = 0.0;
+	public static final double kTilterF = 1023./kTilterMaxVelocityNu;
 	
 //	PHYSICAL REFERENCE VALUES-------------------------------------------------------
 	

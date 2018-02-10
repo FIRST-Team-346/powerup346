@@ -31,12 +31,20 @@ public class Loader implements Subsystem {
 		this.mRightLoader.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void setLeftLoaderSpeed(double _leftSpeed) {
+	public void setLeftLoaderSpeedIn(double _leftSpeed) {
 		this.mLeftLoader.set(ControlMode.PercentOutput, _leftSpeed);
 	}
 
-	public void setRightLoaderSpeed(double _rightSpeed) {
-		this.mRightLoader.set(ControlMode.PercentOutput, -(_rightSpeed));
+	public void setRightLoaderSpeedIn(double _rightSpeed) {
+		this.mRightLoader.set(ControlMode.PercentOutput, -_rightSpeed);
+	}
+	
+	public void setLeftLoaderSpeedOut(double _leftSpeed) {
+		this.mLeftLoader.set(ControlMode.PercentOutput, -_leftSpeed);
+	}
+
+	public void setRightLoaderSpeedOut(double _rightSpeed) {
+		this.mRightLoader.set(ControlMode.PercentOutput, _rightSpeed);
 	}
 	
 	public void disable() {

@@ -15,6 +15,7 @@ public class Shooter implements Subsystem {
 	private TalonSRX mRightShooter;
 	private double mLeftSetpointRPM, mRightSetpointRPM;
 	private double mSecondsFromNeutralToFull = 1.0;
+	private boolean mIsDisabled;
 	
 	private static Shooter sTurretShooterInstance = new Shooter();
 	public static Shooter getInstance() {
@@ -25,6 +26,7 @@ public class Shooter implements Subsystem {
 		this.initTalons();
 		this.initEncoders();
 		this.initPIDs();
+		this.disable();
 		
 		this.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
 		this.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
@@ -66,35 +68,71 @@ public class Shooter implements Subsystem {
 	
 	public void setLeftSetpointRPM(double _rpm) {
 		this.mLeftSetpointRPM = _rpm;
+		
+		this.mIsDisabled = false;
 	}
 	
 	public void setRightSetpointRPM(double _rpm) {
 		this.mRightSetpointRPM = _rpm;
+		
+		this.mIsDisabled = false;
 	}
 	
-	public void setOn() {
-		int lLeftSetpointNu = (int)(this.mLeftSetpointRPM *1024./60./10.);
-		int lRightSetpointNu = (int)(this.mRightSetpointRPM *-1024./60./10.);
-		this.mLeftShooter.set(ControlMode.Velocity, lLeftSetpointNu);
-		this.mRightShooter.set(ControlMode.Velocity, lRightSetpointNu);
+	public void holdSpeedSetpoint() {
+		if(!this.mIsDisabled) {
+			int lLeftSetpointNu = (int)(this.mLeftSetpointRPM *1024./60./10.);
+			int lRightSetpointNu = (int)(this.mRightSetpointRPM *-1024./60./10.);
+			this.mLeftShooter.set(ControlMode.Velocity, lLeftSetpointNu);
+			this.mRightShooter.set(ControlMode.Velocity, lRightSetpointNu);
+		}
+		else {
+			this.disable();
+		}
 	}
 	
-	public void setOff() {
-		this.mLeftShooter.set(ControlMode.Velocity, 0);
-		this.mRightShooter.set(ControlMode.Velocity, 0);
+	public void setPercentForward(double _percent) {
+		this.setLeftPercentForward(-_percent);
+		this.setRightPercentForward(-_percent);
+		
+		this.mIsDisabled = false;
 	}
 	
-	public void setLeftPercent(double _percent) {
+	public void setPercentReverse(double _percent) {
+		this.setLeftPercentReverse(_percent);
+		this.setRightPercentReverse(_percent);
+		
+		this.mIsDisabled = false;
+	}
+	
+	public void setLeftPercentForward(double _percent) {
 		this.mLeftShooter.set(ControlMode.PercentOutput, _percent);
+		
+		this.mIsDisabled = false;
 	}
 	
-	public void setRightPercent(double _percent) {
+	public void setRightPercentForward(double _percent) {
 		this.mRightShooter.set(ControlMode.PercentOutput, -_percent);
+		
+		this.mIsDisabled = false;
+	}
+	
+	public void setLeftPercentReverse(double _percent) {
+		this.mLeftShooter.set(ControlMode.PercentOutput, -_percent);
+		
+		this.mIsDisabled = false;
+	}
+	
+	public void setRightPercentReverse(double _percent) {
+		this.mRightShooter.set(ControlMode.PercentOutput, _percent);
+		
+		this.mIsDisabled = false;
 	}
 
 	public void disable() {
 		this.mLeftShooter.set(ControlMode.Disabled, 0);
 		this.mRightShooter.set(ControlMode.Disabled, 0);
+		
+		this.mIsDisabled = true;
 	}
 
 	public void publishData() {

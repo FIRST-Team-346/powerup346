@@ -31,12 +31,20 @@ public class Outtake implements Subsystem {
 		this.mRightOuttake.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void setLeftOuttakeSpeed(double _leftSpeed) {
+	public void setLeftOuttakeSpeedForward(double _leftSpeed) {
 		this.mLeftOuttake.set(ControlMode.PercentOutput, _leftSpeed);
 	}
 
-	public void setRightOuttakeSpeed(double _rightSpeed) {
+	public void setRightOuttakeSpeedForward(double _rightSpeed) {
 		this.mRightOuttake.set(ControlMode.PercentOutput, -(_rightSpeed));
+	}
+	
+	public void setLeftOuttakeSpeedReverse(double _leftSpeed) {
+		this.mLeftOuttake.set(ControlMode.PercentOutput, -_leftSpeed);
+	}
+
+	public void setRightOuttakeSpeedReverse(double _rightSpeed) {
+		this.mRightOuttake.set(ControlMode.PercentOutput, _rightSpeed);
 	}
 	
 	public void disable() {

@@ -92,6 +92,17 @@ public class Drive implements Subsystem{
 	
 	/**Initializes the PID values on the master encoders.**/
 	private void initPIDs() {
+		this.mDriveLeftMaster.config_kP(PID_POS, RobotMap.kDrivePosLeftP, 0);
+		this.mDriveLeftMaster.config_kI(PID_POS, RobotMap.kDrivePosLeftI, 0);
+		this.mDriveLeftMaster.config_kD(PID_POS, RobotMap.kDrivePosLeftD, 0);
+		this.mDriveLeftMaster.config_kF(PID_POS, RobotMap.kDrivePosLeftF, 0);
+		
+		this.mDriveRightMaster.config_kP(PID_POS, RobotMap.kDrivePosRightP, 0);
+		this.mDriveRightMaster.config_kI(PID_POS, RobotMap.kDrivePosRightI, 0);
+		this.mDriveRightMaster.config_kD(PID_POS, RobotMap.kDrivePosRightD, 0);
+		this.mDriveRightMaster.config_kF(PID_POS, RobotMap.kDrivePosRightF, 0);
+		
+		
 		this.mDriveLeftMaster.config_kP(PID_VEL, RobotMap.kDriveVelLeftP, 0);
 		this.mDriveLeftMaster.config_kI(PID_VEL, RobotMap.kDriveVelLeftI, 0);
 		this.mDriveLeftMaster.config_kD(PID_VEL, RobotMap.kDriveVelLeftD, 0);
