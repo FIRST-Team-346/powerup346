@@ -252,12 +252,20 @@ public class Drive implements Subsystem{
 		return this.mDriveRightMaster.getSelectedSensorVelocity(0) /-1024.*60.*10.;
 	}
 	
+	public double getAveragedVelocity() {
+		return 1./2. * ( this.getLeftVelocity() + this.getRightVelocity() );
+	}
+	
 	public double getLeftPosition() {
 		return this.mDriveLeftMaster.getSelectedSensorPosition(0) /1024.;
 	}
 	
 	public double getRightPosition() {
 		return this.mDriveRightMaster.getSelectedSensorPosition(0) /-1024.;
+	}
+	
+	public double getAveragedPosition() {
+		return 1./2. * ( this.getLeftPosition() + this.getRightPosition() );
 	}
 	
 	public void setNominal(double _limit){
