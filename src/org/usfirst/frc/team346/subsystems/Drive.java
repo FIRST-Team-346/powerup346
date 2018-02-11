@@ -89,8 +89,12 @@ public class Drive implements Subsystem{
 	/**Initializes the encoders on the master CANTalons.**/
 	private void initEncoders() {
 		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mDriveRightMaster.setInverted(false);
+		this.mDriveRightMaster.setSensorPhase(false);
 		
 		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mDriveRightMaster.setInverted(false);
+		this.mDriveRightMaster.setSensorPhase(false);
 	}
 	
 	/**Initializes the PID values on the master encoders.**/
@@ -121,7 +125,7 @@ public class Drive implements Subsystem{
 		switch(_mode) {
 			case PERCENT : {
 				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _left);
-				this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_right));
+				this.mDriveRightMaster.set(ControlMode.PercentOutput, -_right);
 			}; break;
 			
 			case PERCENTVElOCITY : {
@@ -131,12 +135,12 @@ public class Drive implements Subsystem{
 		
 			case VELOCITY: {
 				this.mDriveLeftMaster.set(ControlMode.Velocity, _left);
-				this.mDriveLeftMaster.set(ControlMode.Velocity, -_right);
+				this.mDriveRightMaster.set(ControlMode.Velocity, -_right);
 			}; break;
 			
 			case POSITION : {
 				this.mDriveLeftMaster.set(ControlMode.Position, _left);
-				this.mDriveRightMaster.set(ControlMode.Position, -(_right));
+				this.mDriveRightMaster.set(ControlMode.Position, -_right);
 			}; break;
 		
 			default : {
@@ -149,7 +153,7 @@ public class Drive implements Subsystem{
 		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
-		this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle) + this.mTurn);
+		this.mDriveRightMaster.set(ControlMode.PercentOutput, -_throttle + this.mTurn);
 	}
 	
 	public void publishData() {
@@ -159,6 +163,7 @@ public class Drive implements Subsystem{
 //		this.publishPosition();
 		this.publishMaxVel();
 		this.publishVelDifference();
+		this.publishAccel();
 	}
 	
 	public void publishVoltage() {
@@ -191,7 +196,7 @@ public class Drive implements Subsystem{
 	}
 
 	public void publishVelDifference() {
-		SmartDashboard.putNumber("Drive Velocity Difference", 
+		SmartDashboard.putNumber("DriveVelocityDifference", 
 		   Math.abs(this.getLeftVelocity())-Math.abs(this.getRightVelocity()));
 	}
 	
@@ -212,15 +217,15 @@ public class Drive implements Subsystem{
 	}
 	
 	public double getRightPercent() {
-		return this.mDriveRightMaster.getMotorOutputPercent() *-1.;
+		return this.mDriveRightMaster.getMotorOutputPercent() * -1.;
 	}
 	
 	public double getLeftPosition() {
-		return this.mDriveLeftMaster.getSelectedSensorPosition(0) /1024.;
+		return this.mDriveLeftMaster.getSelectedSensorPosition(0);
 	}
 	
 	public double getRightPosition() {
-		return this.mDriveRightMaster.getSelectedSensorPosition(0) /-1024.;
+		return this.mDriveRightMaster.getSelectedSensorPosition(0) * -1.;
 	}
 	
 	public double getAveragedPosition() {
@@ -232,7 +237,7 @@ public class Drive implements Subsystem{
 	}
 	
 	public double getRightVelocity() {
-		return this.mDriveRightMaster.getSelectedSensorVelocity(0);
+		return this.mDriveRightMaster.getSelectedSensorVelocity(0) * -1.;
 	}
 	
 	public double getAveragedVelocity() {
@@ -255,7 +260,7 @@ public class Drive implements Subsystem{
 	
 	public double getAveragedAccel() {
 		double lAccel = this.mPrevAccel;
-		if(System.currentTimeMillis() - this.mPrevTime > 0.1) {
+		if(System.currentTimeMillis()/1000. - this.mPrevTime > 0.1) {
 			lAccel = (this.getAveragedVelocity() - this.mPrevVel) /0.1;
 			this.mPrevTime = System.currentTimeMillis() /1000.;
 			this.mPrevVel = this.getAveragedVelocity();

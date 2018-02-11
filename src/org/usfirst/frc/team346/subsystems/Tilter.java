@@ -156,7 +156,7 @@ public class Tilter implements Subsystem {
 	 * @return acceleration in Nu per 100ms per 1s (1 rpm/s = 1.70666... Nu/100ms/s)**/
 	public double getAccelerationNu() {
 		double lAccel = this.mPrevAccel;
-		if(System.currentTimeMillis() - this.mPrevTime > 0.1) {
+		if(System.currentTimeMillis()/1000. - this.mPrevTime > 0.1) {
 			lAccel = (this.getVelocityNu() - this.mPrevVel) /0.1;
 			this.mPrevTime = System.currentTimeMillis() /1000.;
 			this.mPrevVel = this.getVelocityNu();

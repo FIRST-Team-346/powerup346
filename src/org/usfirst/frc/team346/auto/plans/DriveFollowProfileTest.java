@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.actions.DriveFollowProfile;
 import org.usfirst.frc.team346.robot.Robot;
+import org.usfirst.frc.team346.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.Preferences;
 
@@ -23,7 +24,9 @@ public class DriveFollowProfileTest extends AutoPlan {
 		new Thread(this.mDFP).start();
 		while (this.mDFP.isDriving()) {
 		}
-		System.out.println("DFP| complete");
+		System.out.println("DFP| driving complete");
+		super.waitTime(2);
+		System.out.println("DFP| final distance:" + Drive.getInstance().getAveragedPosition()/1024.);
 	}
 
 }

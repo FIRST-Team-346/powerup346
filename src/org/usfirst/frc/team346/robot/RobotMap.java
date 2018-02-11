@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
+import org.usfirst.frc.team346.auto.plans.DriveFollowProfileTest;
 import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
 import org.usfirst.frc.team346.auto.plans.SwitchCube;
 import org.usfirst.frc.team346.auto.plans.Test;
@@ -10,7 +11,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new Test();
+	public static final AutoPlan kAutoPlan = new DriveFollowTest();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -98,13 +99,14 @@ public class RobotMap {
 
 	public static final double kDriveFollowErrorScalerMultiplier = 10.;
 	public static final double kDriveFollowErrorScalerDivider = 0.5;
+	public static final double kDriveFollowProfileErrorScalerMultiplier = 1.5;
 	
-	public static final double kDriveFollowVelSetpoint = 0.8 * RobotMap.kDriveVelAverage;
-	public static final double kDriveFollowAccelSetpoint = 0.;
-	public static final double kDriveFollowDecelSetpoint = 0.;
+	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
+	public static final double kDriveFollowAccelSetpoint = 1000.;
+	public static final double kDriveFollowDecelSetpoint = 175.;
 	
 	public static final double kDriveFollowUpdateRate = 0.02;
-	public static final double kDriveFollowMinVelocity = 0.;
+	public static final double kDriveFollowMinVelocity = 0.175 * RobotMap.kDriveVelAverage;
 	
 //	SHOOTER PID/SUBSYSTEM VALUES----------------------------------------------------
 	

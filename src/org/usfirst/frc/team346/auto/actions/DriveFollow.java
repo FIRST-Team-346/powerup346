@@ -37,7 +37,7 @@ public class DriveFollow {
 	private final double kTimeOutSeconds = 10.;
 	private final double kThresholdSeconds = 0.25;
 	private final double kThresholdFeet = 0.5;
-	private final double kThresholdRPM = 50;
+	private final double kThresholdVelocity = 0.1 * RobotMap.kDriveVelAverage;
 	private double mStartTime;
 	private double mCountdown;
 	private boolean mCountdownStarted;
@@ -210,7 +210,7 @@ public class DriveFollow {
 	
 	private void checkCompletionVelocity() {
 		checkDisabled();
-		if(Math.abs(mVelocity[CURR]) < kThresholdRPM) {
+		if(Math.abs(mVelocity[CURR]) < kThresholdVelocity) {
 			if(!mCountdownStarted) {
 				System.out.println("Velocity countdown started");
 				mCountdown = System.currentTimeMillis()/1000.;
