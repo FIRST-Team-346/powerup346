@@ -97,7 +97,7 @@ public class RobotMap {
 	public static final double kDriveFollowD = 0;
 	public static final double kDriveFollowF = 0.5;
 
-	public static final double kDriveFollowErrorScalerMultiplier = 10.;
+	public static final double kDriveFollowErrorScalerMultiplier = 2.0;
 	public static final double kDriveFollowErrorScalerDivider = 0.5;
 	public static final double kDriveFollowProfileErrorScalerMultiplier = 1.5;
 	

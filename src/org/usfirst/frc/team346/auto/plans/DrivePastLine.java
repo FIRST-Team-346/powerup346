@@ -3,11 +3,11 @@ package org.usfirst.frc.team346.auto.plans;
 import org.usfirst.frc.team346.auto.actions.DriveFollow;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.Robot;
+import org.usfirst.frc.team346.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class DrivePastLine extends AutoPlan{
-	DriveFollow mStraightDriver;
+public class DrivePastLine extends AutoPlan {
 	Rotate mRotator;
 	
 	double side;
@@ -15,11 +15,10 @@ public class DrivePastLine extends AutoPlan{
 	DriverStation driverStation = DriverStation.getInstance();
 	
 	public String getGoal() {
-		return "drive straight and turn left";
+		return "drive past line";
 	}
 
 	public void run(Robot _robot, String _layout) {
-		this.mStraightDriver = new DriveFollow(_robot);
 		this.mRotator = new Rotate();
 
 		if(driverStation.getGameSpecificMessage().charAt(1)=='L') {
@@ -28,18 +27,16 @@ public class DrivePastLine extends AutoPlan{
 		else {
 			side = 1;
 		}
-			this.mStraightDriver.followLine(3);
+			new DriveFollow(3, 0.7 * RobotMap.kDriveVelAverage).followLine();
 			super.waitTime(2);
 			this.mRotator.rotate(side*51, 0.4, 1, 3);
 			super.waitTime(2);
-			this.mStraightDriver = new DriveFollow(_robot);
-			this.mStraightDriver.followLine(22);
+			new DriveFollow(22, 0.7 * RobotMap.kDriveVelAverage).followLine();
 			super.waitTime(4);
 			this.mRotator = new Rotate();
 			this.mRotator.rotate(side*-51, 0.4, 1, 3);
 			this.waitTime(2);
-			this.mStraightDriver = new DriveFollow(_robot);
-			this.mStraightDriver.followLine(25);
+			new DriveFollow(25, 0.7 * RobotMap.kDriveVelAverage).followLine();
 	}
 		
 }
