@@ -298,11 +298,11 @@ public class Drive implements Subsystem{
 	
 	public void disable() {
 		this.mDriveLeftMaster.set(ControlMode.Disabled, 0);
-		this.mDriveLeftSlave1.set(ControlMode.Disabled, 0);
-		this.mDriveLeftSlave2.set(ControlMode.Disabled, 0);
+//		this.mDriveLeftSlave1.set(ControlMode.Disabled, 0);
+//		this.mDriveLeftSlave2.set(ControlMode.Disabled, 0);
 		this.mDriveRightMaster.set(ControlMode.Disabled, 0);
-		this.mDriveRightSlave1.set(ControlMode.Disabled, 0);
-		this.mDriveRightSlave2.set(ControlMode.Disabled, 0);
+//		this.mDriveRightSlave1.set(ControlMode.Disabled, 0);
+//		this.mDriveRightSlave2.set(ControlMode.Disabled, 0);
 		System.out.println("Drive train disabled.");
 	}
 	

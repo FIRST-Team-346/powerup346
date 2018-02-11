@@ -17,12 +17,12 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 27;			//27-01
-	public static final int kDriveLeftSlave1Port = 13;			//13-05
-	public static final int kDriveLeftSlave2Port = 7;			//07-08
-	public static final int kDriveRightMasterPort = 26;			//26-03
-	public static final int kDriveRightSlave1Port = 18;			//18-02
-	public static final int kDriveRightSlave2Port = 17;			//17-21
+	public static final int kDriveLeftMasterPort = 1;			//27-01
+	public static final int kDriveLeftSlave1Port = 5;			//13-05
+	public static final int kDriveLeftSlave2Port = 8;			//07-08
+	public static final int kDriveRightMasterPort = 3;			//26-03
+	public static final int kDriveRightSlave1Port = 2;			//18-02
+	public static final int kDriveRightSlave2Port = 21;			//17-21
 	
 	public static final int kIntakeLeftPort = 20;				//20-
 	public static final int kIntakeRightPort = 41;				//41-
@@ -35,8 +35,8 @@ public class RobotMap {
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 24;				//24-
-	public static final int kShooterRightPort = 9;				//09-
+	public static final int kShooterLeftPort = 19;				//19-
+	public static final int kShooterRightPort = 15;				//15-
 	
 	public static final int kClimberPort = 0;					//
 	

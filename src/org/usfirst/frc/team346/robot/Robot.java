@@ -130,7 +130,6 @@ public class Robot extends IterativeRobot {
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
 		this.sTilter.disable();
 		this.sShooter.disable();
-		
 	}
 	
 	public void zeroDevices() {
