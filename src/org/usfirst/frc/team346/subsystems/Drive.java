@@ -19,8 +19,11 @@ public class Drive implements Subsystem{
 	private double mTurn;
 	private double mSecondsFromNeutralToFull = 0.25;
 	
+	private double leftMaxVel = 0, rightMaxVel = 0;
+	
 	public enum DriveMode {
 		PERCENT,
+		PERCENTVElOCITY,
 		VELOCITY,
 		POSITION;
 	}
@@ -120,10 +123,15 @@ public class Drive implements Subsystem{
 				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _left);
 				this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_right));
 			}; break;
+			
+			case PERCENTVElOCITY : {
+				this.mDriveLeftMaster.set(ControlMode.Velocity, _left * RobotMap.kDriveVelMax);
+				this.mDriveRightMaster.set(ControlMode.Velocity, -_right * RobotMap.kDriveVelMax);
+			};break;
 		
 			case VELOCITY: {
-				this.setLeftVelocityRPM(_left);
-				this.setRightVelocityRPM(_right);
+				this.mDriveLeftMaster.set(ControlMode.Velocity, _left);
+				this.mDriveLeftMaster.set(ControlMode.Velocity, -_right);
 			}; break;
 			
 			case POSITION : {
@@ -187,21 +195,31 @@ public class Drive implements Subsystem{
 		}
 	}
 	
-	public void setLeftVelocityRPM(double _rpm) {
-		int lSetpoint = (int)(_rpm *1024./60./10.);
-		this.mDriveLeftMaster.set(ControlMode.Velocity, lSetpoint);
+	public double getMaxLeftVel() {
+		if(Math.abs(this.leftMaxVel) < Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0))){
+			this.leftMaxVel = Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0));
+		}
+		return leftMaxVel;
 	}
 	
-	public void setRightVelocityRPM(double _rpm) {
-		int lSetpoint = (int)(_rpm *-1024./60./10.);
-		this.mDriveRightMaster.set(ControlMode.Velocity, lSetpoint);
+	public double getMaxRightVel() {
+		if(Math.abs(this.rightMaxVel) < Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0))){
+			this.rightMaxVel = Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0));
+		}
+		return rightMaxVel;
 	}
 	
 	public void publishData() {
-		this.publishVoltage();
+//		this.publishVoltage();
 //		this.publishPercent();
-		this.publishVelocity();
-		this.publishPosition();
+//		this.publishVelocity();
+//		this.publishPosition();
+		this.publishMaxVel();
+	}
+	
+	public void publishMaxVel() {
+		SmartDashboard.putNumber("leftMaxVel", this.getMaxLeftVel());
+		SmartDashboard.putNumber("rightMaxVel", this.getMaxRightVel());
 	}
 	
 	public void publishVoltage() {
