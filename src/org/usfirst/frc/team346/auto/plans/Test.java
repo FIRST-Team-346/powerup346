@@ -6,11 +6,15 @@ import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Gyro;
 
+import edu.wpi.first.wpilibj.Preferences;
+
 public class Test extends AutoPlan{
 
 	Rotate mRotate;
 	DriveStraight mDriveStraight;
 	DriveFollow mDriveFollow;
+	
+	Preferences pref = Preferences.getInstance();
 	
 	Gyro mGyro = Gyro.getInstance();
 	
@@ -27,7 +31,10 @@ public class Test extends AutoPlan{
 //		this.mDriveFollow.followLine(5);
 		
 		this.mRotate = new Rotate();
+		this.mRotate.setPID(pref.getDouble("angleP", 0), pref.getDouble("angleI", 0), pref.getDouble("angleD", 0));
 		this.mRotate.rotate(90, 0.3, 5, 0.5);
+		super.waitTime(1);
+		System.out.println(this.mGyro.getAngle());
 	}
 	
 }

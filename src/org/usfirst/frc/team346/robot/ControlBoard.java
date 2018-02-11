@@ -32,7 +32,7 @@ public class ControlBoard {
 	public ControlBoard(Robot _robot) {
 		this.sRobot = _robot;
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
-		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
+//		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
 		
 		this.mPrefs = Preferences.getInstance();
 	}
@@ -46,7 +46,8 @@ public class ControlBoard {
 			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
 		else {
-			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+//			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+			this.sRobot.sDrive.drive(DriveMode.PERCENTVElOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 //			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*1200, -this.mController.getRawAxis(RIGHT_STICK_Y)*1200);
 //			this.sRobot.sDrive.driveDifferential(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 //			this.sRobot.sDrive.drive(DriveMode.PERCENT, this.mPreference.getDouble("minVL", 0), -this.mPreference.getDouble("minVL", 0));

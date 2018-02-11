@@ -10,19 +10,19 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new DriveFollowTest();
+	public static final AutoPlan kAutoPlan = new Test();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 27;			//27-01
-	public static final int kDriveLeftSlave1Port = 13;			//13-05
-	public static final int kDriveLeftSlave2Port = 7;			//07-08
-	public static final int kDriveRightMasterPort = 26;			//26-03
-	public static final int kDriveRightSlave1Port = 18;			//18-02
-	public static final int kDriveRightSlave2Port = 17;			//17-21
+	public static final int kDriveLeftMasterPort = 3;			//27-03
+	public static final int kDriveLeftSlave1Port =2;			//13-02
+	public static final int kDriveLeftSlave2Port = 21;			//07-21
+	public static final int kDriveRightMasterPort = 1;			//26-01
+	public static final int kDriveRightSlave1Port = 5;			//18-05
+	public static final int kDriveRightSlave2Port = 8;			//17-08
 	
 	public static final int kIntakeLeftPort = 20;				//20-
 	public static final int kIntakeRightPort = 41;				//41-
@@ -64,16 +64,19 @@ public class RobotMap {
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
+	public static final double kDriveLeftVelMax = 2200;
+
 	public static final double kDriveVelLeftP = 0;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
-	public static final double kDriveVelLeftF = 0.5;
-	
+	public static final double kDriveVelLeftF = 1023 / kDriveLeftVelMax;
+		
+	public static final double kDriveRightVelMax = 2000;
+
 	public static final double kDriveVelRightP = 0;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
-	public static final double kDriveVelRightF = 0.5;
-	
+	public static final double kDriveVelRightF = 1023 / kDriveRightVelMax;
 	
 	public static final double kDrivePosLeftP = 0;
 	public static final double kDrivePosLeftI = 0;
