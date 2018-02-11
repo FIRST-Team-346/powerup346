@@ -125,8 +125,8 @@ public class Drive implements Subsystem{
 			}; break;
 			
 			case PERCENTVElOCITY : {
-				this.mDriveLeftMaster.set(ControlMode.Velocity, _left * RobotMap.kDriveVelMax);
-				this.mDriveRightMaster.set(ControlMode.Velocity, -_right * RobotMap.kDriveVelMax);
+				this.mDriveLeftMaster.set(ControlMode.Velocity, _left * RobotMap.kDriveVelAverage);
+				this.mDriveRightMaster.set(ControlMode.Velocity, -_right * RobotMap.kDriveVelAverage);
 			};break;
 		
 			case VELOCITY: {

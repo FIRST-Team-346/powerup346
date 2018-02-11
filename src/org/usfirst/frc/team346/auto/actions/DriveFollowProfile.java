@@ -3,8 +3,10 @@ package org.usfirst.frc.team346.auto.actions;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveFollowProfile implements Runnable {
 
@@ -30,7 +32,12 @@ public class DriveFollowProfile implements Runnable {
 	
 	private double mExpectedCourseDistancePhaseAccel, mExpectedCourseDistancePhaseCruise, mExpectedCourseDistancePhaseDecel;
 	
+	private boolean mIsDrivingForward;
+	
 	public DriveFollowProfile(double _distanceFt, double _velocityFtPerDs) {
+		this.sDrive = Drive.getInstance();
+		this.sGyro = Gyro.getInstance();
+		
 		this.mTimeZero = System.currentTimeMillis()/1000.;
 		this.kUpdateFreq = 0.02;
 		this.mTimeOutSec = 10.;
@@ -38,15 +45,13 @@ public class DriveFollowProfile implements Runnable {
 		this.mCourseDistanceThreshold = 0.25;
 		
 		this.kCourseDistanceSetpoint = _distanceFt;
+		this.kVelocitySetpointMag = Math.abs(_velocityFtPerDs);
+		this.kAccelSetpointMag = Math.abs(RobotMap.kDriveFollowAccelSetpoint);
+		this.kDecelSetpointMag = Math.abs(RobotMap.kDriveFollowAccelSetpoint);
 		
-		this.kVelocitySetpointMag = _velocityFtPerDs;
+		this.mIsDrivingForward = (this.kCourseDistanceSetpoint >= 0);
+		
 		this.mPhaseDecelCompleteCountdownStarted = false;
-		
-		this.kAccelSetpointMag = RobotMap.kDriveFollowAccelSetpoint;
-		this.kDecelSetpointMag = RobotMap.kDriveFollowAccelSetpoint;
-		
-		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
 	}
 	
 	public void run() {
@@ -91,24 +96,42 @@ public class DriveFollowProfile implements Runnable {
 		this.mDistancePrev = this.sDrive.getAveragedPosition();
 		this.mVelocityPrev = this.sDrive.getAveragedVelocity();
 		
-		this.mExpectedCourseDistancePhaseAccel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kAccelSetpointMag;
-		this.mExpectedCourseDistancePhaseDecel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kDecelSetpointMag;
-		this.mExpectedCourseDistancePhaseCruise = this.kCourseDistanceSetpoint - this.mExpectedCourseDistancePhaseAccel - this.mExpectedCourseDistancePhaseDecel;
+		if(this.mIsDrivingForward) {
+			this.mExpectedCourseDistancePhaseAccel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kAccelSetpointMag;
+			this.mExpectedCourseDistancePhaseDecel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kDecelSetpointMag;
+			this.mExpectedCourseDistancePhaseCruise = this.kCourseDistanceSetpoint - this.mExpectedCourseDistancePhaseAccel - this.mExpectedCourseDistancePhaseDecel;
+		}
+		else {
+			this.mExpectedCourseDistancePhaseAccel = -1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kAccelSetpointMag;
+			this.mExpectedCourseDistancePhaseDecel = -1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kDecelSetpointMag;
+			this.mExpectedCourseDistancePhaseCruise = this.kCourseDistanceSetpoint - this.mExpectedCourseDistancePhaseAccel - this.mExpectedCourseDistancePhaseDecel;
+		}
 		
 		this.checkTriangleProfile();
 	}
 	
 	private void checkTriangleProfile() {
-		if(this.mExpectedCourseDistancePhaseCruise < 0) {
-			this.kVelocitySetpointMag = Math.sqrt(2. * this.kCourseDistanceSetpoint / (1. / this.kAccelSetpointMag + 1. / this.kDecelSetpointMag));
+		if(this.mIsDrivingForward && this.mExpectedCourseDistancePhaseCruise < 0) {
+			this.kVelocitySetpointMag = Math.sqrt(2. * Math.abs(this.kCourseDistanceSetpoint) / (1. / this.kAccelSetpointMag + 1. / this.kDecelSetpointMag));
 			this.mExpectedCourseDistancePhaseAccel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kAccelSetpointMag;
 			this.mExpectedCourseDistancePhaseDecel = 1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kDecelSetpointMag;
+			this.mExpectedCourseDistancePhaseCruise = 0;
+		}
+		if(!this.mIsDrivingForward && this.mExpectedCourseDistancePhaseCruise > 0) {
+			this.kVelocitySetpointMag = Math.sqrt(2. * Math.abs(this.kCourseDistanceSetpoint) / (1. / this.kAccelSetpointMag + 1. / this.kDecelSetpointMag));
+			this.mExpectedCourseDistancePhaseAccel = -1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kAccelSetpointMag;
+			this.mExpectedCourseDistancePhaseDecel = -1./2. * this.kVelocitySetpointMag * this.kVelocitySetpointMag / this.kDecelSetpointMag;
 			this.mExpectedCourseDistancePhaseCruise = 0;
 		}
 	}
 	
 	private void phaseAccel() {
-		this.mSetDriveVelocity = this.kAccelSetpointMag * this.mTimeInCurrPhase;
+		if(this.mIsDrivingForward) {
+			this.mSetDriveVelocity = this.kAccelSetpointMag * this.mTimeInCurrPhase;
+		}
+		else {
+			this.mSetDriveVelocity = -this.kAccelSetpointMag * this.mTimeInCurrPhase;
+		}
 		
 		if(Math.abs(this.mSetDriveVelocity) < this.kVelocitySetpointMag) {
 			this.setDriveVelocity(this.mSetDriveVelocity);
@@ -117,48 +140,75 @@ public class DriveFollowProfile implements Runnable {
 			this.setDriveVelocity(this.kVelocitySetpointMag);
 		}
 		
-		if(this.mCourseDistanceTotal >= this.mExpectedCourseDistancePhaseAccel) {
+		if(Math.abs(this.mCourseDistanceTotal) >= Math.abs(this.mExpectedCourseDistancePhaseAccel)) {
 			this.mTimeInCurrPhase = 0.;
 			this.mPhaseAccelComplete = true;
 		}
 	}
 	
 	private void phaseCruise() {
-		this.mSetDriveVelocity = this.kVelocitySetpointMag;
+		if(this.mIsDrivingForward) {
+			this.mSetDriveVelocity = this.kVelocitySetpointMag;
+		}
+		else {
+			this.mSetDriveVelocity = -this.kVelocitySetpointMag;
+		}
 		
 		this.setDriveVelocity(this.mSetDriveVelocity);
 		
-		if(this.mCourseDistanceRemaining <= this.mExpectedCourseDistancePhaseDecel) {
+		if(Math.abs(this.mCourseDistanceRemaining) <= Math.abs(this.mExpectedCourseDistancePhaseDecel)) {
 			this.mTimeInCurrPhase = 0.;
 			this.mPhaseCruiseComplete = true;
 		}
 	}
 	
 	private void phaseDecel() {
-		this.mSetDriveVelocity = this.kVelocitySetpointMag - this.kDecelSetpointMag * this.mTimeInCurrPhase;
-		
-		if(Math.abs(this.mCourseDistanceRemaining) < this.mCourseDistanceThreshold) {
-			this.setDriveVelocity(0);
+		if(this.mIsDrivingForward) {
+			this.mSetDriveVelocity = this.kVelocitySetpointMag - this.kDecelSetpointMag * this.mTimeInCurrPhase;
+			
+			if(Math.abs(this.mCourseDistanceRemaining) < Math.abs(this.mCourseDistanceThreshold)) {
+				this.setDriveVelocity(0);
+			}
+			else if(this.mCourseDistanceRemaining >= 0) {
+				if(this.mSetDriveVelocity > 0) {
+					this.setDriveVelocity(this.mSetDriveVelocity);
+				}
+				else {
+					this.setDriveVelocity(RobotMap.kDriveFollowMinVelocity);
+				}
+			}
+			else {
+				this.setDriveVelocity(-RobotMap.kDriveFollowMinVelocity);
+			}
 		}
-		else if(this.mCourseDistanceRemaining >= 0) {
-			if(this.mSetDriveVelocity > 0) {
-				this.setDriveVelocity(this.mSetDriveVelocity);
+		else {
+			this.mSetDriveVelocity = -this.kVelocitySetpointMag + this.kDecelSetpointMag * this.mTimeInCurrPhase;
+			
+			if(Math.abs(this.mCourseDistanceRemaining) < Math.abs(this.mCourseDistanceThreshold)) {
+				this.setDriveVelocity(0);
+			}
+			else if(this.mCourseDistanceRemaining <= 0) {
+				if(this.mSetDriveVelocity < 0) {
+					this.setDriveVelocity(this.mSetDriveVelocity);
+				}
+				else {
+					this.setDriveVelocity(-RobotMap.kDriveFollowMinVelocity);
+				}
 			}
 			else {
 				this.setDriveVelocity(RobotMap.kDriveFollowMinVelocity);
 			}
 		}
-		else {
-			this.setDriveVelocity(-RobotMap.kDriveFollowMinVelocity);
-		}
 		
 		//Countdown
-		if(Math.abs(this.sDrive.getAveragedVelocity()) < RobotMap.kDriveFollowMinVelocity) {
+		if(Math.abs(this.sDrive.getAveragedVelocity()) < Math.abs(RobotMap.kDriveFollowMinVelocity)) {
 			if(!this.mPhaseDecelCompleteCountdownStarted) {
+				this.setDriveVelocity(0);
 				this.mThresholdCountdown = System.currentTimeMillis();
 				this.mPhaseDecelCompleteCountdownStarted = true;
 			}
 			if(System.currentTimeMillis() - this.mThresholdCountdown > this.mThresholdSec * 1000.) {
+				this.setDriveVelocity(0);
 				this.mTimeInCurrPhase = 0.;
 				this.mPhaseDecelComplete = true;
 			}
@@ -186,17 +236,48 @@ public class DriveFollowProfile implements Runnable {
 		this.mVelocityCurr = this.sDrive.getAveragedVelocity();
 		this.mVelocityDelta = this.mVelocityCurr - this.mVelocityPrev;
 		
-		this.mCourseDistanceDelta = this.mDistanceDelta * Math.cos(Math.toRadians(this.mHeadingCurrent));	//course arc-length travelled so far
+		if(this.mIsDrivingForward) {
+			this.mCourseDistanceDelta = this.mDistanceDelta * Math.cos(Math.toRadians(this.mHeadingCurrent));	//course arc-length travelled so far
+			this.mCourseErrorDelta = this.mDistanceDelta * Math.sin(Math.toRadians(this.mHeadingCurrent));		//perpendicular error away from course
+		}
+		else {
+			this.mCourseDistanceDelta = -this.mDistanceDelta * Math.cos(Math.toRadians(this.mHeadingCurrent));	//course arc-length travelled so far
+			this.mCourseErrorDelta = -this.mDistanceDelta * Math.sin(Math.toRadians(this.mHeadingCurrent));		//perpendicular error away from course
+		}
+		
 		this.mCourseDistanceTotal += this.mCourseDistanceDelta;
-		
-		this.mCourseErrorDelta = this.mDistanceDelta * Math.sin(Math.toRadians(this.mHeadingCurrent));		//perpendicular error away from course
 		this.mCourseErrorTotal += this.mCourseErrorDelta;
-		
 		this.mCourseDistanceRemaining = this.kCourseDistanceSetpoint - this.mCourseDistanceTotal;
 	}
 	
 	private void setDriveVelocity(double _setVelocityFtPerDs) {
-		//TODO implement this from DriveFollow
+		double lLeftSet = _setVelocityFtPerDs, lRightSet = _setVelocityFtPerDs;
+		
+		//TODO: this part may be unnecessary
+//		if(this.mCourseErrorTotal > 1.) {
+//			this.mCourseErrorTotal = 1.;
+//		}
+//		if(this.mCourseErrorTotal < -1.) {
+//			this.mCourseErrorTotal = -1.;
+//		}
+		if(_setVelocityFtPerDs >= 0) {
+			if(this.mCourseErrorTotal >= 0) {
+				lRightSet = _setVelocityFtPerDs * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(this.mCourseErrorTotal)));
+			}
+			else if(this.mCourseErrorTotal < 0) {
+				lLeftSet = _setVelocityFtPerDs * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(this.mCourseErrorTotal)));
+			}
+		}
+		else if(_setVelocityFtPerDs < 0) {
+			if(this.mCourseErrorTotal >= 0) {
+				lRightSet = _setVelocityFtPerDs * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(this.mCourseErrorTotal)));
+			}
+			else if(this.mCourseErrorTotal < 0) {
+				lLeftSet = _setVelocityFtPerDs * (1+(RobotMap.kDriveFollowErrorScalerDivider*Math.abs(this.mCourseErrorTotal)));
+			}
+		}
+		
+		this.sDrive.drive(DriveMode.VELOCITY, lLeftSet, lRightSet);
 	}
 	
 	public boolean isDriving() {
@@ -204,7 +285,7 @@ public class DriveFollowProfile implements Runnable {
 	}
 	
 	private void checkDisabled() {
-		if(System.currentTimeMillis()/1000. - this.mTimeZero > this.mTimeOutSec || DriverStation.getInstance().isDisabled()) {
+		if(System.currentTimeMillis()/1000. - this.mTimeZero > this.mTimeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
 			System.out.println("Drive Follow Profile| timeout");
 			this.phaseStop();
 		}

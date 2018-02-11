@@ -23,7 +23,7 @@ public class RobotMap {
 	public static final int kDriveRightMasterPort = 1;			//26-01
 	public static final int kDriveRightSlave1Port = 5;			//18-05
 	public static final int kDriveRightSlave2Port = 8;			//17-08
-	
+
 	public static final int kIntakeLeftPort = 20;				//20-
 	public static final int kIntakeRightPort = 41;				//41-
 	
@@ -35,8 +35,8 @@ public class RobotMap {
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 24;				//24-
-	public static final int kShooterRightPort = 9;				//09-
+	public static final int kShooterLeftPort = 19;				//19-
+	public static final int kShooterRightPort = 15;				//15-
 	
 	public static final int kClimberPort = 0;					//
 	
@@ -64,19 +64,21 @@ public class RobotMap {
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
-	public static final double kDriveLeftVelMax = 2200;
+	public static final double kDriveLeftVelMax = 2200.;
 
 	public static final double kDriveVelLeftP = 0;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
-	public static final double kDriveVelLeftF = 1023 / kDriveLeftVelMax;
+	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
 		
-	public static final double kDriveRightVelMax = 2000;
+	public static final double kDriveRightVelMax = 2000.;
 
 	public static final double kDriveVelRightP = 0;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
-	public static final double kDriveVelRightF = 1023 / kDriveRightVelMax;
+	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;
+	
+	public static final double kDriveVelAverage = 2100.;
 	
 	public static final double kDrivePosLeftP = 0;
 	public static final double kDrivePosLeftI = 0;
