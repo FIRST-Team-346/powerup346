@@ -212,9 +212,10 @@ public class Drive implements Subsystem{
 	public void publishData() {
 //		this.publishVoltage();
 //		this.publishPercent();
-//		this.publishVelocity();
+		this.publishVelocity();
 //		this.publishPosition();
 		this.publishMaxVel();
+		this.publishVelDifference();
 	}
 	
 	public void publishMaxVel() {
@@ -241,6 +242,11 @@ public class Drive implements Subsystem{
 		SmartDashboard.putNumber("DriveLeftPosition", this.getLeftPosition());
 		SmartDashboard.putNumber("DriveRightPosition", this.getRightPosition());
 	}
+
+	public void publishVelDifference() {
+		SmartDashboard.putNumber("Drive Velocity Difference", 
+		   Math.abs(this.getLeftVelocity())-Math.abs(this.getRightVelocity()));
+	}
 	
 	public double getLeftVoltage() {
 		return (this.mDriveLeftMaster.getMotorOutputVoltage() +
@@ -263,11 +269,11 @@ public class Drive implements Subsystem{
 	}
 	
 	public double getLeftVelocity() {
-		return this.mDriveLeftMaster.getSelectedSensorVelocity(0) /1024.*60.*10.;
+		return this.mDriveLeftMaster.getSelectedSensorVelocity(0);
 	}
 	
 	public double getRightVelocity() {
-		return this.mDriveRightMaster.getSelectedSensorVelocity(0) /-1024.*60.*10.;
+		return this.mDriveRightMaster.getSelectedSensorVelocity(0);
 	}
 	
 	public double getAveragedVelocity() {
