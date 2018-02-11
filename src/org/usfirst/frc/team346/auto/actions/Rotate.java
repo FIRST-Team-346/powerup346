@@ -27,6 +27,8 @@ public class Rotate {
 	public Rotate() {
 		drive = Drive.getInstance();
 		gyro = Gyro.getInstance();	
+		this.createPID();
+
 	}
 	
 	public void rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
@@ -35,7 +37,7 @@ public class Rotate {
 		timeOutTime  = _timeOutTime;
 		tolerance = _tolerance;
 		
-		this.createPID();
+//		this.createPID();
 		this.anglePID.setSetpoint(angleSetpoint);
 		this.drive.enable();
 		this.runPID();
@@ -90,7 +92,7 @@ public class Rotate {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= 0.25) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 500) {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
@@ -117,6 +119,11 @@ public class Rotate {
 		
 		System.out.println("Rotate completed via timeout");
 		System.out.println("Current angle: " + this.gyro.getAngle());
+	}
+	
+	public void setPID(double _P, double _I, double _D) {
+		this.anglePID.setPID(_P, _I, _D);
+		System.out.println(this.anglePID.getP());
 	}
 	
 	public void disablePID(){
