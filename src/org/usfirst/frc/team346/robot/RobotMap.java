@@ -93,13 +93,13 @@ public class RobotMap {
 	
 	public static final double kDriveFollowP = 0.5;
 	public static final double kDriveFollowI = 0;
-	public static final double kDriveFollowD = 0.5;
-	public static final double kDriveFollowF = 0;
+	public static final double kDriveFollowD = 0;
+	public static final double kDriveFollowF = 0.5;
 
 	public static final double kDriveFollowErrorScalerMultiplier = 10.;
 	public static final double kDriveFollowErrorScalerDivider = 0.5;
 	
-	public static final double kDriveFollowVelSetpoint = 0.8 * 1200.;
+	public static final double kDriveFollowVelSetpoint = 0.8 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 0.;
 	public static final double kDriveFollowDecelSetpoint = 0.;
 	

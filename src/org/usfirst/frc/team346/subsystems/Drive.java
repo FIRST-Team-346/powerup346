@@ -19,7 +19,7 @@ public class Drive implements Subsystem{
 	private double mTurn;
 	private double mSecondsFromNeutralToFull = 0.25;
 	
-	private double leftMaxVel = 0, rightMaxVel = 0;
+	private double leftMaxVel = 0, rightMaxVel = 0, mPrevTime, mPrevVel = 0, mPrevAccel = 0;
 	
 	public enum DriveMode {
 		PERCENT,
@@ -152,74 +152,12 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_throttle) + this.mTurn);
 	}
 	
-	public void driveDifferential(DriveMode _mode, double _left, double _right) {
-		if(_mode == DriveMode.VELOCITY) {
-			_left /= 1200.;
-			_right /= 1200.;
-		}
-		
-		int lNotchCount = 3;
-		if(_left >= 0) {
-			_left = (double)((int)((_left * lNotchCount) + 0.5))/lNotchCount;
-		}
-		else if(_left < 0) {
-			_left = (double)((int)((_left * lNotchCount) - 0.5))/lNotchCount;
-		}
-		
-		if(_right >= 0) {
-			_right = (double)((int)((_right * lNotchCount) + 0.5))/lNotchCount;
-		}
-		else if(_right < 0) {
-			_right = (double)((int)((_right * lNotchCount) - 0.5))/lNotchCount;
-		}
-		
-		if(_mode == DriveMode.VELOCITY) {
-			_left *= 1200.;
-			_right *= 1200.;
-		}
-		
-		switch(_mode) {
-			case PERCENT : {
-				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _left);
-				this.mDriveRightMaster.set(ControlMode.PercentOutput, -(_right));
-			}; break;
-		
-			case VELOCITY: {
-				this.mDriveLeftMaster.set(ControlMode.Velocity, _left *1024./60./10.);
-				this.mDriveRightMaster.set(ControlMode.Velocity, -(_right) *1024./60./10.);
-			}; break;
-			
-			default : {
-				System.out.println("Drive command unsuccessful: invalid drive mode specified.");
-			}; break;
-		}
-	}
-	
-	public double getMaxLeftVel() {
-		if(Math.abs(this.leftMaxVel) < Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0))){
-			this.leftMaxVel = Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0));
-		}
-		return leftMaxVel;
-	}
-	
-	public double getMaxRightVel() {
-		if(Math.abs(this.rightMaxVel) < Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0))){
-			this.rightMaxVel = Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0));
-		}
-		return rightMaxVel;
-	}
-	
 	public void publishData() {
 //		this.publishVoltage();
 //		this.publishPercent();
 //		this.publishVelocity();
 //		this.publishPosition();
 		this.publishMaxVel();
-	}
-	
-	public void publishMaxVel() {
-		SmartDashboard.putNumber("leftMaxVel", this.getMaxLeftVel());
-		SmartDashboard.putNumber("rightMaxVel", this.getMaxRightVel());
 	}
 	
 	public void publishVoltage() {
@@ -232,14 +170,23 @@ public class Drive implements Subsystem{
 		SmartDashboard.putNumber("DriveRightPercent", this.getRightPercent());
 	}
 	
+	public void publishPosition() {
+		SmartDashboard.putNumber("DriveLeftPosition", this.getLeftPosition());
+		SmartDashboard.putNumber("DriveRightPosition", this.getRightPosition());
+	}
+	
 	public void publishVelocity() {
 		SmartDashboard.putNumber("DriveLeftVelocity", this.getLeftVelocity());
 		SmartDashboard.putNumber("DriveRightVelocity", this.getRightVelocity());
 	}
 	
-	public void publishPosition() {
-		SmartDashboard.putNumber("DriveLeftPosition", this.getLeftPosition());
-		SmartDashboard.putNumber("DriveRightPosition", this.getRightPosition());
+	public void publishMaxVel() {
+		SmartDashboard.putNumber("leftMaxVel", this.getMaxLeftVel());
+		SmartDashboard.putNumber("rightMaxVel", this.getMaxRightVel());
+	}
+	
+	public void publishAccel() {
+		SmartDashboard.putNumber("DriveAccel", this.getAveragedAccel());
 	}
 	
 	public double getLeftVoltage() {
@@ -262,6 +209,18 @@ public class Drive implements Subsystem{
 		return this.mDriveRightMaster.getMotorOutputPercent() *-1.;
 	}
 	
+	public double getLeftPosition() {
+		return this.mDriveLeftMaster.getSelectedSensorPosition(0) /1024.;
+	}
+	
+	public double getRightPosition() {
+		return this.mDriveRightMaster.getSelectedSensorPosition(0) /-1024.;
+	}
+	
+	public double getAveragedPosition() {
+		return 1./2. * ( this.getLeftPosition() + this.getRightPosition() );
+	}
+	
 	public double getLeftVelocity() {
 		return this.mDriveLeftMaster.getSelectedSensorVelocity(0) /1024.*60.*10.;
 	}
@@ -274,16 +233,29 @@ public class Drive implements Subsystem{
 		return 1./2. * ( this.getLeftVelocity() + this.getRightVelocity() );
 	}
 	
-	public double getLeftPosition() {
-		return this.mDriveLeftMaster.getSelectedSensorPosition(0) /1024.;
+	public double getMaxLeftVel() {
+		if(Math.abs(this.leftMaxVel) < Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0))){
+			this.leftMaxVel = Math.abs(this.mDriveLeftMaster.getSelectedSensorVelocity(0));
+		}
+		return leftMaxVel;
 	}
 	
-	public double getRightPosition() {
-		return this.mDriveRightMaster.getSelectedSensorPosition(0) /-1024.;
+	public double getMaxRightVel() {
+		if(Math.abs(this.rightMaxVel) < Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0))){
+			this.rightMaxVel = Math.abs(this.mDriveRightMaster.getSelectedSensorVelocity(0));
+		}
+		return rightMaxVel;
 	}
 	
-	public double getAveragedPosition() {
-		return 1./2. * ( this.getLeftPosition() + this.getRightPosition() );
+	public double getAveragedAccel() {
+		double lAccel = this.mPrevAccel;
+		if(System.currentTimeMillis() - this.mPrevTime > 0.1) {
+			lAccel = (this.getAveragedVelocity() - this.mPrevVel) /0.1;
+			this.mPrevTime = System.currentTimeMillis() /1000.;
+			this.mPrevVel = this.getAveragedVelocity();
+			this.mPrevAccel = lAccel;
+		}
+		return lAccel;
 	}
 	
 	public void setNominal(double _limit){
