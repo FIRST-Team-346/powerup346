@@ -286,6 +286,16 @@ public class Drive implements Subsystem{
 		this.setNominal(0);
 	}
 	
+	public void enable() {
+		this.mDriveLeftMaster.set(ControlMode.PercentOutput, 0);
+		this.mDriveLeftSlave1.set(ControlMode.Follower, this.mDriveLeftMaster.getDeviceID());
+		this.mDriveLeftSlave2.set(ControlMode.Follower, this.mDriveLeftMaster.getDeviceID());
+		this.mDriveRightMaster.set(ControlMode.PercentOutput, 0);
+		this.mDriveRightSlave1.set(ControlMode.Follower, this.mDriveRightMaster.getDeviceID());
+		this.mDriveRightSlave1.set(ControlMode.Follower, this.mDriveRightMaster.getDeviceID());
+		System.out.println("Drive train enabled.");
+	}
+	
 	public void disable() {
 		this.mDriveLeftMaster.set(ControlMode.Disabled, 0);
 		this.mDriveLeftSlave1.set(ControlMode.Disabled, 0);

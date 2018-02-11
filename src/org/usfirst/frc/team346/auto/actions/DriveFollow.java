@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveFollow {
 
@@ -40,14 +41,14 @@ public class DriveFollow {
 	private double mStartTime;
 	private double mCountdown;
 	private boolean mCountdownStarted;
-	private int mPrintCount = 0;
+	private int mPrintCount = 0;	
+	
 	
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
 	 * as well as the correct heading along the course.**/
 	public DriveFollow(Robot _robot) {
 		sRobot = _robot;
-		mStartTime = System.currentTimeMillis()/1000.;
 		mCountdownStarted = false;
 	}
 	
@@ -60,7 +61,12 @@ public class DriveFollow {
 		sRobot.zeroDevices();
 		updateFinal();
 		
+		
 		createCoursePID();
+		mStartTime = System.currentTimeMillis()/1000.;
+		
+		this.sRobot.sDrive.enable();
+		
 		mCoursePID.setSetpoint(mDistanceSetpoint);
 		enablePID();
 	}
@@ -118,6 +124,8 @@ public class DriveFollow {
 		}
 	}
 	
+	
+	
 	private void setDriveToFollow(double _courseOutput) {
 		if(mCourseRemaining[TOTAL] < 2. && mCourseRemaining[TOTAL] >= 0) {
 			mVelSetpoint = 0.2*1200.;
@@ -168,6 +176,7 @@ public class DriveFollow {
 			System.out.println("pidOP:" + _courseOutput + " lV:" + mLeftVel + " rV:" + mRightVel);
 		}
 		sRobot.sDrive.drive(DriveMode.VELOCITY, mLeftVel, mRightVel);
+		SmartDashboard.putNumber("driveOutput", mLeftVel);
 	}
 	
 	/**To be run at the end of each cycle to inform the next cycle of the previous values.**/
@@ -176,6 +185,7 @@ public class DriveFollow {
 		mTime[PREV] = mTime[CURR];
 		mDistance[PREV] = mDistance[CURR];
 	}
+	
 	
 	private void checkCompletion() {
 		checkDisabled();
@@ -190,11 +200,11 @@ public class DriveFollow {
 				disablePID();
 				setDriveToFollow(0);
 				
-				//TODO delete this after test
-				long initialTime = System.currentTimeMillis();
-				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
-				}
-				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
+//				//TODO delete this after test
+//				long initialTime = System.currentTimeMillis();
+//				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
+//				}
+//				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
 			}
 		}
 		else if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
@@ -215,11 +225,11 @@ public class DriveFollow {
 				disablePID();
 				setDriveToFollow(0);
 				
-				//TODO delete this after test
-				long initialTime = System.currentTimeMillis();
-				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
-				}
-				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
+//				//TODO delete this after test
+//				long initialTime = System.currentTimeMillis();
+//				while(System.currentTimeMillis() - initialTime < Math.abs(3) * 1000.) {
+//				}
+//				System.out.println("Final acD:" + mCourseTraveled[TOTAL]);
 			}
 		}
 		else if(System.currentTimeMillis()/1000. - mCountdown > kThresholdSeconds) {
