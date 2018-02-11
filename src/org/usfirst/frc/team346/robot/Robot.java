@@ -99,7 +99,6 @@ public class Robot extends IterativeRobot {
 		this.sControlBoard.checkOuttake();
 		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkShooterBlock();
 //		this.sControlBoard.checkClimber();
 		
 		this.publishData();
@@ -139,7 +138,7 @@ public class Robot extends IterativeRobot {
 		this.sDrive.zeroEncoders();
 		
 		this.sDrive.setNominal(0);
-		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
 	}
 
 }

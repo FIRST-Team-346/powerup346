@@ -99,7 +99,10 @@ public class ControlBoard {
 	}
 	
 	public void checkTilter() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton4TilterScaleFar)) {
+		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton7TilterOff)){
+			this.sRobot.sTilter.disable();
+		}
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton4TilterScaleFar)) {
 			this.sRobot.sTilter.setSetpointPos(TiltPos.SCALE_FAR);
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton8TilterScaleClose)) {
@@ -112,23 +115,22 @@ public class ControlBoard {
 			this.sRobot.sTilter.setSetpointPos(TiltPos.SWITCH_CLOSE);
 		}
 		
+		this.sRobot.sTilter.holdSetpoint();
+		
 		this.sRobot.sTilter.setMotionMagicVelocityNu(this.mPrefs.getInt("tiltVelNu", 0));
 		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.mPrefs.getInt("tiltAccelNu", 0));
 		this.sRobot.sTilter.setPID(this.mPrefs.getDouble("tiltP", 0), this.mPrefs.getDouble("tiltI", 0), this.mPrefs.getDouble("tiltD", 0));
-		
-		this.sRobot.sTilter.holdSetpoint();
-		
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton7TilterDisable)){
-			this.sRobot.sTilter.disable();
-		}
 	}
 	
 	public void checkShooter() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton9ShooterOn)) {
-			this.sRobot.sShooter.setLeftPercentReverse(0.7);
-			this.sRobot.sShooter.setRightPercentReverse(0.7);
-//			this.sRobot.sShooter.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
-//			this.sRobot.sShooter.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton10ShooterOff)) {
+			this.sRobot.sShooter.disable();
+		}
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton9ShooterOn)) {
+//			this.sRobot.sShooter.setLeftPercentReverse(0.7);
+//			this.sRobot.sShooter.setRightPercentReverse(0.7);
+			this.sRobot.sShooter.setLeftSetpointNu(RobotMap.kShooterLeftSetpointNu);
+			this.sRobot.sShooter.setRightSetpointNu(RobotMap.kShooterRightSetpointNu);
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton6OuttakeReverse)) {
 			this.sRobot.sShooter.setLeftPercentReverse(0.1);
@@ -140,10 +142,6 @@ public class ControlBoard {
 		}
 		
 		this.sRobot.sShooter.holdSpeedSetpoint();
-
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton10ShooterOff)) {
-			this.sRobot.sShooter.disable();
-		}
 	}
 	
 	public void checkClimb() {

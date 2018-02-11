@@ -18,6 +18,7 @@ public class Tilter implements Subsystem {
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
 	private boolean mIsDisabled;
+	private final int mNeutralPosThreshold = 15;
 	
 	public enum TiltPos {
 		NEUTRAL,
@@ -77,26 +78,22 @@ public class Tilter implements Subsystem {
 	 * @options SWITCH_CLOSE, SWITCH_FAR, SCALE_CLOSE, SCALE_FAR, NEUTRAL**/
 	public void setSetpointPos(TiltPos _position) {
 		double lPosNeg = (RobotMap.kTiltUpIsPositive ? 1 : -1);
-		double lPosition1 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION1 * lPosNeg;
-		double lPosition2 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION2 * lPosNeg;
-		double lPosition3 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION3 * lPosNeg;
-		double lPosition4 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION4 * lPosNeg;
 		
 		switch(_position) {
 			case SWITCH_CLOSE : {
-				this.setSetpointNu(lPosition1);
+				this.setSetpointNu(RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg);
 			}; break;
 			
 			case SWITCH_FAR : {
-				this.setSetpointNu(lPosition2);
+				this.setSetpointNu(RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg);
 			};  break;
 			
 			case SCALE_CLOSE : {
-				this.setSetpointNu(lPosition3);
+				this.setSetpointNu(RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg);
 			}; break;
 			
 			case SCALE_FAR : {
-				this.setSetpointNu(lPosition4);
+				this.setSetpointNu(RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg);
 			}; break;
 			
 			default : {
@@ -116,6 +113,9 @@ public class Tilter implements Subsystem {
 	public void holdSetpoint() {
 		if(!this.mIsDisabled) {
 			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
+			if(this.mTilterSetpoint == RobotMap.kTiltPosNeutral && Math.abs(this.getPositionNu() - RobotMap.kTiltPosNeutral) < this.mNeutralPosThreshold) {
+				this.disable();
+			}
 		}
 		else {
 			this.disable();
@@ -187,16 +187,6 @@ public class Tilter implements Subsystem {
 		return this.mMaxAccel;
 	}
 	
-	/**Publishes data about the Tilter subsystem to the SmartDashboard.**/
-	public void publishData() {
-		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
-		SmartDashboard.putNumber("TilterPosition", this.getPositionNu());
-		SmartDashboard.putNumber("TilterVelocity", this.getVelocityNu());
-		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
-		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
-		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
-	}
-	
 	/**Disables the Tilter subsystem.**/
 	public void disable() {
 		this.mPrevTime = System.currentTimeMillis() /1000.;
@@ -205,6 +195,16 @@ public class Tilter implements Subsystem {
 		
 		this.mTilter.set(ControlMode.Disabled, 0);
 		this.mIsDisabled = true;
+	}
+	
+	/**Publishes data about the Tilter subsystem to the SmartDashboard.**/
+	public void publishData() {
+		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
+		SmartDashboard.putNumber("TilterPosition", this.getPositionNu());
+		SmartDashboard.putNumber("TilterVelocity", this.getVelocityNu());
+		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
+		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
+		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
 	}
 	
 }
