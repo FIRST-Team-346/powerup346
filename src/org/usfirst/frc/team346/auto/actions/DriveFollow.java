@@ -61,7 +61,6 @@ public class DriveFollow {
 		sRobot.zeroDevices();
 		updateFinal();
 		
-		
 		createCoursePID();
 		mStartTime = System.currentTimeMillis()/1000.;
 		
@@ -124,8 +123,6 @@ public class DriveFollow {
 		}
 	}
 	
-	
-	
 	private void setDriveToFollow(double _courseOutput) {
 		if(mCourseRemaining[TOTAL] < 2. && mCourseRemaining[TOTAL] >= 0) {
 			mVelSetpoint = 0.2*1200.;
@@ -185,7 +182,6 @@ public class DriveFollow {
 		mTime[PREV] = mTime[CURR];
 		mDistance[PREV] = mDistance[CURR];
 	}
-	
 	
 	private void checkCompletion() {
 		checkDisabled();
