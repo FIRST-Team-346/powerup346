@@ -52,12 +52,12 @@ public class Robot extends IterativeRobot {
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
 		
-//		this.sIntake = Intake.getInstance();
-//		this.sOuttake = Outtake.getInstance();
-//		this.sLoader = Loader.getInstance();
-//		
-//		this.sTilter = Tilter.getInstance();
-//		this.sShooter = Shooter.getInstance();
+		this.sIntake = Intake.getInstance();
+		this.sOuttake = Outtake.getInstance();
+		this.sLoader = Loader.getInstance();
+		
+		this.sTilter = Tilter.getInstance();
+		this.sShooter = Shooter.getInstance();
 		
 //		this.sClimber = Climber.getInstance();
 		
@@ -94,11 +94,11 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 		this.sControlBoard.drive();
-//		this.sControlBoard.checkIntake();
-//		this.sControlBoard.checkLoader();
-//		this.sControlBoard.checkOuttake();
-//		this.sControlBoard.checkTilter();
-//		this.sControlBoard.checkShooter();
+		this.sControlBoard.checkIntake();
+		this.sControlBoard.checkLoader();
+		this.sControlBoard.checkOuttake();
+		this.sControlBoard.checkTilter();
+		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimber();
 		
 		this.publishData();
@@ -118,8 +118,8 @@ public class Robot extends IterativeRobot {
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
-//				this.sTilter.publishData();
-//				this.sShooter.publishData();
+				this.sTilter.publishData();
+				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
 		}
@@ -128,8 +128,8 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		this.zeroDevices();
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
-//		this.sTilter.disable();
-//		this.sShooter.disable();
+		this.sTilter.disable();
+		this.sShooter.disable();
 	}
 	
 	public void zeroDevices() {

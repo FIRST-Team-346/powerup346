@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
+import org.usfirst.frc.team346.subsystems.Shooter.ShooterMode;
 import org.usfirst.frc.team346.subsystems.Tilter.TiltPos;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,7 +33,7 @@ public class ControlBoard {
 	public ControlBoard(Robot _robot) {
 		this.sRobot = _robot;
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
-//		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
+		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
 		
 		this.mPrefs = Preferences.getInstance();
 	}
@@ -46,20 +47,24 @@ public class ControlBoard {
 			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
 		else {
-//			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 //			this.sRobot.sDrive.drive(DriveMode.PERCENTVElOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*2100., -this.mController.getRawAxis(RIGHT_STICK_Y)*2100.);
+//			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*2100., -this.mController.getRawAxis(RIGHT_STICK_Y)*2100.);
 		}
 	}
     
 	public void checkIntake() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton5IntakeOut)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton2IntakeOut)) {
 			this.sRobot.sIntake.setLeftIntakeSpeedOut(0.75);
 			this.sRobot.sIntake.setRightIntakeSpeedOut(0.75);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButton1IntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
-			this.sRobot.sIntake.setLeftIntakeSpeedIn(0.75);
-			this.sRobot.sIntake.setRightIntakeSpeedIn(0.75);
+			this.sRobot.sIntake.setLeftIntakeSpeedIn(0.50);
+			this.sRobot.sIntake.setRightIntakeSpeedIn(0.50);
+		}
+		else if(this.mButtonBoard.getRawButton(13) ) {
+			this.sRobot.sIntake.setLeftIntakeSpeedOut(.25);
+			this.sRobot.sIntake.setRightIntakeSpeedOut(.25);
 		}
 		else {
 			this.sRobot.sIntake.setLeftIntakeSpeedIn(0.0);
@@ -68,13 +73,17 @@ public class ControlBoard {
     }
 	
 	public void checkLoader() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton5IntakeOut)) {
-			this.sRobot.sLoader.setLeftLoaderSpeedOut(1.0);
-			this.sRobot.sLoader.setRightLoaderSpeedOut(1.0);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton2IntakeOut)) {
+			this.sRobot.sLoader.setLeftLoaderSpeedOut(0.5);
+			this.sRobot.sLoader.setRightLoaderSpeedOut(0.5);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButton1IntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
-			this.sRobot.sLoader.setLeftLoaderSpeedIn(1.0);
-			this.sRobot.sLoader.setRightLoaderSpeedIn(1.0);
+			this.sRobot.sLoader.setLeftLoaderSpeedIn(1);
+			this.sRobot.sLoader.setRightLoaderSpeedIn(1);
+		}
+		else if(this.mButtonBoard.getRawButton(13)) {
+			this.sRobot.sLoader.setLeftLoaderSpeedIn(.75);
+			this.sRobot.sLoader.setRightLoaderSpeedIn(.75);
 		}
 		else {
 			this.sRobot.sLoader.setLeftLoaderSpeedIn(0.0);
@@ -83,11 +92,11 @@ public class ControlBoard {
 	}
 	
 	public void checkOuttake() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton2OuttakeForward)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton5OuttakeFront)) {
 			this.sRobot.sOuttake.setLeftOuttakeSpeedForward(0.75);
 			this.sRobot.sOuttake.setRightOuttakeSpeedForward(0.75);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButton6OuttakeReverse)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButton6OuttakeBack)) {
 			this.sRobot.sOuttake.setLeftOuttakeSpeedReverse(0.65);
 			this.sRobot.sOuttake.setRightOuttakeSpeedReverse(0.65);
 		}
@@ -98,8 +107,14 @@ public class ControlBoard {
 	}
 	
 	public void checkTilter() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton7TilterOff)){
+		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton7)) {
 			this.sRobot.sTilter.disable();
+		}
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButton11)) {
+			this.sRobot.sTilter.setPercent(0.5);
+		}
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton3TilterNeutral)){
+			this.sRobot.sTilter.setSetpointPos(TiltPos.NEUTRAL);
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton4TilterScaleFar)) {
 			this.sRobot.sTilter.setSetpointPos(TiltPos.SCALE_FAR);
@@ -113,12 +128,20 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton15TilterSwitchClose)) {
 			this.sRobot.sTilter.setSetpointPos(TiltPos.SWITCH_CLOSE);
 		}
+		else if(this.sRobot.sTilter.getTiltPosSetpoint() == TiltPos.VOLTAGE_PERCENT) {
+			this.sRobot.sTilter.setPercent(0);
+		}
+		else {
+			this.sRobot.sTilter.holdSetpoint();
+		}
 		
-		this.sRobot.sTilter.holdSetpoint();
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton13)) {
+			this.sRobot.sTilter.setTiltNeutralNu();
+		}
 		
-		this.sRobot.sTilter.setMotionMagicVelocityNu(this.mPrefs.getInt("tiltVelNu", 0));
-		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.mPrefs.getInt("tiltAccelNu", 0));
-		this.sRobot.sTilter.setPID(this.mPrefs.getDouble("tiltP", 0), this.mPrefs.getDouble("tiltI", 0), this.mPrefs.getDouble("tiltD", 0));
+//		this.sRobot.sTilter.setMotionMagicVelocityNu(this.mPrefs.getInt("tiltVelNu", 0));
+//		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.mPrefs.getInt("tiltAccelNu", 0));
+//		this.sRobot.sTilter.setPID(this.mPrefs.getDouble("tiltP", 0), this.mPrefs.getDouble("tiltI", 0), this.mPrefs.getDouble("tiltD", 0));
 	}
 	
 	public void checkShooter() {
@@ -126,21 +149,25 @@ public class ControlBoard {
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton9ShooterOn)) {
-//			this.sRobot.sShooter.setLeftPercentReverse(0.7);
-//			this.sRobot.sShooter.setRightPercentReverse(0.7);
 			this.sRobot.sShooter.setLeftSetpointNu(RobotMap.kShooterLeftSetpointNu);
 			this.sRobot.sShooter.setRightSetpointNu(RobotMap.kShooterRightSetpointNu);
 		}
-		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton6OuttakeReverse)) {
-			this.sRobot.sShooter.setLeftPercentReverse(0.1);
-			this.sRobot.sShooter.setRightPercentReverse(0.1);
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButton2IntakeOut) || this.mButtonBoard.getRawButton(RobotMap.kButton5OuttakeFront)) {
+			this.sRobot.sShooter.setPercentBack(0.3);
 		}
-		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton2OuttakeForward)) {
-			this.sRobot.sShooter.setLeftPercentForward(0.1);
-			this.sRobot.sShooter.setRightPercentForward(0.1);
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButton1IntakeIn) || this.mButtonBoard.getRawButton(RobotMap.kButton6OuttakeBack)) {
+			this.sRobot.sShooter.setPercentFront(0.3);
+		}
+		else if(this.mButtonBoard.getRawButton(13)) {
+			this.sRobot.sShooter.setPercentFront(0.5);
+		}
+		else if(this.sRobot.sShooter.getShooterMode() == ShooterMode.PERCENT_VOLTAGE) {
+			this.sRobot.sShooter.setPercentFront(0);
 		}
 		
-		this.sRobot.sShooter.holdSpeedSetpoint();
+		if(this.sRobot.sShooter.getShooterMode() != ShooterMode.PERCENT_VOLTAGE) {
+			this.sRobot.sShooter.holdSpeedSetpoint();
+		}
 	}
 	
 	public void checkClimb() {

@@ -18,25 +18,25 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 3;			//27-03
-	public static final int kDriveLeftSlave1Port =2;			//13-02
-	public static final int kDriveLeftSlave2Port = 21;			//07-21
-	public static final int kDriveRightMasterPort = 1;			//26-01
-	public static final int kDriveRightSlave1Port = 5;			//18-05
-	public static final int kDriveRightSlave2Port = 8;			//17-08
+	public static final int kDriveLeftMasterPort = 27;			//27-03
+	public static final int kDriveLeftSlave1Port =7;			//13-02
+	public static final int kDriveLeftSlave2Port = 13;			//07-21
+	public static final int kDriveRightMasterPort = 26;			//26-01
+	public static final int kDriveRightSlave1Port = 18;			//18-05
+	public static final int kDriveRightSlave2Port = 17;			//17-08
 
-	public static final int kIntakeLeftPort = 20;				//20-
-	public static final int kIntakeRightPort = 41;				//41-
+	public static final int kIntakeLeftPort = 24;			    //20-
+	public static final int kIntakeRightPort = 20;				//41-
 	
-	public static final int kLoaderLeftPort = 15;				//15-
+	public static final int kLoaderLeftPort = 41;				//15-
 	public static final int kLoaderRightPort = 19;				//19-
 	
-	public static final int kOuttakeLeftPort = 23;				//23-
-	public static final int kOuttakeRightPort = 14;				//14-
+	public static final int kOuttakeLeftPort = 14;				//23-
+	public static final int kOuttakeRightPort = 23;				//14-
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 19;				//19-
+	public static final int kShooterLeftPort = 9;				//19-
 	public static final int kShooterRightPort = 15;				//15-
 	
 	public static final int kClimberPort = 0;					//
@@ -48,12 +48,12 @@ public class RobotMap {
 	public static final double kThrottleTurnRotationStrength = 0.8;
 	
 	public static final int kButton1IntakeIn = 1;
-	public static final int kButton2OuttakeForward = 2;
-	public static final int kButton3 = 3;
+	public static final int kButton2IntakeOut = 2;
+	public static final int kButton3TilterNeutral = 3;
 	public static final int kButton4TilterScaleFar = 4;
-	public static final int kButton5IntakeOut = 5;
-	public static final int kButton6OuttakeReverse = 6;
-	public static final int kButton7TilterOff = 7;
+	public static final int kButton5OuttakeFront = 5;
+	public static final int kButton6OuttakeBack = 6;
+	public static final int kButton7 = 7;
 	public static final int kButton8TilterScaleClose = 8;
 	public static final int kButton9ShooterOn = 9;
 	public static final int kButton10ShooterOff = 10;
@@ -65,14 +65,14 @@ public class RobotMap {
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
-	public static final double kDriveLeftVelMax = 2200.;
+	public static final double kDriveLeftVelMax = 2150.;
 
 	public static final double kDriveVelLeftP = 0;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
 	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
 		
-	public static final double kDriveRightVelMax = 2000.;
+	public static final double kDriveRightVelMax = 2050.;
 
 	public static final double kDriveVelRightP = 0;
 	public static final double kDriveVelRightI = 0;
@@ -121,7 +121,7 @@ public class RobotMap {
 	public static final double kShooterRightF = 0.041;
 	
 	public static final int kShooterLeftSetpointNu = 17000;
-	public static final int kShooterRightSetpointNu = 17000;
+	public static final int kShooterRightSetpointNu = -17000;
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
@@ -129,19 +129,19 @@ public class RobotMap {
 	
 	public static final boolean kTiltUpIsPositive = true;
 	
-	public static final int kTiltPosNeutral = 336;
+	public static final int kTiltPosNeutral = 771;
 	public static final int kTiltPosRange = 260;
 	
-	public static final int kTiltPosNeutralToSwitchClose = 50;
-	public static final int kTiltPosNeutralToSwitchFar = 100;
-	public static final int kTiltPosNeutralToScaleClose = 150;
-	public static final int kTiltPosNeutralToScaleFar = 200;
+	public static final int kTiltPosNeutralToSwitchClose = 100;
+	public static final int kTiltPosNeutralToSwitchFar = 150;
+	public static final int kTiltPosNeutralToScaleClose = 200;
+	public static final int kTiltPosNeutralToScaleFar = 250;
 	
 	public static final int kTilterMaxVelocityNu = 83;
 	public static final int kTilterMaxAccelerationNu = 100;
 	
-	public static final int kTilterDesiredVelocityNu = 40;
-	public static final int kTilterDesiredAccelerationNu = 80;
+	public static final int kTilterDesiredVelocityNu = 20;
+	public static final int kTilterDesiredAccelerationNu = 40;
 	
 	public static final double kTilterP = 12.0;
 	public static final double kTilterI = 0.0;
