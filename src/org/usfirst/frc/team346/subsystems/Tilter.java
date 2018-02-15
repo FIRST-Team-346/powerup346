@@ -84,25 +84,21 @@ public class Tilter implements Subsystem {
 	public void setSetpointPos(TiltPos _position) {
 		double lPosNeg = (RobotMap.kTiltUpIsPositive ? 1 : -1);
 		this.mTiltPosSetpoint = _position;
-		
+
 		switch(_position) {
 			case SWITCH_CLOSE : {
-				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg);
 				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg;
 			}; break;
 			
 			case SWITCH_FAR : {
-				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg);
 				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg;
 			};  break;
 			
 			case SCALE_CLOSE : {
-				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg);
-				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg;
+				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg;			
 			}; break;
 			
 			case SCALE_FAR : {
-				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg);
 				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg;
 			}; break;
 			
@@ -110,6 +106,13 @@ public class Tilter implements Subsystem {
 				this.setSetpointNu(this.mNeutralPosNuFinal);
 			}; break;
 		}
+		if(Math.abs(this.mTilter.getSelectedSensorPosition(0) - this.mTilterSetpoint) > 5) {
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
+		}
+		else {
+			this.mTilter.set(ControlMode.PercentOutput, 0.05);
+		}
+
 	}
 	
 	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.

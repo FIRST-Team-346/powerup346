@@ -35,25 +35,24 @@ public class ControlBoard {
 		this.sRobot = _robot;
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
 		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
-		this.mDroneController = new Joystick(RobotMap.KDroneControllerPort);
+//		this.mDroneController = new Joystick(RobotMap.KDroneControllerPort);
 		
 		this.mPrefs = Preferences.getInstance();
 	}
     
 	public void drive() {
-//		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
-//			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
-//		}
-//		
-//		if(this.mIsThrottleTurnMode) {
-//			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
-//		}
-//		else {
-//			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-////			this.sRobot.sDrive.drive(DriveMode.PERCENTVElOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-////			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*2100., -this.mController.getRawAxis(RIGHT_STICK_Y)*2100.);
-//		}
-		this.sRobot.sDrive.driveThrottleTurn(-this.mDroneController.getRawAxis(0), this.mDroneController.getRawAxis(3));
+		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
+			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
+		}
+		
+		if(this.mIsThrottleTurnMode) {
+			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
+		}
+		else {
+			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));///			this.sRobot.sDrive.drive(DriveMode.PERCENTVElOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+//			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*2100., -this.mController.getRawAxis(RIGHT_STICK_Y)*2100.);
+		}
+//		this.sRobot.sDrive.driveThrottleTurn(-this.mDroneController.getRawAxis(0), this.mDroneController.getRawAxis(3));
 
 	}
     
@@ -133,8 +132,8 @@ public class ControlBoard {
 			this.sRobot.sTilter.setTiltNeutralNu();
 		}
 		
-//		this.sRobot.sTilter.setMotionMagicVelocityNu(this.mPrefs.getInt("tiltVelNu", 0));
-//		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.mPrefs.getInt("tiltAccelNu", 0));
+		this.sRobot.sTilter.setMotionMagicVelocityNu(this.mPrefs.getInt("tiltVelNu", 0));
+		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.mPrefs.getInt("tiltAccelNu", 0));
 		this.sRobot.sTilter.setPID(this.mPrefs.getDouble("tiltP", 0), this.mPrefs.getDouble("tiltI", 0), this.mPrefs.getDouble("tiltD", 0));
 	}
 	
