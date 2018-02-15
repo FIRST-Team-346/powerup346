@@ -28,9 +28,8 @@ public class Tilter implements Subsystem {
 		SWITCH_CLOSE,
 		SWITCH_FAR,
 		SCALE_CLOSE,
-		SCALE_FAR,
-		VOLTAGE_PERCENT;
-	}
+		SCALE_FAR;
+		}
 	
 	private static Tilter sTilterInstance = new Tilter();
 	/**Gets the single instance of Tilter.
@@ -50,8 +49,6 @@ public class Tilter implements Subsystem {
 	private void initTalon() {
 		this.mTilter = new TalonSRX(RobotMap.kTilterPort);
 		this.mTilter.setNeutralMode(NeutralMode.Brake);
-		this.mTilter.overrideLimitSwitchesEnable(true);
-		this.mTilter.overrideSoftLimitsEnable(true);
 		
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
 		this.mTilter.setInverted(true);
@@ -76,8 +73,8 @@ public class Tilter implements Subsystem {
 	
 	/**Sets the Tilter motor to a voltage percent.
 	 * @param _percent percent voltage**/
+	@Deprecated
 	public void setPercent(double _percent) {
-		this.mTiltPosSetpoint = TiltPos.VOLTAGE_PERCENT;
 		this.mTilter.set(ControlMode.PercentOutput, _percent);
 	}
 	
@@ -91,18 +88,22 @@ public class Tilter implements Subsystem {
 		switch(_position) {
 			case SWITCH_CLOSE : {
 				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg);
+				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg;
 			}; break;
 			
 			case SWITCH_FAR : {
 				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg);
+				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg;
 			};  break;
 			
 			case SCALE_CLOSE : {
 				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg);
+				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg;
 			}; break;
 			
 			case SCALE_FAR : {
 				this.setSetpointNu(this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg);
+				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg;
 			}; break;
 			
 			default : {
@@ -114,21 +115,9 @@ public class Tilter implements Subsystem {
 	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.
 	 * @param _nu position setpoint in Nu**/
 	public void setSetpointNu(double _nu) {
-		this.mTilterSetpoint = _nu;
-		this.mIsDisabled = false;
+		this.mTilter.set(ControlMode.MotionMagic, _nu);
 	}
 	
-	/**Puts the Tilter into Motion Magic mode to follow its current setpoint.**/
-	public void holdSetpoint() {
-		if(!this.mIsDisabled && this.mTiltPosSetpoint != TiltPos.VOLTAGE_PERCENT) {
-			if(this.mTilterSetpoint == this.mNeutralPosNuFinal && Math.abs(this.getPositionNu() - this.mNeutralPosNuFinal) < this.mNeutralPosThreshold) {
-				this.disable();
-			}
-			else {
-				this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
-			}
-		}
-	}
 	
 	/**Sets the cruise velocity of the Tilter for Motion Magic mode.
 	 * @param _nu cruise velocity in Nu per 100ms**/
@@ -210,7 +199,6 @@ public class Tilter implements Subsystem {
 		this.mPrevAccel = 0;
 		
 		this.mTilter.set(ControlMode.Disabled, 0);
-		this.mTiltPosSetpoint = TiltPos.VOLTAGE_PERCENT;
 		this.mIsDisabled = true;
 	}
 	
@@ -219,9 +207,11 @@ public class Tilter implements Subsystem {
 		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
 		SmartDashboard.putNumber("TilterPosition", this.getPositionNu());
 		SmartDashboard.putNumber("TilterVelocity", this.getVelocityNu());
+		SmartDashboard.putNumber("TilterOutput", this.mTilter.getMotorOutputPercent());
 		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
 		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
 		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
+		SmartDashboard.putNumber("TilterSetpoint", this.mTilterSetpoint);
 	}
 	
 }

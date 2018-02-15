@@ -57,10 +57,10 @@ public class Shooter implements Subsystem {
 	private void initEncoders() {
 		this.mLeftShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
 		this.mLeftShooter.setInverted(false);
-		this.mLeftShooter.setSensorPhase(false);
+		this.mLeftShooter.setSensorPhase(true);
 		this.mRightShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
-		this.mLeftShooter.setInverted(false);
-		this.mLeftShooter.setSensorPhase(false);
+		this.mRightShooter.setInverted(true);
+		this.mRightShooter.setSensorPhase(true);
 	}
 	
 	private void setLeftPIDs(double _kP, double _kI, double _kD) {
@@ -100,7 +100,7 @@ public class Shooter implements Subsystem {
 	
 	public void setPercentFront(double _percent) {
 		this.mLeftShooter.set(ControlMode.PercentOutput, -_percent);
-		this.mRightShooter.set(ControlMode.PercentOutput, _percent);
+		this.mRightShooter.set(ControlMode.PercentOutput,- _percent);
 		
 		this.mShooterMode = ShooterMode.PERCENT_VOLTAGE;
 		this.mIsDisabled = true;
@@ -108,7 +108,7 @@ public class Shooter implements Subsystem {
 	
 	public void setPercentBack(double _percent) {
 		this.mLeftShooter.set(ControlMode.PercentOutput, _percent);
-		this.mRightShooter.set(ControlMode.PercentOutput, -_percent);
+		this.mRightShooter.set(ControlMode.PercentOutput, _percent);
 		
 		this.mShooterMode = ShooterMode.PERCENT_VOLTAGE;
 		this.mIsDisabled = true;

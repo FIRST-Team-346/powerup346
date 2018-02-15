@@ -2,7 +2,6 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
-import org.usfirst.frc.team346.auto.plans.DriveFollowProfileTest;
 import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
 import org.usfirst.frc.team346.auto.plans.SwitchCube;
 import org.usfirst.frc.team346.auto.plans.Test;
@@ -45,6 +44,7 @@ public class RobotMap {
 	
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
+	public static final int KDroneControllerPort = 2;
 	public static final double kThrottleTurnRotationStrength = 0.8;
 	
 	public static final int kButton1IntakeIn = 1;
@@ -129,7 +129,7 @@ public class RobotMap {
 	
 	public static final boolean kTiltUpIsPositive = true;
 	
-	public static final int kTiltPosNeutral = 771;
+	public static final int kTiltPosNeutral = 814;
 	public static final int kTiltPosRange = 260;
 	
 	public static final int kTiltPosNeutralToSwitchClose = 100;
@@ -140,8 +140,8 @@ public class RobotMap {
 	public static final int kTilterMaxVelocityNu = 83;
 	public static final int kTilterMaxAccelerationNu = 100;
 	
-	public static final int kTilterDesiredVelocityNu = 20;
-	public static final int kTilterDesiredAccelerationNu = 40;
+	public static final int kTilterDesiredVelocityNu = 30;
+	public static final int kTilterDesiredAccelerationNu = 80;
 	
 	public static final double kTilterP = 12.0;
 	public static final double kTilterI = 0.0;

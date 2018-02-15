@@ -88,11 +88,11 @@ public class Drive implements Subsystem{
 	
 	/**Initializes the encoders on the master CANTalons.**/
 	private void initEncoders() {
-		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		this.mDriveRightMaster.setInverted(false);
 		this.mDriveRightMaster.setSensorPhase(false);
 		
-		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		this.mDriveRightMaster.setInverted(false);
 		this.mDriveRightMaster.setSensorPhase(false);
 	}
@@ -157,8 +157,8 @@ public class Drive implements Subsystem{
 	}
 	
 	public void publishData() {
-//		this.publishVoltage();
-//		this.publishPercent();
+		this.publishVoltage();
+		this.publishPercent();
 		this.publishVelocity();
 //		this.publishPosition();
 		this.publishMaxVel();
