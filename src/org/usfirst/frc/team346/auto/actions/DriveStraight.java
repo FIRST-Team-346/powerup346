@@ -1,5 +1,6 @@
 package org.usfirst.frc.team346.auto.actions;
 
+import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
@@ -26,7 +27,7 @@ public class DriveStraight{
 	
 	private double angleDifference;
 	private double leftSpeed,rightSpeed;
-	private double angleKP;
+	private double angleKP = 30;
 	
 	public DriveStraight(double _distance, double _percentSpeed, double _angle, double _timeOutTime, double _tolerance) {
 		this.distance = _distance;
@@ -41,7 +42,7 @@ public class DriveStraight{
 		this.createPID();
 		this.enablePID();
 		
-		this.runPID();
+//		this.runPID();
 	}
 	
 	public void createPID() {
@@ -79,33 +80,29 @@ public class DriveStraight{
 			public void pidWrite(double _output){
 				angleDifference = sGyro.getAngle() - angleSetpoint;
 				if(distance >= 0) {
-//					leftSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
-					System.out.println("O" + (double)_output);
-					leftSpeed = _output;
+					leftSpeed = percentSpeed * ((RobotMap.kDriveVelAverage*_output) - (angleDifference * angleKP));
 
 				}
 				else {
-//					leftSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
-					leftSpeed = _output;
+					leftSpeed = percentSpeed * ((RobotMap.kDriveVelAverage*_output) + (angleDifference * angleKP));
 				}
 			}
 		};
 		
 		this.rightOutput = new PIDOutput(){
 			public void pidWrite(double _output){
+				angleDifference = sGyro.getAngle() - angleSetpoint;
 				if(distance >= 0) {
-					//rightSpeed = percentSpeed * ((1080*_output) + (angleDifference * angleKP));
-					rightSpeed = _output;
+					rightSpeed = percentSpeed*(_output*RobotMap.kDriveVelAverage) + (angleDifference * angleKP);
 				}
 				else {
-//					rightSpeed = percentSpeed * ((1080*_output) - (angleDifference * angleKP));
-					rightSpeed = _output;
+					rightSpeed = percentSpeed*(_output*RobotMap.kDriveVelAverage) - (angleDifference * angleKP);
 				}
 			}
 		};
 		
-		leftDistancePID = new PIDController(0.22, 0, 4, leftSource, leftOutput, 0.02);
-		rightDistancePID = new PIDController(0.22, 0, 4, rightSource, rightOutput, 0.02);
+		leftDistancePID = new PIDController(0, 0, 0, leftSource, leftOutput, 0.02);
+		rightDistancePID = new PIDController(0, 0, 0, rightSource, rightOutput, 0.02);
 	}
 
 	public void enablePID() {
@@ -127,7 +124,7 @@ public class DriveStraight{
 				leftDistancePID.disable();
 				rightDistancePID.disable();
 				
-				sDrive.drive(DriveMode.VELOCITY, 0, 0);
+				sDrive.drive(DriveMode.PERCENT, 0, 0);
 				
 				System.out.println("Thread Killed");
 				System.out.println(sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
@@ -160,7 +157,7 @@ public class DriveStraight{
 				}
 			}
 			
-			this.sDrive.drive(DriveMode.PERCENT, leftSpeed, rightSpeed);
+			this.sDrive.drive(DriveMode.VELOCITY, leftSpeed, rightSpeed);
 //			this.publishData();
 		}
 		System.out.println("Drive completed via timeout");

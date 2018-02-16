@@ -71,14 +71,14 @@ public class RobotMap {
 	
 	public static final double kDriveLeftVelMax = 3000.;
 
-	public static final double kDriveVelLeftP = 0;
+	public static final double kDriveVelLeftP = 0.75;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
 	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
 		
 	public static final double kDriveRightVelMax = 3000.;
 
-	public static final double kDriveVelRightP = 0;
+	public static final double kDriveVelRightP = 0.65;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
 	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;
