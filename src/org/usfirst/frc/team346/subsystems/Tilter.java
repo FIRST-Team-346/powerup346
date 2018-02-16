@@ -19,16 +19,15 @@ public class Tilter implements Subsystem {
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
 	private boolean mIsDisabled;
-	private final int mNeutralPosThreshold = 15;
 	private int mNeutralPosNuFinal;
 	
 	private TiltPos mTiltPosSetpoint;
 	public enum TiltPos {
 		NEUTRAL,
-		SWITCH_CLOSE,
-		SWITCH_FAR,
-		SCALE_CLOSE,
-		SCALE_FAR;
+		SWITCH,
+		VAULT,
+		SCALE,
+		UNUSED;
 		}
 	
 	private static Tilter sTilterInstance = new Tilter();
@@ -86,32 +85,30 @@ public class Tilter implements Subsystem {
 		this.mTiltPosSetpoint = _position;
 
 		switch(_position) {
-			case SWITCH_CLOSE : {
-				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchClose * lPosNeg;
+			case NEUTRAL : {
+				this.mTilterSetpoint = RobotMap.kTiltPosNeutral;
+			};break;
+		
+			case SWITCH : {
+				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToSwitch;
 			}; break;
 			
-			case SWITCH_FAR : {
-				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToSwitchFar * lPosNeg;
+			case VAULT : {
+				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToVault;
 			};  break;
 			
-			case SCALE_CLOSE : {
-				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleClose * lPosNeg;			
+			case SCALE : {
+				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToScale;			
 			}; break;
 			
-			case SCALE_FAR : {
-				this.mTilterSetpoint = this.mNeutralPosNuFinal + RobotMap.kTiltPosNeutralToScaleFar * lPosNeg;
+			case UNUSED : {
+				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToUnusedPosition;
 			}; break;
 			
-			default : {
-				this.setSetpointNu(this.mNeutralPosNuFinal);
-			}; break;
+			default : break;
 		}
-		if(Math.abs(this.mTilter.getSelectedSensorPosition(0) - this.mTilterSetpoint) > 5) {
-			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
-		}
-		else {
-			this.mTilter.set(ControlMode.PercentOutput, 0.05);
-		}
+		
+		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint + 6);
 
 	}
 	

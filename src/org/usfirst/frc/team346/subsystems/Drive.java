@@ -36,7 +36,7 @@ public class Drive implements Subsystem{
 	protected Drive() {
 		this.initTalons();
 		this.initEncoders();
-		this.initPIDs();
+		this.setSpeedPIDs();
 	}
 	
 	private void initTalons() {
@@ -98,7 +98,7 @@ public class Drive implements Subsystem{
 	}
 	
 	/**Initializes the PID values on the master encoders.**/
-	private void initPIDs() {
+	public void setPosPIDs() {
 		this.mDriveLeftMaster.config_kP(PID_POS, RobotMap.kDrivePosLeftP, 0);
 		this.mDriveLeftMaster.config_kI(PID_POS, RobotMap.kDrivePosLeftI, 0);
 		this.mDriveLeftMaster.config_kD(PID_POS, RobotMap.kDrivePosLeftD, 0);
@@ -108,8 +108,9 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.config_kI(PID_POS, RobotMap.kDrivePosRightI, 0);
 		this.mDriveRightMaster.config_kD(PID_POS, RobotMap.kDrivePosRightD, 0);
 		this.mDriveRightMaster.config_kF(PID_POS, RobotMap.kDrivePosRightF, 0);
-		
-		
+	}
+	
+	public void setSpeedPIDs() {
 		this.mDriveLeftMaster.config_kP(PID_VEL, RobotMap.kDriveVelLeftP, 0);
 		this.mDriveLeftMaster.config_kI(PID_VEL, RobotMap.kDriveVelLeftI, 0);
 		this.mDriveLeftMaster.config_kD(PID_VEL, RobotMap.kDriveVelLeftD, 0);
@@ -154,6 +155,17 @@ public class Drive implements Subsystem{
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, -_throttle + this.mTurn);
+	}
+	
+	public void setLeftPIDs(double _P, double _I, double _D) {
+		this.mDriveLeftMaster.config_kP(PID_VEL, _P, 0);
+		this.mDriveLeftMaster.config_kI(PID_VEL, _I, 0);
+		this.mDriveLeftMaster.config_kD(PID_VEL, _D, 0);
+	}
+	public void setRightPIDs(double _P, double _I, double _D) {
+		this.mDriveRightMaster.config_kP(PID_VEL, _P, 0);
+		this.mDriveRightMaster.config_kI(PID_VEL, _I, 0);
+		this.mDriveRightMaster.config_kD(PID_VEL, _D, 0);
 	}
 	
 	public void publishData() {
