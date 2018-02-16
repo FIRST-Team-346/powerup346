@@ -10,7 +10,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new DriveFollowTest();
+	public static final AutoPlan kAutoPlan = new Test();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -124,9 +124,9 @@ public class RobotMap {
 	public static final double kShooterRightD = 10.0;
 	public static final double kShooterRightF = 0.041;
 	
-	public static final int kShooterLeftSetpointNuLow = 12750;
+	public static final int kShooterLeftSetpointNuLow = 12650;
 	public static final int kShooterRightSetpointNuLow = 12500;
-	public static final int kShooterLeftSetpointNuHigh = 15250;
+	public static final int kShooterLeftSetpointNuHigh = 15150;
 	public static final int kShooterRightSetpointNuHigh = 15000;
 	
 	public static final int kShooterRampRateSeconds = 1;
@@ -135,7 +135,7 @@ public class RobotMap {
 	
 	public static final boolean kTiltUpIsPositive = true;
 	
-	public static final int kTiltPosNeutral = 54;
+	public static final int kTiltPosNeutral = 47;
 	public static final int kTiltPosRange = 287;
 	
 	public static final int kTiltPosNeutralToSwitch = 85 + kTiltPosNeutral;

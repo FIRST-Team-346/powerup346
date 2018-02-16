@@ -18,6 +18,7 @@ public class Drive implements Subsystem{
 	private final int PID_VEL = 0, PID_POS = 1;
 	private double mTurn;
 	private double mSecondsFromNeutralToFull = 0.25;
+	private double nominal = 0;
 	
 	private double leftMaxVel = 0, rightMaxVel = 0, mPrevTime, mPrevVel = 0, mPrevAccel = 0;
 	
@@ -169,13 +170,13 @@ public class Drive implements Subsystem{
 	}
 	
 	public void publishData() {
-		this.publishVoltage();
+//		this.publishVoltage();
 		this.publishPercent();
 		this.publishVelocity();
-//		this.publishPosition();
-		this.publishMaxVel();
-		this.publishVelDifference();
-		this.publishAccel();
+		this.publishPosition();
+//		this.publishMaxVel();
+//		this.publishVelDifference();
+//		this.publishAccel();
 	}
 	
 	public void publishVoltage() {
@@ -240,6 +241,14 @@ public class Drive implements Subsystem{
 		return this.mDriveRightMaster.getSelectedSensorPosition(0) * -1.;
 	}
 	
+	public double getLeftPositionFt() {
+		return this.mDriveLeftMaster.getSelectedSensorPosition(0)/1425.;
+	}
+	
+	public double getRightPositionFt() {
+		return this.mDriveRightMaster.getSelectedSensorPosition(0)/-1425.;
+	}
+	
 	public double getAveragedPosition() {
 		return 1./2. * ( this.getLeftPosition() + this.getRightPosition() );
 	}
@@ -282,10 +291,15 @@ public class Drive implements Subsystem{
 	}
 	
 	public void setNominal(double _limit){
-		this.mDriveLeftMaster.configNominalOutputForward(_limit, 0);
-		this.mDriveLeftMaster.configNominalOutputReverse(_limit, 0);
-		this.mDriveRightMaster.configNominalOutputForward(_limit, 0);
-		this.mDriveRightMaster.configNominalOutputReverse(_limit, 0);
+		if(_limit != this.nominal) {
+			this.nominal = _limit;
+			this.mDriveLeftMaster.configNominalOutputForward(_limit, 10);
+			this.mDriveLeftMaster.configNominalOutputReverse(_limit, 10);
+			this.mDriveRightMaster.configNominalOutputForward(_limit, 10);
+			this.mDriveRightMaster.configNominalOutputReverse(_limit, 10);
+//			System.out.println("Nominal set to " + _limit);
+			SmartDashboard.putNumber("Nominal", _limit);
+		}
 	}
 	
 	public void zeroEncoders() {

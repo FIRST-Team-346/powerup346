@@ -6,6 +6,7 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
+import org.usfirst.frc.team346.subsystems.LEDs;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
 import org.usfirst.frc.team346.subsystems.Shooter;
@@ -33,6 +34,7 @@ public class Robot extends IterativeRobot {
 	public Tilter sTilter;
 	public Shooter sShooter;
 	public Climber sClimber;
+	public LEDs sLED;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -59,6 +61,8 @@ public class Robot extends IterativeRobot {
 		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
+		this.sLED = LEDs.getInstance();
+		
 //		this.sClimber = Climber.getInstance();
 		
 //		this.sCompressor = new Compressor();
@@ -84,6 +88,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		this.sLED.on();
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();
@@ -111,7 +116,7 @@ public class Robot extends IterativeRobot {
 			
 			if(this.sDriverStation.isAutonomous()) {
 				this.sDrive.publishData();
-				this.sGyro.publishData();
+//				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
 				this.sDrive.publishData();

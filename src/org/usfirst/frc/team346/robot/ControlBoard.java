@@ -52,15 +52,15 @@ public class ControlBoard {
 //			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));///			this.sRobot.sDrive.drive(DriveMode.PERCENTVElOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 			this.sRobot.sDrive.drive(DriveMode.VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y)*3000., -this.mController.getRawAxis(RIGHT_STICK_Y)*3000.);
 		}
-		this.sRobot.sDrive.setLeftPIDs(pref.getDouble("driveLeftP", 0), pref.getDouble("driveLeftI", 0), pref.getDouble("driveLeftD", 0));
-		this.sRobot.sDrive.setRightPIDs(pref.getDouble("driveRightP", 0), pref.getDouble("driveRightI", 0), pref.getDouble("driveRighD", 0));
+//		this.sRobot.sDrive.setLeftPIDs(pref.getDouble("driveLeftP", 0), pref.getDouble("driveLeftI", 0), pref.getDouble("driveLeftD", 0));
+//		this.sRobot.sDrive.setRightPIDs(pref.getDouble("driveRightP", 0), pref.getDouble("driveRightI", 0), pref.getDouble("driveRighD", 0));
 	}
 	
 	public void driveDroneController() {
 		this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(DRONE_RIGHT_STICK_Y), this.mController.getRawAxis(DRONE_LEFT_STICK_X));
 
-		this.sRobot.sDrive.setLeftPIDs(pref.getDouble("driveLeftP", 0), pref.getDouble("driveLeftI", 0), pref.getDouble("driveLeftD", 0));
-		this.sRobot.sDrive.setRightPIDs(pref.getDouble("driveRightP", 0), pref.getDouble("driveRightI", 0), pref.getDouble("driveRighD", 0));
+//		this.sRobot.sDrive.setLeftPIDs(pref.getDouble("driveLeftP", 0), pref.getDouble("driveLeftI", 0), pref.getDouble("driveLeftD", 0));
+//		this.sRobot.sDrive.setRightPIDs(pref.getDouble("driveRightP", 0), pref.getDouble("driveRightI", 0), pref.getDouble("driveRighD", 0));
 	}
     
 	public void checkIntake() {
