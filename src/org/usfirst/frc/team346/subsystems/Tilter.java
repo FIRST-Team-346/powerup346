@@ -4,6 +4,8 @@ import org.usfirst.frc.team346.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -39,6 +41,9 @@ public class Tilter implements Subsystem {
 		this.mTilter.setInverted(true);
 		this.mTilter.setSensorPhase(true);
 		
+		this.mTilter.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
+		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
+
 		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		
 		this.setMotionMagicAccelerationNu(RobotMap.kTilterDesiredAccelerationNu);
@@ -68,7 +73,12 @@ public class Tilter implements Subsystem {
 	public void setSetpointNu(int _nu) {
 		this.mTilterSetpointNu = _nu;
 		
-		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+		if(this.mTilterSetpointNu == RobotMap.kTiltPosNeutral) {
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu);
+		}
+		else {
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+		}
 	}
 	
 	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.

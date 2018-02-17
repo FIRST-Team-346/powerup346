@@ -75,6 +75,7 @@ public class Shooter implements Subsystem {
 		this.mLeftSetpointNu = _nu;
 		
 		this.mIsInVelocityMode = true;
+		this.mIsDisabled = false;
 		this.mLeftShooter.setNeutralMode(NeutralMode.Coast);
 		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 	}
@@ -83,6 +84,7 @@ public class Shooter implements Subsystem {
 		this.mRightSetpointNu = _nu;
 		
 		this.mIsInVelocityMode = true;
+		this.mIsDisabled = false;
 		this.mLeftShooter.setNeutralMode(NeutralMode.Coast);
 		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 	}
@@ -91,6 +93,7 @@ public class Shooter implements Subsystem {
 		if(!this.mIsDisabled && this.mIsInVelocityMode) {
 			this.mLeftShooter.set(ControlMode.Velocity, this.mLeftSetpointNu);
 			this.mRightShooter.set(ControlMode.Velocity, this.mRightSetpointNu);
+			this.mIsInVelocityMode = true;
 		}
 	}
 	
@@ -99,6 +102,7 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.set(ControlMode.PercentOutput, _percent);
 		
 		this.mIsInVelocityMode = false;
+		this.mIsDisabled = false;
 		this.mLeftShooter.setNeutralMode(NeutralMode.Brake);
 		this.mRightShooter.setNeutralMode(NeutralMode.Brake);
 	}

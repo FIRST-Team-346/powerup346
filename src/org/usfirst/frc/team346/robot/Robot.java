@@ -93,6 +93,9 @@ public class Robot extends IterativeRobot {
 		this.zeroDevices();
 //		this.sCompressor.start();
 		
+//		this.sTilter.setSetpointNu(RobotMap.kButtonTilterScaleLow);
+		this.sTilter.disable();
+		
 		System.out.println("Teleop Init| complete");
 	}
 
@@ -103,7 +106,7 @@ public class Robot extends IterativeRobot {
 		this.sControlBoard.checkOuttake();
 		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkClimber();
+//		this.sControlBoard.checkClimb();
 		
 		this.publishData();
 	}

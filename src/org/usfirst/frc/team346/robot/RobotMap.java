@@ -18,27 +18,27 @@ public class RobotMap {
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
 	public static final int kDriveLeftMasterPort = 27;			//27-03
-	public static final int kDriveLeftSlave1Port =7;			//13-02
+	public static final int kDriveLeftSlave1Port = 7;			//13-02
 	public static final int kDriveLeftSlave2Port = 13;			//07-21
 	public static final int kDriveRightMasterPort = 26;			//26-01
 	public static final int kDriveRightSlave1Port = 18;			//18-05
 	public static final int kDriveRightSlave2Port = 17;			//17-08
 
-	public static final int kIntakeLeftPort = 24;			    //20-
-	public static final int kIntakeRightPort = 20;				//41-
+	public static final int kIntakeLeftPort = 24;			    //24-
+	public static final int kIntakeRightPort = 20;				//20-
 	
-	public static final int kLoaderLeftPort = 41;				//15-
+	public static final int kLoaderLeftPort = 41;				//41-
 	public static final int kLoaderRightPort = 19;				//19-
 	
-	public static final int kOuttakeLeftPort = 14;				//23-
-	public static final int kOuttakeRightPort = 23;				//14-
+	public static final int kOuttakeLeftPort = 14;				//14-
+	public static final int kOuttakeRightPort = 23;				//23-
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 9;				//19-
+	public static final int kShooterLeftPort = 9;				//09-
 	public static final int kShooterRightPort = 15;				//15-
 	
-	public static final int kClimberPort = 0;					//
+	public static final int kClimberPort = 30;					//30
 	
 	public static final int kLightRedChannel = 1;
 	public static final int kLightGreenChannel = 2;
@@ -61,6 +61,7 @@ public class RobotMap {
 	public static final int kButtonTilterScaleLow = 8;
 	public static final int kButtonTilterVault = 12;
 	public static final int kButtonTilterSwitchBack = 15;
+	public static final int kButtonTilterScaleBack = 14;
 	
 	public static final int kButtonShooterOn = 10;
 	public static final int kButtonShooterOff = 11;
@@ -70,7 +71,6 @@ public class RobotMap {
 	public static final int kButton5 = 5;
 	public static final int kButton9 = 9;
 	public static final int kButton13 = 13;
-	public static final int kButton14 = 14;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
@@ -131,21 +131,22 @@ public class RobotMap {
 	
 	public static final int kShooterLeftSetpointNuLow = 12650;
 	public static final int kShooterRightSetpointNuLow = 12500;
-	public static final int kShooterLeftSetpointNuHigh = 15150;
-	public static final int kShooterRightSetpointNuHigh = 15000;
+	public static final int kShooterLeftSetpointNuHigh = 16250;
+	public static final int kShooterRightSetpointNuHigh = 16100;
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 47;
-	public static final int kTiltPosRange 		= 287;
+	public static final int kTiltPosNeutral 	= 85;
+	public static final int kTiltPosRange 		= 329;
 	
 	public static final int kTiltPosDrive		= 10  + kTiltPosNeutral;
-	public static final int kTiltPosSwitchBack 		= 85  + kTiltPosNeutral;
-	public static final int kTiltPosVault 		= 170 + kTiltPosNeutral;
+	public static final int kTiltPosSwitchBack 	= 65  + kTiltPosNeutral;
+	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
 	public static final int kTiltPosScaleLow 	= 250 + kTiltPosNeutral;
-	public static final int kTiltPosScaleHigh 	= 280 + kTiltPosNeutral;
+	public static final int kTiltPosScaleHigh 	= 275 + kTiltPosNeutral;
+	public static final int kTiltPosScaleBack 	= 324 + kTiltPosNeutral;
 	
 	public static final int kTilterDesiredVelocityNu = 50;
 	public static final int kTilterDesiredAccelerationNu = 100;

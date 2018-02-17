@@ -36,11 +36,11 @@ public class Intake implements Subsystem {
 		this.setRightIntakeSpeedIn(_percentIn);
 	}
 	
-	private void setLeftIntakeSpeedIn(double _leftPercentIn) {
+	public void setLeftIntakeSpeedIn(double _leftPercentIn) {
 		this.mLeftIntake.set(ControlMode.PercentOutput, _leftPercentIn);
 	}
 
-	private void setRightIntakeSpeedIn(double _rightPercentIn) {
+	public void setRightIntakeSpeedIn(double _rightPercentIn) {
 		this.mRightIntake.set(ControlMode.PercentOutput, -_rightPercentIn);
 	}
 	
