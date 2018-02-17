@@ -13,7 +13,7 @@ public class Shooter implements Subsystem {
 
 	private TalonSRX mLeftShooter;
 	private TalonSRX mRightShooter;
-	private double mLeftSetpointRPM, mRightSetpointRPM;
+	private double mLeftSetpoint, mRightSetpoint;
 	private double mSecondsFromNeutralToFull = 1.0;
 	private boolean mIsDisabled;
 	
@@ -28,8 +28,8 @@ public class Shooter implements Subsystem {
 		this.initPIDs();
 		this.disable();
 		
-		this.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
-		this.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
+		this.setLeftSetpoint(RobotMap.kShooterLeftSetpointRPM);
+		this.setRightSetpoint(RobotMap.kShooterRightSetpointRPM);
 		
 		this.mLeftShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mRightShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
@@ -51,6 +51,8 @@ public class Shooter implements Subsystem {
 	
 	private void initEncoders() {
 		this.mLeftShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mLeftShooter.setInverted(true);
+		this.mLeftShooter.setSensorPhase(true);
 		this.mRightShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
 	}
 	
@@ -66,22 +68,36 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.config_kF(0, RobotMap.kShooterRightF, 0);
 	}
 	
-	public void setLeftSetpointRPM(double _rpm) {
-		this.mLeftSetpointRPM = _rpm;
+	public void setLeftPIDs(double _kP, double _kI, double _kD, double _kF) {
+		this.mLeftShooter.config_kP(0, _kP, 0);
+		this.mLeftShooter.config_kI(0, _kI, 0);
+		this.mLeftShooter.config_kD(0, _kD, 0);
+		this.mLeftShooter.config_kF(0, _kF, 0);
+	}
+	
+	public void setRightPIDs(double _kP, double _kI, double _kD, double _kF) {
+		this.mRightShooter.config_kP(0, _kP, 0);
+		this.mRightShooter.config_kI(0, _kI, 0);
+		this.mRightShooter.config_kD(0, _kD, 0);
+		this.mRightShooter.config_kF(0, _kF, 0);
+	}
+	
+	public void setLeftSetpoint(double _nu) {
+		this.mLeftSetpoint = _nu;
 		
 		this.mIsDisabled = false;
 	}
 	
-	public void setRightSetpointRPM(double _rpm) {
-		this.mRightSetpointRPM = _rpm;
+	public void setRightSetpoint(double _nu) {
+		this.mRightSetpoint = _nu;
 		
 		this.mIsDisabled = false;
 	}
 	
 	public void holdSpeedSetpoint() {
 		if(!this.mIsDisabled) {
-			int lLeftSetpointNu = (int)(this.mLeftSetpointRPM *1024./60./10.);
-			int lRightSetpointNu = (int)(this.mRightSetpointRPM *-1024./60./10.);
+			int lLeftSetpointNu = (int)(this.mLeftSetpoint);
+			int lRightSetpointNu = (int)(this.mRightSetpoint);
 			this.mLeftShooter.set(ControlMode.Velocity, lLeftSetpointNu);
 			this.mRightShooter.set(ControlMode.Velocity, lRightSetpointNu);
 		}
@@ -134,10 +150,16 @@ public class Shooter implements Subsystem {
 		
 		this.mIsDisabled = true;
 	}
+	
+	public void zeroEncoders() {
+		this.mLeftShooter.setSelectedSensorPosition(0, 0, 0);
+		this.mRightShooter.setSelectedSensorPosition(0, 0, 0);
+	}
 
 	public void publishData() {
-		SmartDashboard.putNumber("LeftShooterRPM", this.mLeftShooter.getSelectedSensorVelocity(0));
-		SmartDashboard.putNumber("RightShooterRPM", this.mRightShooter.getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("LeftShooterSpeed", this.mLeftShooter.getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("RightShooterSpeed", this.mRightShooter.getSelectedSensorVelocity(0));
+		SmartDashboard.putNumber("LeftShooterPos", this.mLeftShooter.getSelectedSensorPosition(0));
 	}
 	
 }

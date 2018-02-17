@@ -35,8 +35,8 @@ public class RobotMap {
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 24;				//24-
-	public static final int kShooterRightPort = 9;				//09-
+	public static final int kShooterLeftPort = 42;				//24-
+	public static final int kShooterRightPort = 16;				//09-
 	
 	public static final int kClimberPort = 0;					//
 	

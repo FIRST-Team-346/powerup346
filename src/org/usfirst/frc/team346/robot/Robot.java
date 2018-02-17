@@ -49,14 +49,14 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void robotInit() {
-		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
+//		this.sDrive = Drive.getInstance();
+//		this.sGyro = Gyro.getInstance();
 		
-		this.sIntake = Intake.getInstance();
-		this.sOuttake = Outtake.getInstance();
-		this.sLoader = Loader.getInstance();
+//		this.sIntake = Intake.getInstance();
+//		this.sOuttake = Outtake.getInstance();
+//		this.sLoader = Loader.getInstance();
 		
-		this.sTilter = Tilter.getInstance();
+//		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
 //		this.sClimber = Climber.getInstance();
@@ -87,17 +87,18 @@ public class Robot extends IterativeRobot {
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();
+		this.sShooter.zeroEncoders();
 //		this.sCompressor.start();
 		
 		System.out.println("Teleop Init| complete");
 	}
 
 	public void teleopPeriodic() {
-		this.sControlBoard.drive();
-		this.sControlBoard.checkIntake();
-		this.sControlBoard.checkLoader();
-		this.sControlBoard.checkOuttake();
-		this.sControlBoard.checkTilter();
+//		this.sControlBoard.drive();
+//		this.sControlBoard.checkIntake();
+//		this.sControlBoard.checkLoader();
+//		this.sControlBoard.checkOuttake();
+//		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkShooterBlock();
 //		this.sControlBoard.checkClimber();
@@ -114,32 +115,32 @@ public class Robot extends IterativeRobot {
 				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
-				this.sDrive.publishData();
-				this.sGyro.publishData();
+//				this.sDrive.publishData();
+//				this.sGyro.publishData();
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
-				this.sTilter.publishData();
-//				this.sShooter.publishData();
+//				this.sTilter.publishData();
+				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
 		}
 	}
 	
 	public void disabledInit() {
-		this.zeroDevices();
-		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
-		this.sTilter.disable();
-		this.sShooter.disable();
+//		this.zeroDevices();
+//		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
+//		this.sTilter.disable();
+//		this.sShooter.disable();
 		
 	}
 	
 	public void zeroDevices() {
-		this.sGyro.zeroGyro();
-		this.sDrive.zeroEncoders();
-		
-		this.sDrive.setNominal(0);
-		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+//		this.sGyro.zeroGyro();
+//		this.sDrive.zeroEncoders();
+//		
+//		this.sDrive.setNominal(0);
+//		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
 	}
 
 }

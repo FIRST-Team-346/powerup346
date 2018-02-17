@@ -124,25 +124,38 @@ public class ControlBoard {
 	}
 	
 	public void checkShooter() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton9ShooterOn)) {
-			this.sRobot.sShooter.setLeftPercentReverse(0.7);
-			this.sRobot.sShooter.setRightPercentReverse(0.7);
-//			this.sRobot.sShooter.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
-//			this.sRobot.sShooter.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
-		}
-		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton6OuttakeReverse)) {
-			this.sRobot.sShooter.setLeftPercentReverse(0.1);
-			this.sRobot.sShooter.setRightPercentReverse(0.1);
-		}
-		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton2OuttakeForward)) {
-			this.sRobot.sShooter.setLeftPercentForward(0.1);
-			this.sRobot.sShooter.setRightPercentForward(0.1);
-		}
+//		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton9ShooterOn)) {
+//			this.sRobot.sShooter.setLeftPercentReverse(0.7);
+//			this.sRobot.sShooter.setRightPercentReverse(0.7);
+////			this.sRobot.sShooter.setLeftSetpointRPM(RobotMap.kShooterLeftSetpointRPM);
+////			this.sRobot.sShooter.setRightSetpointRPM(RobotMap.kShooterRightSetpointRPM);
+//		}
+//		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton6OuttakeReverse)) {
+//			this.sRobot.sShooter.setLeftPercentReverse(0.1);
+//			this.sRobot.sShooter.setRightPercentReverse(0.1);
+//		}
+//		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton2OuttakeForward)) {
+//			this.sRobot.sShooter.setLeftPercentForward(0.1);
+//			this.sRobot.sShooter.setRightPercentForward(0.1);
+//		}
+//		
+//		this.sRobot.sShooter.holdSpeedSetpoint();
+//
+//		if(this.mButtonBoard.getRawButton(RobotMap.kButton10ShooterOff)) {
+//			this.sRobot.sShooter.disable();
+//		}
 		
-		this.sRobot.sShooter.holdSpeedSetpoint();
-
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton10ShooterOff)) {
-			this.sRobot.sShooter.disable();
+		if(this.mController.getRawButton(CIRCLE)) {
+//			this.sRobot.sShooter.setLeftPercentForward(.7);
+			this.sRobot.sShooter.setLeftPIDs(this.mPrefs.getDouble("lP", 0), this.mPrefs.getDouble("lI", 0), this.mPrefs.getDouble("lD", 0), this.mPrefs.getDouble("lF", 0));
+			this.sRobot.sShooter.setLeftSetpoint(this.mPrefs.getDouble("lSpeed", 0));
+			this.sRobot.sShooter.setRightPIDs(this.mPrefs.getDouble("rP", 0), this.mPrefs.getDouble("rI", 0), this.mPrefs.getDouble("rD", 0), this.mPrefs.getDouble("rF", 0));
+			this.sRobot.sShooter.setRightSetpoint(this.mPrefs.getDouble("rSpeed", 0));
+			this.sRobot.sShooter.holdSpeedSetpoint();
+		}
+		else {
+			this.sRobot.sShooter.setLeftPercentForward(0);
+			this.sRobot.sShooter.setRightPercentForward(0);
 		}
 	}
 	
