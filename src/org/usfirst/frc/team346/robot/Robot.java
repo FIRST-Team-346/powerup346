@@ -88,7 +88,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		this.sLights.on();
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();

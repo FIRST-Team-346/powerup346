@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
+import org.usfirst.frc.team346.subsystems.Lights.Color;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -186,4 +187,10 @@ public class ControlBoard {
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+	public void checkLights() {
+		this.sRobot.sLights.setColor(Color.WHITE);
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
 }

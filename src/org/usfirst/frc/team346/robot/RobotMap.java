@@ -40,9 +40,9 @@ public class RobotMap {
 	
 	public static final int kClimberPort = 0;					//
 	
-	public static final int kLightRedPort = 1;
-	public static final int kLightGreenPort = 2;
-	public static final int kLightBluePort = 3;
+	public static final int kLightRedChannel = 1;
+	public static final int kLightGreenChannel = 2;
+	public static final int kLightBlueChannel = 3;
 	
 //	CONTROLLER PORTS/BUTTONS--------------------------------------------------------
 	
