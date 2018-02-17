@@ -51,14 +51,14 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void robotInit() {
-		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
+//		this.sDrive = Drive.getInstance();
+//		this.sGyro = Gyro.getInstance();
 		
-		this.sIntake = Intake.getInstance();
-		this.sOuttake = Outtake.getInstance();
-		this.sLoader = Loader.getInstance();
+//		this.sIntake = Intake.getInstance();
+//		this.sOuttake = Outtake.getInstance();
+//		this.sLoader = Loader.getInstance();
 		
-		this.sTilter = Tilter.getInstance();
+//		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
 		this.sLights = Lights.getInstance();
@@ -91,6 +91,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();
+		this.sShooter.zeroEncoders();
 //		this.sCompressor.start();
 		
 //		this.sTilter.setSetpointNu(RobotMap.kButtonTilterScaleLow);
@@ -100,11 +101,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		this.sControlBoard.drive();
-		this.sControlBoard.checkIntake();
-		this.sControlBoard.checkLoader();
-		this.sControlBoard.checkOuttake();
-		this.sControlBoard.checkTilter();
+//		this.sControlBoard.drive();
+//		this.sControlBoard.checkIntake();
+//		this.sControlBoard.checkLoader();
+//		this.sControlBoard.checkOuttake();
+//		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
 //		this.sControlBoard.checkClimb();
 		
@@ -120,8 +121,8 @@ public class Robot extends IterativeRobot {
 //				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
-				this.sDrive.publishData();
-				this.sGyro.publishData();
+//				this.sDrive.publishData();
+//				this.sGyro.publishData();
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();

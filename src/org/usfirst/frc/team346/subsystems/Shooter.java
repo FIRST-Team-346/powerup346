@@ -93,7 +93,6 @@ public class Shooter implements Subsystem {
 		if(!this.mIsDisabled && this.mIsInVelocityMode) {
 			this.mLeftShooter.set(ControlMode.Velocity, this.mLeftSetpointNu);
 			this.mRightShooter.set(ControlMode.Velocity, this.mRightSetpointNu);
-			this.mIsInVelocityMode = true;
 		}
 	}
 	
@@ -116,6 +115,11 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.set(ControlMode.Disabled, 0);
 		
 		this.mIsDisabled = true;
+	}
+	
+	public void zeroEncoders() {
+		this.mLeftShooter.setSelectedSensorPosition(0, 0, 0);
+		this.mRightShooter.setSelectedSensorPosition(0, 0, 0);
 	}
 
 	public void publishData() {
