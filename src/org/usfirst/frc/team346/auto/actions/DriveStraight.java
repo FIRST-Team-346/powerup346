@@ -27,17 +27,18 @@ public class DriveStraight{
 	
 	private double angleDifference;
 	private double leftSpeed,rightSpeed;
-	private double angleKP = 25;
+	private double angleKP = 30;
 	
-	public DriveStraight(double _distance, double _percentSpeed, double _angle, double _timeOutTime, double _tolerance) {
+	public DriveStraight(double _distance, double _percentSpeed, double _timeOutTime, double _tolerance) {
+		sDrive = Drive.getInstance();
+		sGyro = Gyro.getInstance();
+		
 		this.distance = _distance;
-		this.angleSetpoint = _angle;
+		this.sGyro.zeroGyro();
+		this.angleSetpoint = this.sGyro.getAngle();
 		this.percentSpeed = _percentSpeed;
 		this.timeOutTime = _timeOutTime;
 		this.tolerance = _tolerance;
-		
-		sDrive = Drive.getInstance();
-		sGyro = Gyro.getInstance();
 		
 		this.createPID();
 		this.enablePID();
@@ -53,7 +54,7 @@ public class DriveStraight{
 			}
 			@Override
 			public double pidGet() {
-				return sDrive.getLeftPositionFt();
+				return sDrive.getLeftPosition();
 			}
 			@Override
 			public PIDSourceType getPIDSourceType() {
@@ -67,7 +68,7 @@ public class DriveStraight{
 			}
 			@Override
 			public double pidGet() {
-				return sDrive.getRightPositionFt();
+				return sDrive.getRightPosition();
 				
 			}
 			@Override
@@ -147,7 +148,7 @@ public class DriveStraight{
 						this.sDrive.drive(DriveMode.VELOCITY, 0, 0);
 						
 						System.out.println("Driving Distance (Speed) Complete via Threshold");
-						System.out.println(sDrive.getLeftPositionFt() + "|" + sDrive.getRightPositionFt());
+						System.out.println(sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
 						this.sDrive.disable();;
 						return;
 					}
@@ -161,18 +162,9 @@ public class DriveStraight{
 //			this.publishData();
 		}
 		System.out.println("Drive completed via timeout");
-		System.out.println("Drove : " + sDrive.getLeftPositionFt() + "|" + sDrive.getRightPositionFt());
-		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+		System.out.println("Drove : " + sDrive.getLeftPosition() + "|" + sDrive.getRightPosition());
 		
 		this.disablePID();
-	}
-	
-	public void setLeftPID(double _P, double _I, double _D) {
-		this.leftDistancePID.setPID(_P, _I, _D);
-	}
-	
-	public void setRightPID(double _P, double _I, double _D) {
-		this.rightDistancePID.setPID(_P, _I, _D);
 	}
 	
 	public void disablePID() {

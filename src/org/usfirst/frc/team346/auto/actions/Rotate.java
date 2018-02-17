@@ -37,10 +37,8 @@ public class Rotate {
 		timeOutTime  = _timeOutTime;
 		tolerance = _tolerance;
 		
-//		this.createPID();
 		this.anglePID.setSetpoint(angleSetpoint);
 		this.drive.enable();
-		this.drive.setSpeedPIDs();
 		this.runPID();
 	}
 	
@@ -62,13 +60,12 @@ public class Rotate {
 					drive.drive(DriveMode.PERCENT, 0, 0);
 				}
 				else {
-//					drive.drive(DriveMode.PERCENTVElOCITY, _output * percentSpeed, _output * percentSpeed);
-					drive.drive(DriveMode.PERCENT, _output, -_output);
+					drive.drive(DriveMode.PERCENTVElOCITY, _output * percentSpeed, -_output * percentSpeed);
 //					System.out.println("output" + (-1200. * _output * percentSpeed) + "," + (-1200. * _output * percentSpeed));
 				}
 			}
 		};
-		this.anglePID = new PIDController(0.003,0,0.1,this.angleSource,this.angleOutput, 0.02);
+		this.anglePID = new PIDController(0.5,0,0,this.angleSource,this.angleOutput, 0.02);
 	}
 	
 	private void runPID() {
@@ -76,9 +73,8 @@ public class Rotate {
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
 		System.out.println("Rotating to: " + angleSetpoint);
-		this.drive.setNominal(0.13);//.33
+		this.drive.setNominal(0.33);//.33
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
-			this.PublishData();
 			if(!driverStation.isAutonomous()) {
 				anglePID.disable();
 				
@@ -91,17 +87,16 @@ public class Rotate {
 			}
 			
 			if(Math.abs(gyro.getAngle() - angleSetpoint) < tolerance) {
-				this.drive.setNominal(0);
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
-					this.drive.setNominal(0);
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= 500) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 1000) {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
 						System.out.println("in setpoint");
+						this.drive.setNominal(0);
 						this.drive.drive(DriveMode.PERCENT, 0, 0);
 						
 						System.out.println("Rotation to " + angleSetpoint + " Complete via Threshold");
@@ -111,11 +106,9 @@ public class Rotate {
 					}
 					else {
 						l_inThreshold = false;
+						this.drive.setNominal(0.33);//.33
 					}
 				}
-			}
-			else {
-				this.drive.setNominal(0.13);
 			}
 			
 			this.anglePID.enable();
@@ -134,9 +127,5 @@ public class Rotate {
 	
 	public void disablePID(){
 		this.anglePID.disable();
-	}
-	
-	public void PublishData() {
-		this.drive.publishPercent();
 	}
 }
