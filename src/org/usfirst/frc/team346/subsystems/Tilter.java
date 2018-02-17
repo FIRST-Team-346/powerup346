@@ -1,7 +1,6 @@
 package org.usfirst.frc.team346.subsystems;
 
 import org.usfirst.frc.team346.robot.RobotMap;
-import org.usfirst.frc.team346.subsystems.Shooter.ShooterMode;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -10,25 +9,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class Tilter implements Subsystem {
 
 	private TalonSRX mTilter;
-	private double mTilterSetpoint;
+	private int mTilterSetpointNu;
+	private int SLOP_CONSTANT = 6;
 	
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
-	private boolean mIsDisabled;
-	private int mNeutralPosNuFinal;
-	
-	private TiltPos mTiltPosSetpoint;
-	public enum TiltPos {
-		NEUTRAL,
-		SWITCH,
-		VAULT,
-		SCALE,
-		UNUSED;
-		}
 	
 	private static Tilter sTilterInstance = new Tilter();
 	/**Gets the single instance of Tilter.
@@ -40,8 +28,6 @@ public class Tilter implements Subsystem {
 	protected Tilter() {
 		this.initTalon();
 		this.disable();
-		this.mNeutralPosNuFinal = RobotMap.kTiltPosNeutral;
-		this.mTiltPosSetpoint = TiltPos.NEUTRAL;
 	}
 	
 	/**Instantiates the Talon controllers for the Tilter.**/
@@ -78,46 +64,18 @@ public class Tilter implements Subsystem {
 	}
 	
 	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.
-	 * @param _position named position setpoint from TiltPos enum
-	 * @options SWITCH_CLOSE, SWITCH_FAR, SCALE_CLOSE, SCALE_FAR, NEUTRAL**/
-	public void setSetpointPos(TiltPos _position) {
-		double lPosNeg = (RobotMap.kTiltUpIsPositive ? 1 : -1);
-		this.mTiltPosSetpoint = _position;
-
-		switch(_position) {
-			case NEUTRAL : {
-				this.mTilterSetpoint = RobotMap.kTiltPosNeutral;
-			};break;
-		
-			case SWITCH : {
-				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToSwitch;
-			}; break;
-			
-			case VAULT : {
-				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToVault;
-			};  break;
-			
-			case SCALE : {
-				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToScale;			
-			}; break;
-			
-			case UNUSED : {
-				this.mTilterSetpoint = RobotMap.kTiltPosNeutralToUnusedPosition;
-			}; break;
-			
-			default : break;
-		}
-		
-		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint + 6);
-
-	}
-	
-	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.
 	 * @param _nu position setpoint in Nu**/
-	public void setSetpointNu(double _nu) {
-		this.mTilter.set(ControlMode.MotionMagic, _nu);
+	public void setSetpointNu(int _nu) {
+		this.mTilterSetpointNu = _nu;
+		
+		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
 	}
 	
+	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.
+	 * @return position setpoint in Nu**/
+	public double getSetpointNu() {
+		return this.mTilterSetpointNu;
+	}
 	
 	/**Sets the cruise velocity of the Tilter for Motion Magic mode.
 	 * @param _nu cruise velocity in Nu per 100ms**/
@@ -129,12 +87,6 @@ public class Tilter implements Subsystem {
 	 * @param _nu maximum acceleration in Nu per 100ms per 1s**/
 	public void setMotionMagicAccelerationNu(int _nu) {
 		this.mTilter.configMotionAcceleration(_nu, 0);
-	}
-	
-	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.
-	 * @return position setpoint in Nu**/
-	public double getSetpointNu() {
-		return this.mTilterSetpoint;
 	}
 	
 	/**Gets the current absolute position of the Tilter.
@@ -184,22 +136,9 @@ public class Tilter implements Subsystem {
 		return this.mMaxAccel;
 	}
 	
-	public TiltPos getTiltPosSetpoint() {
-		return this.mTiltPosSetpoint;
-	}
-	
-	public void setTiltNeutralNu() {
-		this.mNeutralPosNuFinal = (int)this.getPositionNu();
-	}
-	
 	/**Disables the Tilter subsystem.**/
 	public void disable() {
-		this.mPrevTime = System.currentTimeMillis() /1000.;
-		this.mPrevVel = 0;
-		this.mPrevAccel = 0;
-		
 		this.mTilter.set(ControlMode.Disabled, 0);
-		this.mIsDisabled = true;
 	}
 	
 	/**Publishes data about the Tilter subsystem to the SmartDashboard.**/
@@ -211,7 +150,7 @@ public class Tilter implements Subsystem {
 		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
 		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
 		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
-		SmartDashboard.putNumber("TilterSetpoint", this.mTilterSetpoint);
+		SmartDashboard.putNumber("TilterSetpoint", this.mTilterSetpointNu);
 	}
 	
 }

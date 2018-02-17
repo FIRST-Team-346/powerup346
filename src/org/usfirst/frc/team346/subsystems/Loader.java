@@ -21,7 +21,7 @@ public class Loader implements Subsystem {
 		this.initTalons();
 	}
 	
-	public void initTalons() {
+	private void initTalons() {
 		this.mLeftLoader = new TalonSRX(RobotMap.kLoaderLeftPort);
 		this.mLeftLoader.set(ControlMode.PercentOutput, 0);
 		this.mLeftLoader.setNeutralMode(NeutralMode.Brake);
@@ -31,20 +31,17 @@ public class Loader implements Subsystem {
 		this.mRightLoader.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void setLeftLoaderSpeedIn(double _leftSpeed) {
-		this.mLeftLoader.set(ControlMode.PercentOutput, _leftSpeed);
-	}
-
-	public void setRightLoaderSpeedIn(double _rightSpeed) {
-		this.mRightLoader.set(ControlMode.PercentOutput, -_rightSpeed);
+	public void setSpeedIn(double _percentIn) {
+		this.setLeftLoaderSpeedIn(_percentIn);
+		this.setRightLoaderSpeedIn(_percentIn);
 	}
 	
-	public void setLeftLoaderSpeedOut(double _leftSpeed) {
-		this.mLeftLoader.set(ControlMode.PercentOutput, -_leftSpeed);
+	private void setLeftLoaderSpeedIn(double _leftPercentIn) {
+		this.mLeftLoader.set(ControlMode.PercentOutput, _leftPercentIn);
 	}
 
-	public void setRightLoaderSpeedOut(double _rightSpeed) {
-		this.mRightLoader.set(ControlMode.PercentOutput, _rightSpeed);
+	private void setRightLoaderSpeedIn(double _rightPercentIn) {
+		this.mRightLoader.set(ControlMode.PercentOutput, -_rightPercentIn);
 	}
 	
 	public void disable() {

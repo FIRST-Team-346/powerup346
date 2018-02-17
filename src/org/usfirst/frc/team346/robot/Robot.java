@@ -6,7 +6,7 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
-import org.usfirst.frc.team346.subsystems.LEDs;
+import org.usfirst.frc.team346.subsystems.Lights;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
 import org.usfirst.frc.team346.subsystems.Shooter;
@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 	public Tilter sTilter;
 	public Shooter sShooter;
 	public Climber sClimber;
-	public LEDs sLED;
+	public Lights sLights;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
 		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
-		this.sLED = LEDs.getInstance();
+		this.sLights = Lights.getInstance();
 		
 //		this.sClimber = Climber.getInstance();
 		
@@ -88,7 +88,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		this.sLED.on();
+		this.sLights.on();
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();
@@ -98,8 +98,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
-		this.sControlBoard.driveXbox();
-//		this.sControlBoard.driveDroneController();
+		this.sControlBoard.drive();
 		this.sControlBoard.checkIntake();
 		this.sControlBoard.checkLoader();
 		this.sControlBoard.checkOuttake();

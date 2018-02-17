@@ -24,7 +24,7 @@ public class Drive implements Subsystem{
 	
 	public enum DriveMode {
 		PERCENT,
-		PERCENTVElOCITY,
+		PERCENT_VELOCITY,
 		VELOCITY,
 		POSITION;
 	}
@@ -130,7 +130,7 @@ public class Drive implements Subsystem{
 				this.mDriveRightMaster.set(ControlMode.PercentOutput, -_right);
 			}; break;
 			
-			case PERCENTVElOCITY : {
+			case PERCENT_VELOCITY : {
 				this.mDriveLeftMaster.set(ControlMode.Velocity, _left * RobotMap.kDriveVelAverage);
 				this.mDriveRightMaster.set(ControlMode.Velocity, -_right * RobotMap.kDriveVelAverage);
 			};break;

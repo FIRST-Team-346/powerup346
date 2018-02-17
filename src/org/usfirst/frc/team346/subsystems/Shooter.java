@@ -13,20 +13,14 @@ public class Shooter implements Subsystem {
 
 	private TalonSRX mLeftShooter;
 	private TalonSRX mRightShooter;
-	private double mLeftSetpointNu, mRightSetpointNu;
+	private int mLeftSetpointNu, mRightSetpointNu;
 	
-	private double mSecondsFromNeutralToFull = RobotMap.kShooterRampRateSeconds;
+	private boolean mIsInVelocityMode;
 	private boolean mIsDisabled;
 	
-	private ShooterMode mShooterMode;
-	public enum ShooterMode {
-		PERCENT_VOLTAGE,
-		VELOCITY;
-	}
-	
-	private static Shooter sTurretShooterInstance = new Shooter();
+	private static Shooter sShooterInstance = new Shooter();
 	public static Shooter getInstance() {
-		return sTurretShooterInstance;
+		return sShooterInstance;
 	}
 	
 	protected Shooter() {
@@ -35,9 +29,6 @@ public class Shooter implements Subsystem {
 		this.setLeftPIDs(RobotMap.kShooterLeftP, RobotMap.kShooterLeftI, RobotMap.kShooterLeftD);
 		this.setRightPIDs(RobotMap.kShooterRightP, RobotMap.kShooterRightI, RobotMap.kShooterRightD);
 		this.disable();
-		
-		this.mLeftShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
-		this.mRightShooter.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 	}
 	
 	private void initTalons() {
@@ -52,6 +43,9 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 		this.mRightShooter.overrideLimitSwitchesEnable(true);
 		this.mRightShooter.overrideSoftLimitsEnable(true);
+		
+		this.mLeftShooter.configClosedloopRamp(RobotMap.kShooterRampRateSeconds, 0);
+		this.mRightShooter.configClosedloopRamp(RobotMap.kShooterRampRateSeconds, 0);
 	}
 	
 	private void initEncoders() {
@@ -77,52 +71,46 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.config_kF(0, RobotMap.kShooterRightF, 0);
 	}
 	
-	public void setLeftSetpointNu(double _nu) {
+	public void setLeftSpeedSetpointNu(int _nu) {
 		this.mLeftSetpointNu = _nu;
 		
-		this.mShooterMode = ShooterMode.VELOCITY;
-		this.mIsDisabled = false;
+		this.mIsInVelocityMode = true;
+		this.mLeftShooter.setNeutralMode(NeutralMode.Coast);
+		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 	}
 	
-	public void setRightSetpointNu(double _nu) {
+	public void setRightSpeedSetpointNu(int _nu) {
 		this.mRightSetpointNu = _nu;
 		
-		this.mShooterMode = ShooterMode.VELOCITY;
-		this.mIsDisabled = false;
+		this.mIsInVelocityMode = true;
+		this.mLeftShooter.setNeutralMode(NeutralMode.Coast);
+		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 	}
 	
 	public void holdSpeedSetpoint() {
-		if(!this.mIsDisabled && this.mShooterMode == ShooterMode.VELOCITY) {
-			this.mLeftShooter.set(ControlMode.Velocity, (int)this.mLeftSetpointNu);
-			this.mRightShooter.set(ControlMode.Velocity, (int)this.mRightSetpointNu);
+		if(!this.mIsDisabled && this.mIsInVelocityMode) {
+			this.mLeftShooter.set(ControlMode.Velocity, this.mLeftSetpointNu);
+			this.mRightShooter.set(ControlMode.Velocity, this.mRightSetpointNu);
 		}
 	}
 	
 	public void setPercentFront(double _percent) {
-		this.mLeftShooter.set(ControlMode.PercentOutput, -_percent);
-		this.mRightShooter.set(ControlMode.PercentOutput,- _percent);
-		
-		this.mShooterMode = ShooterMode.PERCENT_VOLTAGE;
-		this.mIsDisabled = true;
-	}
-	
-	public void setPercentBack(double _percent) {
 		this.mLeftShooter.set(ControlMode.PercentOutput, _percent);
 		this.mRightShooter.set(ControlMode.PercentOutput, _percent);
 		
-		this.mShooterMode = ShooterMode.PERCENT_VOLTAGE;
-		this.mIsDisabled = true;
+		this.mIsInVelocityMode = false;
+		this.mLeftShooter.setNeutralMode(NeutralMode.Brake);
+		this.mRightShooter.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public ShooterMode getShooterMode() {
-		return this.mShooterMode;
+	public boolean isInVelocityMode() {
+		return this.mIsInVelocityMode;
 	}
 
 	public void disable() {
 		this.mLeftShooter.set(ControlMode.Disabled, 0);
 		this.mRightShooter.set(ControlMode.Disabled, 0);
 		
-		this.mShooterMode = ShooterMode.PERCENT_VOLTAGE;
 		this.mIsDisabled = true;
 	}
 
