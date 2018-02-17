@@ -6,6 +6,7 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
+import org.usfirst.frc.team346.subsystems.Lights;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
 import org.usfirst.frc.team346.subsystems.Shooter;
@@ -33,6 +34,7 @@ public class Robot extends IterativeRobot {
 	public Tilter sTilter;
 	public Shooter sShooter;
 	public Climber sClimber;
+	public Lights sLights;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -58,6 +60,8 @@ public class Robot extends IterativeRobot {
 		
 //		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
+		
+		this.sLights = Lights.getInstance();
 		
 //		this.sClimber = Climber.getInstance();
 		
@@ -100,7 +104,6 @@ public class Robot extends IterativeRobot {
 //		this.sControlBoard.checkOuttake();
 //		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkShooterBlock();
 //		this.sControlBoard.checkClimber();
 		
 		this.publishData();
@@ -112,7 +115,7 @@ public class Robot extends IterativeRobot {
 			
 			if(this.sDriverStation.isAutonomous()) {
 				this.sDrive.publishData();
-				this.sGyro.publishData();
+//				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
 //				this.sDrive.publishData();
@@ -120,7 +123,11 @@ public class Robot extends IterativeRobot {
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
+<<<<<<< HEAD
 //				this.sTilter.publishData();
+=======
+				this.sTilter.publishData();
+>>>>>>> 1c8071b5d50fcadd79039ea45b4acfdc7a72c06a
 				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
@@ -128,6 +135,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void disabledInit() {
+<<<<<<< HEAD
 //		this.zeroDevices();
 //		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
 //		this.sTilter.disable();
@@ -141,6 +149,20 @@ public class Robot extends IterativeRobot {
 //		
 //		this.sDrive.setNominal(0);
 //		this.sDrive.drive(DriveMode.PERCENT, 0, 0);
+=======
+		this.zeroDevices();
+		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
+		this.sTilter.disable();
+		this.sShooter.disable();
+	}
+	
+	public void zeroDevices() {
+		this.sGyro.zeroGyro();
+		this.sDrive.zeroEncoders();
+		
+		this.sDrive.setNominal(0);
+		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
+>>>>>>> 1c8071b5d50fcadd79039ea45b4acfdc7a72c06a
 	}
 
 }

@@ -21,7 +21,7 @@ public class Intake implements Subsystem {
 		this.initTalons();
 	}
 	
-	public void initTalons() {
+	private void initTalons() {
 		this.mLeftIntake = new TalonSRX(RobotMap.kIntakeLeftPort);
 		this.mLeftIntake.set(ControlMode.PercentOutput, 0);
 		this.mLeftIntake.setNeutralMode(NeutralMode.Brake);
@@ -31,20 +31,17 @@ public class Intake implements Subsystem {
 		this.mRightIntake.setNeutralMode(NeutralMode.Brake);
 	}
 	
-	public void setLeftIntakeSpeedIn(double _leftSpeed) {
-		this.mLeftIntake.set(ControlMode.PercentOutput, -_leftSpeed);
-	}
-
-	public void setRightIntakeSpeedIn(double _rightSpeed) {
-		this.mRightIntake.set(ControlMode.PercentOutput, _rightSpeed);
+	public void setSpeedIn(double _percentIn) {
+		this.setLeftIntakeSpeedIn(_percentIn);
+		this.setRightIntakeSpeedIn(_percentIn);
 	}
 	
-	public void setLeftIntakeSpeedOut(double _leftSpeed) {
-		this.mLeftIntake.set(ControlMode.PercentOutput, _leftSpeed);
+	private void setLeftIntakeSpeedIn(double _leftPercentIn) {
+		this.mLeftIntake.set(ControlMode.PercentOutput, _leftPercentIn);
 	}
 
-	public void setRightIntakeSpeedOut(double _rightSpeed) {
-		this.mRightIntake.set(ControlMode.PercentOutput, -_rightSpeed);
+	private void setRightIntakeSpeedIn(double _rightPercentIn) {
+		this.mRightIntake.set(ControlMode.PercentOutput, -_rightPercentIn);
 	}
 	
 	public void disable() {

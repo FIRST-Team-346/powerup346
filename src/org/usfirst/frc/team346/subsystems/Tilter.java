@@ -9,23 +9,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class Tilter implements Subsystem {
 
 	private TalonSRX mTilter;
-	private double mTilterSetpoint;
+	private int mTilterSetpointNu;
+	private int SLOP_CONSTANT = 6;
 	
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
-	private boolean mIsDisabled;
-	
-	public enum TiltPos {
-		NEUTRAL,
-		SWITCH_CLOSE,
-		SWITCH_FAR,
-		SCALE_CLOSE,
-		SCALE_FAR;
-	}
 	
 	private static Tilter sTilterInstance = new Tilter();
 	/**Gets the single instance of Tilter.
@@ -36,7 +27,6 @@ public class Tilter implements Subsystem {
 	
 	protected Tilter() {
 		this.initTalon();
-		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		this.disable();
 	}
 	
@@ -44,12 +34,12 @@ public class Tilter implements Subsystem {
 	private void initTalon() {
 		this.mTilter = new TalonSRX(RobotMap.kTilterPort);
 		this.mTilter.setNeutralMode(NeutralMode.Brake);
-		this.mTilter.overrideLimitSwitchesEnable(true);
-		this.mTilter.overrideSoftLimitsEnable(true);
 		
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
-		this.mTilter.setInverted(false);
-		this.mTilter.setSensorPhase(false);
+		this.mTilter.setInverted(true);
+		this.mTilter.setSensorPhase(true);
+		
+		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		
 		this.setMotionMagicAccelerationNu(RobotMap.kTilterDesiredAccelerationNu);
 		this.setMotionMagicVelocityNu(RobotMap.kTilterDesiredVelocityNu);
@@ -68,58 +58,23 @@ public class Tilter implements Subsystem {
 	
 	/**Sets the Tilter motor to a voltage percent.
 	 * @param _percent percent voltage**/
+	@Deprecated
 	public void setPercent(double _percent) {
 		this.mTilter.set(ControlMode.PercentOutput, _percent);
 	}
 	
 	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.
-	 * @param _position named position setpoint from TiltPos enum
-	 * @options SWITCH_CLOSE, SWITCH_FAR, SCALE_CLOSE, SCALE_FAR, NEUTRAL**/
-	public void setSetpointPos(TiltPos _position) {
-		double lPosNeg = (RobotMap.kTiltUpIsPositive ? 1 : -1);
-		double lPosition1 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION1 * lPosNeg;
-		double lPosition2 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION2 * lPosNeg;
-		double lPosition3 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION3 * lPosNeg;
-		double lPosition4 = RobotMap.kTiltPosNeutral + RobotMap.kTiltPosNeutralToPOSITION4 * lPosNeg;
-		
-		switch(_position) {
-			case SWITCH_CLOSE : {
-				this.setSetpointNu(lPosition1);
-			}; break;
-			
-			case SWITCH_FAR : {
-				this.setSetpointNu(lPosition2);
-			};  break;
-			
-			case SCALE_CLOSE : {
-				this.setSetpointNu(lPosition3);
-			}; break;
-			
-			case SCALE_FAR : {
-				this.setSetpointNu(lPosition4);
-			}; break;
-			
-			default : {
-				this.setSetpointNu(RobotMap.kTiltPosNeutral);
-			}; break;
-		}
-	}
-	
-	/**Sets the absolute position setpoint of the Tilter for Motion Magic mode.
 	 * @param _nu position setpoint in Nu**/
-	public void setSetpointNu(double _nu) {
-		this.mTilterSetpoint = _nu;
-		this.mIsDisabled = false;
+	public void setSetpointNu(int _nu) {
+		this.mTilterSetpointNu = _nu;
+		
+		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
 	}
 	
-	/**Puts the Tilter into Motion Magic mode to follow its current setpoint.**/
-	public void holdSetpoint() {
-		if(!this.mIsDisabled) {
-			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpoint);
-		}
-		else {
-			this.disable();
-		}
+	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.
+	 * @return position setpoint in Nu**/
+	public double getSetpointNu() {
+		return this.mTilterSetpointNu;
 	}
 	
 	/**Sets the cruise velocity of the Tilter for Motion Magic mode.
@@ -132,12 +87,6 @@ public class Tilter implements Subsystem {
 	 * @param _nu maximum acceleration in Nu per 100ms per 1s**/
 	public void setMotionMagicAccelerationNu(int _nu) {
 		this.mTilter.configMotionAcceleration(_nu, 0);
-	}
-	
-	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.
-	 * @return position setpoint in Nu**/
-	public double getSetpointNu() {
-		return this.mTilterSetpoint;
 	}
 	
 	/**Gets the current absolute position of the Tilter.
@@ -156,7 +105,7 @@ public class Tilter implements Subsystem {
 	 * @return acceleration in Nu per 100ms per 1s (1 rpm/s = 1.70666... Nu/100ms/s)**/
 	public double getAccelerationNu() {
 		double lAccel = this.mPrevAccel;
-		if(System.currentTimeMillis() - this.mPrevTime > 0.1) {
+		if(System.currentTimeMillis()/1000. - this.mPrevTime > 0.1) {
 			lAccel = (this.getVelocityNu() - this.mPrevVel) /0.1;
 			this.mPrevTime = System.currentTimeMillis() /1000.;
 			this.mPrevVel = this.getVelocityNu();
@@ -187,24 +136,21 @@ public class Tilter implements Subsystem {
 		return this.mMaxAccel;
 	}
 	
+	/**Disables the Tilter subsystem.**/
+	public void disable() {
+		this.mTilter.set(ControlMode.Disabled, 0);
+	}
+	
 	/**Publishes data about the Tilter subsystem to the SmartDashboard.**/
 	public void publishData() {
 		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
 		SmartDashboard.putNumber("TilterPosition", this.getPositionNu());
 		SmartDashboard.putNumber("TilterVelocity", this.getVelocityNu());
+		SmartDashboard.putNumber("TilterOutput", this.mTilter.getMotorOutputPercent());
 		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
 		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
 		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
-	}
-	
-	/**Disables the Tilter subsystem.**/
-	public void disable() {
-		this.mPrevTime = System.currentTimeMillis() /1000.;
-		this.mPrevVel = 0;
-		this.mPrevAccel = 0;
-		
-		this.mTilter.set(ControlMode.Disabled, 0);
-		this.mIsDisabled = true;
+		SmartDashboard.putNumber("TilterSetpoint", this.mTilterSetpointNu);
 	}
 	
 }
