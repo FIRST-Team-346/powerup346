@@ -18,7 +18,7 @@ public class SwitchCube extends AutoPlan {
 	}
 	
 	public void run(Robot _robot, String _layout) {
-		mDrive = new DriveStraight(10, 1, mGyro.getAngle(), 5, 0.5);
+		mDrive = new DriveStraight(10, 1, 5, 0.5);
 		super.waitTime(5);
 		mRotate = new Rotate();
 		this.mRotate.rotate(90,1, 5, 5);

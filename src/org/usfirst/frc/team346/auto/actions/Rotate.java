@@ -60,7 +60,7 @@ public class Rotate {
 					drive.drive(DriveMode.PERCENT, 0, 0);
 				}
 				else {
-					drive.drive(DriveMode.PERCENTVElOCITY, _output * percentSpeed, -_output * percentSpeed);
+					drive.drive(DriveMode.PERCENT_VELOCITY, _output * percentSpeed, -_output * percentSpeed);
 //					System.out.println("output" + (-1200. * _output * percentSpeed) + "," + (-1200. * _output * percentSpeed));
 				}
 			}
