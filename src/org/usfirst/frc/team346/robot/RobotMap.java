@@ -51,24 +51,26 @@ public class RobotMap {
 	public static final int KDroneControllerPort = 2;
 	public static final double kThrottleTurnRotationStrength = 0.6;
 	
-	public static final int kButtonIntakeIn = 1;
+	public static final int kButtonIntakeIn = 3;
 	public static final int kButtonIntakeOut = 2;
 
-	public static final int kButtonOuttakeFront = 5;
-	public static final int kButtonOuttakeBack = 6;
+	public static final int kButtonOuttakeFront = 6;
+	public static final int kButtonOuttakeBack = 7;
 	
 	public static final int kButtonTilterScaleHigh = 4;
 	public static final int kButtonTilterScaleLow = 8;
 	public static final int kButtonTilterVault = 12;
 	public static final int kButtonTilterSwitchBack = 15;
 	
-	public static final int kButton3 = 3;
-	public static final int kButton7 = 7;
-	public static final int kButtonClimb = 9;
 	public static final int kButtonShooterOn = 10;
-	public static final int kButton11 = 11;
-	public static final int kButtonShoot = 13;
-	public static final int kButtonShooterOff = 14;
+	public static final int kButtonShooterOff = 11;
+	
+	public static final int kButtonClimb = 1;
+	
+	public static final int kButton5 = 5;
+	public static final int kButton9 = 9;
+	public static final int kButton13 = 13;
+	public static final int kButton14 = 14;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
