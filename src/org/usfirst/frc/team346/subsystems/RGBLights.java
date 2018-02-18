@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class Leds {
+public class RGBLights {
 	
 	Solenoid r;	
 	Solenoid b;
@@ -16,7 +16,7 @@ public class Leds {
 		while(System.currentTimeMillis() - lInitialTime < Math.abs(_seconds) * 1000) {
 		}
 	}
-	public Leds(int sol, int red, int blue, int green, int power) {
+	public RGBLights(int sol, int red, int blue, int green, int power) {
 		r = new Solenoid(sol,red);
 		b = new Solenoid(sol,blue);
 		g = new Solenoid(sol,green);
@@ -49,9 +49,9 @@ public class Leds {
 //		}
 //	}
 	public void epilepsy() {
-		r.set(Rand.randomBoolean());
-		g.set(Rand.randomBoolean());
-		b.set(Rand.randomBoolean());
+		r.set(Math.random() < 0.5);
+		g.set(Math.random() < 0.5);
+		b.set(Math.random() < 0.5);
 	}
 	public void red() {
 		r.set(true);

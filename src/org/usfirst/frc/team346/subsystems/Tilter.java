@@ -40,6 +40,7 @@ public class Tilter implements Subsystem {
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
 		this.mTilter.setInverted(true);
 		this.mTilter.setSensorPhase(true);
+		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		
 		this.mTilter.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
