@@ -122,18 +122,21 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleLow)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosScaleLow);
 		}
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleBack)) {
+			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosScaleBack);
+		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterVault)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosVault);
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
-		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
-			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
-		}
+//		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
+//			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
+//		}
 		
 //		this.sRobot.sTilter.setMotionMagicVelocityNu(this.pref.getInt("tiltVelNu", 0));
 //		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.pref.getInt("tiltAccelNu", 0));
@@ -147,7 +150,7 @@ public class ControlBoard {
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterOn)) {
-			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh) {
+			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh || this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleBack) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuHigh);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuHigh);
 			}
@@ -155,6 +158,7 @@ public class ControlBoard {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuLow);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuLow);
 			}
+			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(this.LEFT_TRIGGER_BUTTON)) {
 			this.sRobot.sShooter.setPercentFront(-0.6);
@@ -162,8 +166,7 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sShooter.setPercentFront(-0.25);
 		}
-		
-		if(this.sRobot.sShooter.isInVelocityMode()) {
+		else if(this.sRobot.sShooter.isInVelocityMode()) {
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeFront)) {
@@ -177,7 +180,7 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkClimb() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb) || this.mController.getRawButton(this.TRIANGLE)) {
 			this.sRobot.sClimber.setOn();
 		}
 		else {

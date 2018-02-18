@@ -42,6 +42,9 @@ public class Tilter implements Subsystem {
 		this.mTilter.setSensorPhase(true);
 		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		
+		this.mTilter.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
+		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
+
 		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		
 		this.setMotionMagicAccelerationNu(RobotMap.kTilterDesiredAccelerationNu);
@@ -71,7 +74,12 @@ public class Tilter implements Subsystem {
 	public void setSetpointNu(int _nu) {
 		this.mTilterSetpointNu = _nu;
 		
-		this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+		if(this.mTilterSetpointNu == RobotMap.kTiltPosNeutral) {
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu);
+		}
+		else {
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+		}
 	}
 	
 	/**Gets the absolute position setpoint of the Tilter for Motion Magic mode.

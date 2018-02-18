@@ -91,7 +91,11 @@ public class Robot extends IterativeRobot {
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		this.zeroDevices();
+		this.sShooter.zeroEncoders();
 //		this.sCompressor.start();
+		
+//		this.sTilter.setSetpointNu(RobotMap.kButtonTilterScaleLow);
+		this.sTilter.disable();
 		
 		System.out.println("Teleop Init| complete");
 	}
@@ -103,7 +107,7 @@ public class Robot extends IterativeRobot {
 		this.sControlBoard.checkOuttake();
 		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkClimber();
+//		this.sControlBoard.checkClimb();
 		
 		this.publishData();
 	}
@@ -117,8 +121,8 @@ public class Robot extends IterativeRobot {
 //				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
-				this.sDrive.publishData();
-				this.sGyro.publishData();
+//				this.sDrive.publishData();
+//				this.sGyro.publishData();
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
