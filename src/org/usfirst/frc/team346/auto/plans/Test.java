@@ -24,33 +24,13 @@ public class Test extends AutoPlan{
 	}
 	
 	public void run(Robot _robot, String _layout) {
-//		mDriveStraight = new DriveStraight(10, 1, mGyro.getAngle(), 5, 0.5);
-//		super.waitTime(5);
-//		mRotate = new Rotate(90,1, 5, 5);
-		
-//		this.mDriveFollow = new DriveFollow(_robot);
-//		this.mDriveFollow.followLine(5);
-		
-		this.mRotate = new Rotate();
-		this.mRotate.setPID(pref.getDouble("angleP", 0), pref.getDouble("angleI", 0), pref.getDouble("angleD", 0));
-		this.mRotate.rotate(pref.getDouble("rotateAngle", 0), 0.4, 5, 1.5);
+		mDriveStraight = new DriveStraight(10., 1., this.mGyro.getAngle(), 0.5,5.);
+		this.mDriveStraight.setLeftPID(pref.getDouble("leftDriveP", 0), pref.getDouble("leftDriveI", 0), pref.getDouble("leftDriveD", 0));
+		this.mDriveStraight.setRightPID(pref.getDouble("rightDriveP", 0), pref.getDouble("rightDriveI", 0), pref.getDouble("rightDriveD", 0));
+		this.mDriveStraight.runPID();
 		super.waitTime(1);
-		System.out.println(this.mGyro.getAngle());
-		
-//		this.mDriveStraight = new DriveStraight(17, 0.5, 1, 1);
-//		super.waitTime(3);
-//		this.mRotate.rotate(-90,0.4,5,1.5);
-//		super.waitTime(3);
-//		this.mDriveStraight = new DriveStraight(13, 0.5, 1, 1);
-//		super.waitTime(3);
-//		this.mRotate.rotate(-90,0.4,5,1.5);
-//		super.waitTime(3);
-//		this.mDriveStraight = new DriveStraight(17,0.5,1,1);
-//		super.waitTime(3);
-//		this.mRotate.rotate(-90,0.4,5,1.5);
-//		super.waitTime(3);
-//		this.mDriveStraight = new DriveStraight(13, 0.5, 1, 1);
-//		super.waitTime(3);
+		this.mDriveStraight.printDistance();
+
 	}
 	
 }
