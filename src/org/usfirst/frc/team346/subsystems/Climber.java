@@ -6,12 +6,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber implements Subsystem {
 
 	private TalonSRX mWinch;
-	private double mOnValue = 1.0;
+	private Solenoid mHook;
+	private final double mOnValue = 1.0;
 	
 	private static Climber sClimberInstance = new Climber();
 	public static Climber getInstance() {
@@ -20,6 +22,7 @@ public class Climber implements Subsystem {
 	
 	protected Climber() {
 		initTalons();
+		initSolenoid();
 	}
 	
 	private void initTalons() {
@@ -30,6 +33,10 @@ public class Climber implements Subsystem {
 		this.mWinch.overrideSoftLimitsEnable(true);
 	}
 	
+	private void initSolenoid() {
+		this.mHook = new Solenoid(0, RobotMap.kClimberSolenoidChannel);
+	}
+	
 	public void setOn() {
 		this.mWinch.set(ControlMode.PercentOutput, this.mOnValue);
 	}
@@ -37,13 +44,18 @@ public class Climber implements Subsystem {
 	public void setOff() {
 		this.mWinch.set(ControlMode.PercentOutput, 0);
 	}
+	
+	public void deployHook() {
+		this.mHook.set(true);
+	}
 
 	public void disable() {
 		this.mWinch.set(ControlMode.Disabled, 0);
+		this.mHook.set(false);
 	}
 
 	public void publishData() {
-		SmartDashboard.putNumber("WinchPercent", this.mWinch.getMotorOutputPercent());
+		SmartDashboard.putNumber("WinchCurrent", this.mWinch.getOutputCurrent());
 	}
 	
 }

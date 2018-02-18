@@ -79,7 +79,7 @@ public class ControlBoard {
 			this.sRobot.sIntake.setSpeedIn(-1.0);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
-			this.sRobot.sIntake.setSpeedIn(0.50);
+			this.sRobot.sIntake.setSpeedIn(0.5);
 		}
 		else {
 			this.sRobot.sIntake.setSpeedIn(0.0);
@@ -179,7 +179,11 @@ public class ControlBoard {
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	public void checkClimb() {
+	public void checkClimber() {
+		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton5)) {
+			this.sRobot.sClimber.deployHook();
+		}
+		
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb) || this.mController.getRawButton(this.TRIANGLE)) {
 			this.sRobot.sClimber.setOn();
 		}

@@ -39,6 +39,7 @@ public class RobotMap {
 	public static final int kShooterRightPort = 15;				//15-
 	
 	public static final int kClimberPort = 30;					//30
+	public static final int kClimberSolenoidChannel = 0;
 	
 	public static final int kLightRedChannel = 1;
 	public static final int kLightGreenChannel = 2;
@@ -138,10 +139,10 @@ public class RobotMap {
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 85;
+	public static final int kTiltPosNeutral 	= 81;
 	public static final int kTiltPosRange 		= 329;
 	
-	public static final int kTiltPosDrive		= 10  + kTiltPosNeutral;
+	public static final int kTiltPosDrive		= 20  + kTiltPosNeutral;
 	public static final int kTiltPosSwitchBack 	= 65  + kTiltPosNeutral;
 	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
 	public static final int kTiltPosScaleLow 	= 250 + kTiltPosNeutral;

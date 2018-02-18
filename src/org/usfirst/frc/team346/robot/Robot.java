@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 	
 	public Drive sDrive;
-	public Gyro sGyro;
+//	public Gyro sGyro;
 	public Intake sIntake;
 	public Outtake sOuttake;
 	public Loader sLoader;
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 	
 	public void robotInit() {
 		this.sDrive = Drive.getInstance();
-		this.sGyro = Gyro.getInstance();
+//		this.sGyro = Gyro.getInstance();
 		
 		this.sIntake = Intake.getInstance();
 		this.sOuttake = Outtake.getInstance();
@@ -63,9 +63,9 @@ public class Robot extends IterativeRobot {
 		
 		this.sLights = Lights.getInstance();
 		
-//		this.sClimber = Climber.getInstance();
+		this.sClimber = Climber.getInstance();
 		
-//		this.sCompressor = new Compressor();
+		this.sCompressor = new Compressor();
 		this.sDriverStation = DriverStation.getInstance();
 		
 		this.sControlBoard = new ControlBoard(this);
@@ -90,11 +90,9 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
-		this.zeroDevices();
-		this.sShooter.zeroEncoders();
-//		this.sCompressor.start();
+		this.sCompressor.start();
 		
-//		this.sTilter.setSetpointNu(RobotMap.kButtonTilterScaleLow);
+		this.zeroDevices();
 		this.sTilter.disable();
 		
 		System.out.println("Teleop Init| complete");
@@ -107,7 +105,7 @@ public class Robot extends IterativeRobot {
 		this.sControlBoard.checkOuttake();
 		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkClimb();
+		this.sControlBoard.checkClimber();
 		
 		this.publishData();
 	}
@@ -128,7 +126,7 @@ public class Robot extends IterativeRobot {
 //				this.sLoader.publishData();
 				this.sTilter.publishData();
 				this.sShooter.publishData();
-//				this.sClimber.publishData();
+				this.sClimber.publishData();
 			}
 		}
 	}
@@ -136,13 +134,15 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		this.zeroDevices();
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
+		this.sClimber.disable();
 		this.sTilter.disable();
 		this.sShooter.disable();
 	}
 	
 	public void zeroDevices() {
-		this.sGyro.zeroGyro();
+//		this.sGyro.zeroGyro();
 		this.sDrive.zeroEncoders();
+		this.sShooter.zeroEncoders();
 		
 		this.sDrive.setNominal(0);
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
