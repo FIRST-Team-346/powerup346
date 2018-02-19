@@ -18,7 +18,7 @@ public class Drive implements Subsystem{
 	private final int PID_VEL = 0, PID_POS = 1;
 	private double mTurn;
 	private double mSecondsFromNeutralToFull = 0.25;
-	private double nominal = 0;
+	private double leftNominal = 0, rightNominal = 0;
 	
 	private double leftMaxVel = 0, rightMaxVel = 0, mPrevTime, mPrevVel = 0, mPrevAccel = 0;
 	
@@ -290,16 +290,29 @@ public class Drive implements Subsystem{
 		return lAccel;
 	}
 	
-	public void setNominal(double _limit){
-		if(_limit != this.nominal) {
-			this.nominal = _limit;
-			this.mDriveLeftMaster.configNominalOutputForward(_limit, 10);
-			this.mDriveLeftMaster.configNominalOutputReverse(_limit, 10);
-			this.mDriveRightMaster.configNominalOutputForward(_limit, 10);
-			this.mDriveRightMaster.configNominalOutputReverse(_limit, 10);
-//			System.out.println("Nominal set to " + _limit);
-			SmartDashboard.putNumber("Nominal", _limit);
+	public void setNominal(double _leftLimit, double _rightLimit){
+		if(_leftLimit != this.leftNominal) {
+			this.leftNominal = _leftLimit;
+			this.mDriveLeftMaster.configNominalOutputForward(_leftLimit, 0);
+			this.mDriveLeftMaster.configNominalOutputReverse(_leftLimit, 0);
 		}
+		if(_rightLimit != this.rightNominal) {
+			this.rightNominal = _rightLimit;
+			this.mDriveRightMaster.configNominalOutputForward(_rightLimit, 0);
+			this.mDriveRightMaster.configNominalOutputReverse(_rightLimit, 0);
+		}
+		
+		this.mDriveLeftMaster.configPeakOutputForward(1, 0);
+		this.mDriveLeftMaster.configPeakOutputReverse(1, 0);
+		
+		this.mDriveRightMaster.configPeakOutputForward(1, 0);
+		this.mDriveRightMaster.configPeakOutputReverse(1, 0);
+
+//			System.out.println("Nominal set to " + _limit);
+			SmartDashboard.putNumber("Left Nominal", leftNominal);
+			SmartDashboard.putNumber("Right Nominal", rightNominal);
+
+		
 	}
 	
 	public void zeroEncoders() {
@@ -310,7 +323,7 @@ public class Drive implements Subsystem{
 		this.mDriveRightSlave1.setSelectedSensorPosition(0, 0, 0);
 		this.mDriveRightSlave2.setSelectedSensorPosition(0, 0, 0);
 		
-		this.setNominal(0);
+		this.setNominal(0,0);
 	}
 	
 	public void enable() {

@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 	
 	public Drive sDrive;
-//	public Gyro sGyro;
+	public Gyro sGyro;
 	public Intake sIntake;
 	public Outtake sOuttake;
 	public Loader sLoader;
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 	
 	public void robotInit() {
 		this.sDrive = Drive.getInstance();
-//		this.sGyro = Gyro.getInstance();
+		this.sGyro = Gyro.getInstance();
 		
 		this.sIntake = Intake.getInstance();
 		this.sOuttake = Outtake.getInstance();
@@ -144,7 +144,7 @@ public class Robot extends IterativeRobot {
 		this.sDrive.zeroEncoders();
 		this.sShooter.zeroEncoders();
 		
-		this.sDrive.setNominal(0);
+		this.sDrive.setNominal(0,0);
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
 	}
 

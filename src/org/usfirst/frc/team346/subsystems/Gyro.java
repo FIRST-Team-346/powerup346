@@ -1,11 +1,13 @@
 package org.usfirst.frc.team346.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Gyro implements Subsystem {
 
-	public ADXRS450_Gyro mGyroscope;
+//	public ADXRS450_Gyro mGyroscope;
+	private AnalogGyro mGyroscope;
 	
 	private long mLastGyroTime;
 	
@@ -18,7 +20,8 @@ public class Gyro implements Subsystem {
 	}
 	
 	public void initialize() {
-		this.mGyroscope = new ADXRS450_Gyro();
+//		this.mGyroscope = new ADXRS450_Gyro();
+		this.mGyroscope = new AnalogGyro(0);
 		this.mGyroscope.calibrate();
 		this.mLastGyroTime = System.currentTimeMillis();
 	}
@@ -30,6 +33,10 @@ public class Gyro implements Subsystem {
 	
 	public void zeroGyro() {
 		this.mGyroscope.reset();
+	}
+	
+	public void calibrate() {
+		this.mGyroscope.calibrate();
 	}
 	
 	/**Prints gyroscope angle periodically, 0.5s to avoid greater drift.**/

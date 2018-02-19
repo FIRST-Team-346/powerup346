@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,6 +14,7 @@ public class Climber implements Subsystem {
 
 	private TalonSRX mWinch;
 	private Solenoid mHook;
+	private Servo mServo;
 	private final double mOnValue = 1.0;
 	
 	private static Climber sClimberInstance = new Climber();
@@ -23,6 +25,7 @@ public class Climber implements Subsystem {
 	protected Climber() {
 		initTalons();
 		initSolenoid();
+		initServo();
 	}
 	
 	private void initTalons() {
@@ -37,6 +40,10 @@ public class Climber implements Subsystem {
 		this.mHook = new Solenoid(0, RobotMap.kClimberSolenoidChannel);
 	}
 	
+	private void initServo() {
+		this.mServo = new Servo(0);
+	}
+	
 	public void setOn() {
 		this.mWinch.set(ControlMode.PercentOutput, this.mOnValue);
 	}
@@ -47,6 +54,10 @@ public class Climber implements Subsystem {
 	
 	public void deployHook() {
 		this.mHook.set(true);
+	}
+	
+	public void setServo(double _servoOutput) {
+		this.mServo.set(_servoOutput);
 	}
 
 	public void disable() {

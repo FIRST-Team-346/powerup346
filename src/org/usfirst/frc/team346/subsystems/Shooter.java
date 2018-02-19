@@ -96,6 +96,17 @@ public class Shooter implements Subsystem {
 		}
 	}
 	
+	public boolean isAtSpeed() {
+		boolean lLeftAtSpeed = false, lRightAtSpeed = false;
+		if(Math.abs(this.mLeftShooter.getSelectedSensorVelocity(0) - this.mLeftSetpointNu) < 50) {
+			lLeftAtSpeed = true;
+		}
+		if(Math.abs(this.mRightShooter.getSelectedSensorVelocity(0) - this.mRightSetpointNu) < 50) {
+			lRightAtSpeed = true;
+		};
+		return (lLeftAtSpeed && lRightAtSpeed);
+	}
+	
 	public void setPercentFront(double _percent) {
 		this.mLeftShooter.set(ControlMode.PercentOutput, _percent);
 		this.mRightShooter.set(ControlMode.PercentOutput, _percent);

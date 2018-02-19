@@ -6,6 +6,7 @@ import org.usfirst.frc.team346.subsystems.Lights.Color;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ControlBoard {
 
@@ -180,9 +181,16 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkClimber() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButton5)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton5)) {
 			this.sRobot.sClimber.deployHook();
+			this.sRobot.sClimber.setServo(1);
+			SmartDashboard.putBoolean("Servo Enabled", true);
 		}
+		else {
+			SmartDashboard.putBoolean("Servo Enabled", false);
+			this.sRobot.sClimber.setServo(0);
+		}
+		
 		
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb) || this.mController.getRawButton(this.TRIANGLE)) {
 			this.sRobot.sClimber.setOn();

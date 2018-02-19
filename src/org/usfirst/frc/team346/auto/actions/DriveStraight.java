@@ -29,15 +29,16 @@ public class DriveStraight{
 	private double leftSpeed,rightSpeed;
 	private double angleKP = 25;
 	
-	public DriveStraight(double _distance, double _percentSpeed, double _angle, double _timeOutTime, double _tolerance) {
+	public DriveStraight(double _distance, double _percentSpeed, double _timeOutTime, double _tolerance) {
 		this.distance = _distance;
-		this.angleSetpoint = _angle;
 		this.percentSpeed = _percentSpeed;
 		this.timeOutTime = _timeOutTime;
 		this.tolerance = _tolerance;
 		
 		sDrive = Drive.getInstance();
 		sGyro = Gyro.getInstance();
+		
+		this.angleSetpoint = this.sGyro.getAngle();
 		
 		this.createPID();
 		this.enablePID();
@@ -101,8 +102,8 @@ public class DriveStraight{
 			}
 		};
 		
-		leftDistancePID = new PIDController(0, 0, 0, leftSource, leftOutput, 0.02);
-		rightDistancePID = new PIDController(0, 0, 0, rightSource, rightOutput, 0.02);
+		leftDistancePID = new PIDController(0.18, 0, 0, leftSource, leftOutput, 0.02);
+		rightDistancePID = new PIDController(0.18, 0, 0, rightSource, rightOutput, 0.02);
 	}
 
 	public void enablePID() {
@@ -119,6 +120,7 @@ public class DriveStraight{
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
 		System.out.println("Driving distance speed: " + distance);
+		System.out.println("P is " +  this.leftDistancePID.getP());
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
 			if(!driverStation.isAutonomous()) {
 				leftDistancePID.disable();

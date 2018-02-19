@@ -10,7 +10,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new Test();
+	public static final AutoPlan kAutoPlan = new SwitchCube();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -132,6 +132,8 @@ public class RobotMap {
 	
 	public static final int kShooterLeftSetpointNuLow = 12650;
 	public static final int kShooterRightSetpointNuLow = 12500;
+	public static final int kShooterLeftSetpointNuMid = 14500;
+	public static final int kShooterRightSetpointNuMid = 14650;
 	public static final int kShooterLeftSetpointNuHigh = 16250;
 	public static final int kShooterRightSetpointNuHigh = 16100;
 	
