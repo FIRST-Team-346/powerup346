@@ -1,29 +1,30 @@
 package org.usfirst.frc.team346.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.XboxController;
+import org.usfirst.frc.team346.robot.RobotMap;
 
-public class RGBLights {
+import edu.wpi.first.wpilibj.Solenoid;
+
+public class RGBLights implements Subsystem{
 	
 	Solenoid r;	
 	Solenoid b;
 	Solenoid g;
 	Solenoid p;
 	
-	public void waitTime(double _seconds) {
-		long lInitialTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - lInitialTime < Math.abs(_seconds) * 1000) {
-		}
-	}
-	public RGBLights(int sol, int red, int blue, int green, int power) {
-		r = new Solenoid(sol,red);
-		b = new Solenoid(sol,blue);
-		g = new Solenoid(sol,green);
-		p = new Solenoid(sol,power);
+	public static RGBLights lightsInstance= new RGBLights();
+	
+	public RGBLights getInstance() {
+		return this.lightsInstance;
 	}
 	
-	Joystick xbx = new Joystick(0);
+	
+	public RGBLights() {
+		r = new Solenoid(RobotMap.kPCMPort,RobotMap.kLightRedChannel);
+		b = new Solenoid(RobotMap.kPCMPort,RobotMap.kLightBlueChannel);
+		g = new Solenoid(RobotMap.kPCMPort,RobotMap.kLightGreenChannel);
+		p = new Solenoid(RobotMap.kPCMPort,RobotMap.kLightPowerChannel);
+	}
+	
 	public void ledInit() {
 		r.set(false);
 		g.set(false);
@@ -31,23 +32,6 @@ public class RGBLights {
 		p.set(true);
 		
 	}
-//	public void ledChange () {
-//		if(xbx.getRawButton(2)) {
-//			b.set(true);
-//		}else {
-//			b.set(false);
-//		}
-//		if(xbx.getRawButton(3)) {
-//			r.set(true);
-//		}else {
-//			r.set(false);
-//		}
-//		if(xbx.getRawButton(4)) {
-//			g.set(true);
-//		}else {
-//			g.set(false);
-//		}
-//	}
 	public void epilepsy() {
 		r.set(Math.random() < 0.5);
 		g.set(Math.random() < 0.5);
@@ -92,5 +76,17 @@ public class RGBLights {
 		r.set(false);
 		g.set(true);
 		b.set(true);
+	}
+	
+	@Override
+	public void disable() {
+		r.set(false);
+		g.set(false);
+		b.set(false);
+		
+	}
+	@Override
+	public void publishData() {
+		
 	}
 }

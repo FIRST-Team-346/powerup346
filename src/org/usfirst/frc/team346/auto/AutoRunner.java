@@ -37,6 +37,7 @@ public class AutoRunner {
 	}
 	
 	private void receiveLayout() {
+		//Gets the layout of the field from the DriverStation/Field Management System
 		this.mLayout = this.sDriverStation.getGameSpecificMessage();
 	}
 	

@@ -34,7 +34,7 @@ public class Climber implements Subsystem {
 	}
 	
 	private void initSolenoid() {
-		this.mHook = new Solenoid(0, RobotMap.kClimberSolenoidChannel);
+		this.mHook = new Solenoid(RobotMap.kPCMPort, RobotMap.kClimberSolenoidChannel);
 	}
 	
 	public void setOn() {

@@ -15,7 +15,7 @@ public class Tilter implements Subsystem {
 
 	private TalonSRX mTilter;
 	private int mTilterSetpointNu;
-	private int SLOP_CONSTANT = 6;
+	private int UNDERSHOOT_CONSTANT = 6;
 	
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
@@ -40,7 +40,6 @@ public class Tilter implements Subsystem {
 		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
 		this.mTilter.setInverted(true);
 		this.mTilter.setSensorPhase(true);
-		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		
 		this.mTilter.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
@@ -78,7 +77,7 @@ public class Tilter implements Subsystem {
 			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu);
 		}
 		else {
-			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.UNDERSHOOT_CONSTANT);
 		}
 	}
 	
@@ -137,6 +136,7 @@ public class Tilter implements Subsystem {
 	}
 	
 	/**Gets the maximum acceleration of the Tilter since current life-cycle.
+	 * This for for calculating F.
 	 * @return maximum acceleration in Nu per 100ms per 1s**/
 	public double getMaxAccelNu() {
 		double lCurrentAccel = this.getAccelerationNu();
