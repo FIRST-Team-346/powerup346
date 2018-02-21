@@ -36,8 +36,13 @@ public class SubsystemActions {
 		this.setShooterPercentFront(0.0);
 	}
 	
+	public void tilterToSwtichBack() {
+		this.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+	}
+	
 	public void shootToSwitchBack() {
 		this.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		this.waitTime(0.5);
 		this.setOuttakePercentFront(-1.0);
 		this.setShooterPercentFront(-0.5);
 		this.waitTime(1);

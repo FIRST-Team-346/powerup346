@@ -10,7 +10,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new SwitchCube();
+	public static final AutoPlan kAutoPlan = new Test();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -41,9 +41,15 @@ public class RobotMap {
 	public static final int kClimberPort = 30;					//30
 	public static final int kClimberSolenoidChannel = 0;
 	
-	public static final int kLightRedChannel = 1;
-	public static final int kLightGreenChannel = 2;
-	public static final int kLightBlueChannel = 3;
+	public static final int kLightLeftPositive = 0;
+	public static final int kLightLeftGreenChannel = 1;
+	public static final int kLightLeftRedChannel = 2;
+	public static final int kLightLeftBlueChannel = 3;
+	
+	public static final int kLightRightPositive = 7;
+	public static final int kLightRightBlueChannel = 4;
+	public static final int kLightRightRedChannel = 5;
+	public static final int kLightRightGreenChannel = 6;
 	
 //	CONTROLLER PORTS/BUTTONS--------------------------------------------------------
 	
@@ -69,7 +75,7 @@ public class RobotMap {
 	
 	public static final int kButtonClimb = 1;
 	
-	public static final int kButton5 = 5;
+	public static final int kButtonClimbRaiseHook = 5;
 	public static final int kButton9 = 9;
 	public static final int kButton13 = 13;
 	

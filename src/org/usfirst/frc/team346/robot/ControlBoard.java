@@ -2,7 +2,6 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
-import org.usfirst.frc.team346.subsystems.Lights.Color;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -132,12 +131,17 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
-//		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
-//			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
-//		}
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut) || this.mController.getRawButton(RIGHT_TRIGGER_BUTTON)) {
+			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
+				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
+			}
+		}
+		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
+			this.sRobot.sTilter.checkDrivePosition();
+		}
 		
 //		this.sRobot.sTilter.setMotionMagicVelocityNu(this.pref.getInt("tiltVelNu", 0));
 //		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.pref.getInt("tiltAccelNu", 0));
@@ -181,16 +185,14 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkClimber() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton5)) {
-			this.sRobot.sClimber.deployHook();
-			this.sRobot.sClimber.setServo(1);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
+			this.sRobot.sClimber.raiseHook(true);
 			SmartDashboard.putBoolean("Servo Enabled", true);
 		}
 		else {
 			SmartDashboard.putBoolean("Servo Enabled", false);
-			this.sRobot.sClimber.setServo(0);
+			this.sRobot.sClimber.raiseHook(false);
 		}
-		
 		
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb) || this.mController.getRawButton(this.TRIANGLE)) {
 			this.sRobot.sClimber.setOn();
@@ -203,7 +205,12 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void checkLights() {
-		this.sRobot.sLights.setColor(Color.WHITE);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButton9)) {
+			this.sRobot.sLights.epilepsy();
+		}
+		else {
+			this.sRobot.sLights.off();;
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------

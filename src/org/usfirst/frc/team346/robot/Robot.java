@@ -6,12 +6,13 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
-import org.usfirst.frc.team346.subsystems.Lights;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
+import org.usfirst.frc.team346.subsystems.RGBLights;
 import org.usfirst.frc.team346.subsystems.Shooter;
 import org.usfirst.frc.team346.subsystems.Tilter;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -34,7 +35,7 @@ public class Robot extends IterativeRobot {
 	public Tilter sTilter;
 	public Shooter sShooter;
 	public Climber sClimber;
-	public Lights sLights;
+	public RGBLights sLights;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -61,7 +62,7 @@ public class Robot extends IterativeRobot {
 		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
-		this.sLights = Lights.getInstance();
+		this.sLights = RGBLights.getInstance();
 		
 		this.sClimber = Climber.getInstance();
 		
@@ -88,9 +89,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
-		this.sCompressor.start();
+		
+//    	CameraServer.getInstance().startAutomaticCapture();
 		
 		this.zeroDevices();
 		this.sTilter.disable();
@@ -106,6 +109,7 @@ public class Robot extends IterativeRobot {
 		this.sControlBoard.checkTilter();
 		this.sControlBoard.checkShooter();
 		this.sControlBoard.checkClimber();
+		this.sControlBoard.checkLights();
 		
 		this.publishData();
 	}
@@ -119,7 +123,7 @@ public class Robot extends IterativeRobot {
 //				this.sGyro.publishData();
 			}
 			else if(this.sDriverStation.isOperatorControl() || this.sDriverStation.isTest()) {
-//				this.sDrive.publishData();
+				this.sDrive.publishData();
 //				this.sGyro.publishData();
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
@@ -140,7 +144,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void zeroDevices() {
-//		this.sGyro.zeroGyro();
+		this.sGyro.zeroGyro();
 		this.sDrive.zeroEncoders();
 		this.sShooter.zeroEncoders();
 		

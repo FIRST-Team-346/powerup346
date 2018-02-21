@@ -19,6 +19,7 @@ public class Tilter implements Subsystem {
 	
 	private double mPrevTime, mPrevVel, mPrevAccel;
 	private double mMaxVel, mMaxAccel;
+	private double mTilterSetPosPrevTime;
 	
 	private static Tilter sTilterInstance = new Tilter();
 	/**Gets the single instance of Tilter.
@@ -73,12 +74,19 @@ public class Tilter implements Subsystem {
 	 * @param _nu position setpoint in Nu**/
 	public void setSetpointNu(int _nu) {
 		this.mTilterSetpointNu = _nu;
+		this.mTilterSetPosPrevTime = System.currentTimeMillis();
 		
 		if(this.mTilterSetpointNu == RobotMap.kTiltPosNeutral) {
 			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu);
 		}
 		else {
 			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.SLOP_CONSTANT);
+		}
+	}
+	
+	public void checkDrivePosition() {
+		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 1000) {
+			this.setSetpointNu(RobotMap.kTiltPosDrive);
 		}
 	}
 	

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Rotate {
 
@@ -23,7 +23,6 @@ public class Rotate {
 	private PIDController anglePID;
 	
 	public double leftSideEnabled = 1, rightSideEnabled = 1;
-	public boolean leftSide = true, rightSide = true;
 	
 	private DriverStation driverStation = DriverStation.getInstance();
 	
@@ -65,13 +64,14 @@ public class Rotate {
 					drive.drive(DriveMode.PERCENT, 0, 0);
 				}
 				else {
+					SmartDashboard.putNumber("anglePIDOutput", _output);
 //					drive.drive(DriveMode.PERCENTVElOCITY, _output * percentSpeed, _output * percentSpeed);
-					drive.drive(DriveMode.PERCENT, _output*leftSideEnabled, -_output*rightSideEnabled);
+					drive.drive(DriveMode.PERCENT, _output*leftSideEnabled*percentSpeed, -_output*rightSideEnabled*percentSpeed);
 //					System.out.println("output" + (-1200. * _output * percentSpeed) + "," + (-1200. * _output * percentSpeed));
 				}
 			}
 		};
-		this.anglePID = new PIDController(0.006,0,0.1,this.angleSource,this.angleOutput, 0.02);
+		this.anglePID = new PIDController(0.003,0,0.1,this.angleSource,this.angleOutput, 0.02);
 	}
 	
 	private void runPID() {
@@ -79,8 +79,9 @@ public class Rotate {
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
 		System.out.println("Rotating to: " + angleSetpoint);
-		this.drive.setNominal(0.13*leftSideEnabled,0.13*rightSideEnabled);//.33
-		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
+//		this.drive.setNominal(0.13*leftSideEnabled,0.13*rightSideEnabled);//.33
+		this.drive.setNominal(0.17, 0.17);
+		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 500) {
 			this.PublishData();
 			if(!driverStation.isAutonomous()) {
 				anglePID.disable();
@@ -99,8 +100,9 @@ public class Rotate {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
 					this.drive.setNominal(0,0);
+
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= 500) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 1000) {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
@@ -118,15 +120,15 @@ public class Rotate {
 				}
 			}
 			else {
-				
-				this.drive.setNominal(0.13*leftSideEnabled,0.13*rightSideEnabled);
-
+				this.drive.setNominal(0.17, 0.17);
 			}
 			
 			this.anglePID.enable();
 		}
 		this.disablePID();
 		this.drive.setNominal(0,0);
+		System.out.println("Set Nominal to 0");
+
 		
 		System.out.println("Rotate completed via timeout");
 		System.out.println("Current angle: " + this.gyro.getAngle());

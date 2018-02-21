@@ -30,13 +30,19 @@ public class Test extends AutoPlan{
 //		this.mAction.openIntake();
 //		this.mAction.shootToScale();
 		
-		mGyro.calibrate();
-		mDriveStraight = new DriveStraight(this.pref.getDouble("dsDistance", 0), 0.6, 5, 0.5);
-		this.mDriveStraight.setLeftPID(pref.getDouble("leftDriveP", 0), pref.getDouble("leftDriveI", 0), pref.getDouble("leftDriveD", 0));
-		this.mDriveStraight.setRightPID(pref.getDouble("rightDriveP", 0), pref.getDouble("rightDriveI", 0), pref.getDouble("rightDriveD", 0));
-		this.mDriveStraight.runPID();
-		super.waitTime(1);
-		this.mDriveStraight.printDistance();
+//		mGyro.calibrate();
+//		mDriveStraight = new DriveStraight(this.pref.getDouble("dsDistance", 0), 0.6, 5, 0.5);
+//		this.mDriveStraight.setLeftPID(pref.getDouble("leftDriveP", 0), pref.getDouble("leftDriveI", 0), pref.getDouble("leftDriveD", 0));
+//		this.mDriveStraight.setRightPID(pref.getDouble("rightDriveP", 0), pref.getDouble("rightDriveI", 0), pref.getDouble("rightDriveD", 0));
+//		this.mDriveStraight.runPID();
+//		super.waitTime(1);
+//		this.mDriveStraight.printDistance();
+		
+		
+		this.mGyro.zeroGyro();
+		this.mRotate = new Rotate();
+		this.mRotate.setPID(pref.getDouble("angleP", 0), pref.getDouble("angleI", 0), pref.getDouble("angleD", 0));
+		this.mRotate.rotate(pref.getDouble("angle", 0), 0.5, 5, 3);
 
 	}
 	

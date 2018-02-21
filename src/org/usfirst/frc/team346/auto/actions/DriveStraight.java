@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class DriveStraight{
 
@@ -80,25 +79,14 @@ public class DriveStraight{
 		this.leftOutput = new PIDOutput(){
 			public void pidWrite(double _output){
 				angleDifference = sGyro.getAngle() - angleSetpoint;
-				if(distance >= 0) {
 					leftSpeed = percentSpeed * ((RobotMap.kDriveVelAverage*_output) - (angleDifference * angleKP));
-
-				}
-				else {
-					leftSpeed = percentSpeed * ((RobotMap.kDriveVelAverage*_output) + (angleDifference * angleKP));
-				}
 			}
 		};
 		
 		this.rightOutput = new PIDOutput(){
 			public void pidWrite(double _output){
 				angleDifference = sGyro.getAngle() - angleSetpoint;
-				if(distance >= 0) {
 					rightSpeed = percentSpeed*(_output*RobotMap.kDriveVelAverage) + (angleDifference * angleKP);
-				}
-				else {
-					rightSpeed = percentSpeed*(_output*RobotMap.kDriveVelAverage) - (angleDifference * angleKP);
-				}
 			}
 		};
 		
@@ -134,15 +122,13 @@ public class DriveStraight{
 				return;
 			}
 			
-			if(Math.abs((sDrive.getLeftPosition()+sDrive.getRightPosition())/2 - distance) < tolerance) {
+			if(Math.abs(((Math.abs(sDrive.getLeftPosition())+Math.abs(sDrive.getRightPosition()))/2) - Math.abs(distance)) < tolerance) {
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
-					//TODO: Test if this helps/works
-//					this.s_robot.s_drive.setGear(GearMode.SLOW_GEAR);
 					l_inThreshold = true;
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= timeOutTime) {
-					if(Math.abs((sDrive.getLeftPosition() + sDrive.getRightPosition())/2 - distance) < tolerance) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 500) {
+					if(Math.abs((Math.abs(sDrive.getLeftPosition())+Math.abs(sDrive.getRightPosition()))/2 - Math.abs(distance)) < tolerance) {
 						leftDistancePID.disable();
 						rightDistancePID.disable();
 						

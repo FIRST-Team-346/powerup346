@@ -291,28 +291,24 @@ public class Drive implements Subsystem{
 	}
 	
 	public void setNominal(double _leftLimit, double _rightLimit){
-		if(_leftLimit != this.leftNominal) {
-			this.leftNominal = _leftLimit;
-			this.mDriveLeftMaster.configNominalOutputForward(_leftLimit, 0);
-			this.mDriveLeftMaster.configNominalOutputReverse(_leftLimit, 0);
-		}
-		if(_rightLimit != this.rightNominal) {
-			this.rightNominal = _rightLimit;
-			this.mDriveRightMaster.configNominalOutputForward(_rightLimit, 0);
-			this.mDriveRightMaster.configNominalOutputReverse(_rightLimit, 0);
-		}
-		
-		this.mDriveLeftMaster.configPeakOutputForward(1, 0);
-		this.mDriveLeftMaster.configPeakOutputReverse(1, 0);
-		
-		this.mDriveRightMaster.configPeakOutputForward(1, 0);
-		this.mDriveRightMaster.configPeakOutputReverse(1, 0);
+//			this.leftNominal = _leftLimit;
+//			this.mDriveLeftMaster.configNominalOutputForward(_leftLimit, 0);
+//			this.mDriveLeftMaster.configNominalOutputReverse(-_leftLimit, 0);
+//			this.mDriveLeftSlave1.configNominalOutputForward(_leftLimit, 0);
+//			this.mDriveLeftSlave1.configNominalOutputReverse(-_leftLimit, 0);
+//			this.mDriveLeftSlave2.configNominalOutputForward(_leftLimit, 0);
+//			this.mDriveLeftSlave2.configNominalOutputReverse(-_leftLimit, 0);
+//			this.rightNominal = _rightLimit;
+//			this.mDriveRightMaster.configNominalOutputForward(_rightLimit, 0);
+//			this.mDriveRightMaster.configNominalOutputReverse(-_rightLimit, 0);
+//			this.mDriveRightSlave1.configNominalOutputForward(_rightLimit, 0);
+//			this.mDriveRightSlave1.configNominalOutputReverse(-_rightLimit, 0);
+//			this.mDriveRightSlave2.configNominalOutputForward(_rightLimit, 0);
+//			this.mDriveRightSlave2.configNominalOutputReverse(-_rightLimit, 0);
 
-//			System.out.println("Nominal set to " + _limit);
-			SmartDashboard.putNumber("Left Nominal", leftNominal);
-			SmartDashboard.putNumber("Right Nominal", rightNominal);
-
-		
+//		System.out.println("Nominal set to " + _limit);
+		SmartDashboard.putNumber("Left Nominal", leftNominal);
+		SmartDashboard.putNumber("Right Nominal", rightNominal);
 	}
 	
 	public void zeroEncoders() {
@@ -323,7 +319,26 @@ public class Drive implements Subsystem{
 		this.mDriveRightSlave1.setSelectedSensorPosition(0, 0, 0);
 		this.mDriveRightSlave2.setSelectedSensorPosition(0, 0, 0);
 		
-		this.setNominal(0,0);
+		this.mDriveLeftMaster.configNominalOutputForward(0, 0);
+		this.mDriveRightMaster.configNominalOutputForward(0, 0);
+		this.mDriveLeftSlave1.configNominalOutputForward(0, 0);
+		this.mDriveLeftSlave2.configNominalOutputForward(0, 0);
+		this.mDriveRightSlave1.configNominalOutputForward(0, 0);
+		this.mDriveRightSlave2.configNominalOutputForward(0, 0);
+		
+		this.mDriveLeftMaster.configPeakOutputForward(1, 0);
+		this.mDriveLeftSlave1.configPeakOutputForward(1, 0);
+		this.mDriveLeftSlave2.configPeakOutputForward(1, 0);
+		this.mDriveRightMaster.configPeakOutputForward(1, 0);
+		this.mDriveRightSlave1.configPeakOutputForward(1, 0);
+		this.mDriveRightSlave2.configPeakOutputForward(1, 0);
+		
+		this.mDriveLeftMaster.configPeakOutputReverse(-1, 0);
+		this.mDriveLeftSlave1.configPeakOutputReverse(-1, 0);
+		this.mDriveLeftSlave2.configPeakOutputReverse(-1, 0);
+		this.mDriveRightMaster.configPeakOutputReverse(-1, 0);
+		this.mDriveRightSlave1.configPeakOutputReverse(-1, 0);
+		this.mDriveRightSlave2.configPeakOutputReverse(-1, 0);
 	}
 	
 	public void enable() {

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber implements Subsystem {
 
 	private TalonSRX mWinch;
-	private Solenoid mHook;
 	private Servo mServo;
 	private final double mOnValue = 1.0;
 	
@@ -24,7 +23,6 @@ public class Climber implements Subsystem {
 	
 	protected Climber() {
 		initTalons();
-		initSolenoid();
 		initServo();
 	}
 	
@@ -34,10 +32,6 @@ public class Climber implements Subsystem {
 		this.mWinch.setNeutralMode(NeutralMode.Brake);
 		this.mWinch.overrideLimitSwitchesEnable(true);
 		this.mWinch.overrideSoftLimitsEnable(true);
-	}
-	
-	private void initSolenoid() {
-		this.mHook = new Solenoid(0, RobotMap.kClimberSolenoidChannel);
 	}
 	
 	private void initServo() {
@@ -52,17 +46,12 @@ public class Climber implements Subsystem {
 		this.mWinch.set(ControlMode.PercentOutput, 0);
 	}
 	
-	public void deployHook() {
-		this.mHook.set(true);
-	}
-	
-	public void setServo(double _servoOutput) {
-		this.mServo.set(_servoOutput);
+	public void raiseHook(boolean _raise) {
+		this.mServo.set(_raise ? 1 : 0);
 	}
 
 	public void disable() {
 		this.mWinch.set(ControlMode.Disabled, 0);
-		this.mHook.set(false);
 	}
 
 	public void publishData() {
