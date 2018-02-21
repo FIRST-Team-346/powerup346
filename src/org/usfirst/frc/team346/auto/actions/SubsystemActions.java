@@ -26,7 +26,7 @@ public class SubsystemActions {
 		this.mOuttake = Outtake.getInstance();
 	}
 	
-	public void shootToScale() {
+	public void shootToScaleFront() {
 		this.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
 		this.setShooter(RobotMap.kShooterLeftSetpointNuMid, RobotMap.kShooterRightSetpointNuMid);
 		this.waitUntilAtSpeed(1.5);
@@ -36,7 +36,17 @@ public class SubsystemActions {
 		this.setShooterPercentFront(0.0);
 	}
 	
-	public void tilterToSwtichBack() {
+	public void shootToScaleBack() {
+		this.setTilterPosNu(RobotMap.kTiltPosScaleBack);
+		this.setShooter(RobotMap.kShooterLeftSetpointNuBack, RobotMap.kShooterRightSetpointNuBack);
+		this.waitUntilAtSpeed(2.5);
+		this.setOuttakePercentFront(1.0);
+		this.waitTime(1);
+		this.setOuttakePercentFront(0.0);
+		this.setShooterPercentFront(0.0);
+	}
+	
+	public void tilterToSwitchBack() {
 		this.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 	}
 	

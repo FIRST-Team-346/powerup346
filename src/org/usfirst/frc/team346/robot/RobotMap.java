@@ -2,7 +2,8 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
-import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
+import org.usfirst.frc.team346.auto.plans.SideStart;
+import org.usfirst.frc.team346.auto.plans.SideStartFront;
 import org.usfirst.frc.team346.auto.plans.SwitchCube;
 import org.usfirst.frc.team346.auto.plans.Test;
 
@@ -10,7 +11,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new Test();
+	public static final AutoPlan kAutoPlan = new SideStartFront();
 	
 	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
@@ -86,7 +87,8 @@ public class RobotMap {
 	
 	public static final double kDriveLeftVelMax = 3000.;
 
-	public static final double kDriveVelLeftP = 0.75;
+	//leftvelP was 0.75 on left side scale front
+	public static final double kDriveVelLeftP = 0.70;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
 	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
@@ -141,19 +143,21 @@ public class RobotMap {
 	
 	public static final int kShooterLeftSetpointNuLow = 12650;
 	public static final int kShooterRightSetpointNuLow = 12500;
-	public static final int kShooterLeftSetpointNuMid = 14500;
-	public static final int kShooterRightSetpointNuMid = 14650;
-	public static final int kShooterLeftSetpointNuHigh = 16250;
-	public static final int kShooterRightSetpointNuHigh = 16100;
+	public static final int kShooterLeftSetpointNuMid = 14200;
+	public static final int kShooterRightSetpointNuMid = 14350;
+	public static final int kShooterLeftSetpointNuHigh = 15750;
+	public static final int kShooterRightSetpointNuHigh = 15600;
+	public static final int kShooterLeftSetpointNuBack = 21850;
+	public static final int kShooterRightSetpointNuBack = 21400;
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 81;
+	public static final int kTiltPosNeutral 	= 85;
 	public static final int kTiltPosRange 		= 329;
 	
-	public static final int kTiltPosDrive		= 20  + kTiltPosNeutral;
+	public static final int kTiltPosDrive		= 17  + kTiltPosNeutral;
 	public static final int kTiltPosSwitchBack 	= 65  + kTiltPosNeutral;
 	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
 	public static final int kTiltPosScaleLow 	= 250 + kTiltPosNeutral;

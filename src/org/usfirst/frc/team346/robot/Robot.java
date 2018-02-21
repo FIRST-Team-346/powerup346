@@ -8,7 +8,7 @@ import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Intake;
 import org.usfirst.frc.team346.subsystems.Loader;
 import org.usfirst.frc.team346.subsystems.Outtake;
-import org.usfirst.frc.team346.subsystems.RGBLights;
+import org.usfirst.frc.team346.subsystems.Lights;
 import org.usfirst.frc.team346.subsystems.Shooter;
 import org.usfirst.frc.team346.subsystems.Tilter;
 
@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 	public Tilter sTilter;
 	public Shooter sShooter;
 	public Climber sClimber;
-	public RGBLights sLights;
+	public Lights sLights;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -62,7 +62,7 @@ public class Robot extends IterativeRobot {
 		this.sTilter = Tilter.getInstance();
 		this.sShooter = Shooter.getInstance();
 		
-		this.sLights = RGBLights.getInstance();
+		this.sLights = Lights.getInstance();
 		
 		this.sClimber = Climber.getInstance();
 		
@@ -141,6 +141,7 @@ public class Robot extends IterativeRobot {
 		this.sClimber.disable();
 		this.sTilter.disable();
 		this.sShooter.disable();
+		this.sLights.setBlack();
 	}
 	
 	public void zeroDevices() {

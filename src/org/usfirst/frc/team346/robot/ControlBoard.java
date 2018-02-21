@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
+import org.usfirst.frc.team346.subsystems.Lights.Color;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -54,18 +55,20 @@ public class ControlBoard {
 	}
     
 	private void driveXboxController() {
-		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
-			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
-		}
+//		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
+//			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
+//		}
+//		
+//		if(this.mIsThrottleTurnMode) {
+//			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
+//		}
+//		else {
+////			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+//			this.sRobot.sDrive.drive(DriveMode.PERCENT_VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
+//			
+//		}
 		
-		if(this.mIsThrottleTurnMode) {
-			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
-		}
-		else {
-//			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-			this.sRobot.sDrive.drive(DriveMode.PERCENT_VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-			
-		}
+		this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 	}
 	
 	private void driveDroneController() {
@@ -132,6 +135,10 @@ public class ControlBoard {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
+			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
+		}
+		//Temp button 13 to flip over tall cube without running reverse intake
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButton13)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut) || this.mController.getRawButton(RIGHT_TRIGGER_BUTTON)) {
@@ -206,10 +213,13 @@ public class ControlBoard {
 
 	public void checkLights() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButton9)) {
-			this.sRobot.sLights.epilepsy();
+			this.sRobot.sLights.setColor(Color.BLUE);
+		}
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
+			this.sRobot.sLights.setColor(Color.PURPLE);
 		}
 		else {
-			this.sRobot.sLights.off();;
+			this.sRobot.sLights.setColor(Color.OFF);
 		}
 	}
 	
