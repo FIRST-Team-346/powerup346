@@ -2,11 +2,9 @@ package org.usfirst.frc.team346.subsystems;
 
 import org.usfirst.frc.team346.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.XboxController;
 
-public class RGBLights {
+public class RGBLights implements Subsystem{
 	
 	Solenoid rL;	
 	Solenoid bL;
@@ -18,13 +16,7 @@ public class RGBLights {
 	Solenoid gR;
 	Solenoid pR;
 	
-	public static RGBLights lightsInstance = new RGBLights();
-	
-	public void waitTime(double _seconds) {
-		long lInitialTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - lInitialTime < Math.abs(_seconds) * 1000) {
-		}
-	}
+	public static RGBLights lightsInstance= new RGBLights();
 	
 	public static RGBLights getInstance() {
 		return lightsInstance;
@@ -53,7 +45,7 @@ public class RGBLights {
 		pR.set(true);
 		
 	}
-
+	
 	public void epilepsy() {
 		rL.set(Math.random() < 0.5);
 		gL.set(Math.random() < 0.5);
@@ -140,5 +132,17 @@ public class RGBLights {
 		rR.set(false);
 		gR.set(false);
 		bR.set(false);
+	}
+	
+	@Override
+	public void disable() {
+		rR.set(false);
+		gR.set(false);
+		bR.set(false);
+		
+	}
+	@Override
+	public void publishData() {
+		
 	}
 }

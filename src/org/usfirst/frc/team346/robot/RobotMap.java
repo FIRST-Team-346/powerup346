@@ -39,7 +39,10 @@ public class RobotMap {
 	public static final int kShooterRightPort = 15;				//15-
 	
 	public static final int kClimberPort = 30;					//30
-	public static final int kClimberSolenoidChannel = 0;
+	
+	public static final int kPCMPort = 0;
+	
+	public static final int kClimberSolenoidChannel = 5;
 	
 	public static final int kLightLeftPositive = 0;
 	public static final int kLightLeftGreenChannel = 1;

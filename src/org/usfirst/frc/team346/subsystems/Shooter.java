@@ -49,9 +49,13 @@ public class Shooter implements Subsystem {
 	}
 	
 	private void initEncoders() {
+		//Sets the Talon to get input from the QuadEncoder plugged into it.
 		this.mLeftShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		//Gets the motor to spin in the direction we want and that positive sensor is
+		//in phase with positive motor output.
 		this.mLeftShooter.setInverted(false);
 		this.mLeftShooter.setSensorPhase(true);
+		
 		this.mRightShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
 		this.mRightShooter.setInverted(true);
 		this.mRightShooter.setSensorPhase(true);
