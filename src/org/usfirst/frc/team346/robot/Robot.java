@@ -92,7 +92,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		
-//    	CameraServer.getInstance().startAutomaticCapture();
+    	CameraServer.getInstance().startAutomaticCapture();
 		
 		this.zeroDevices();
 //		this.sTilter.disable();

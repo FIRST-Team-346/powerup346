@@ -291,22 +291,13 @@ public class Drive implements Subsystem{
 	}
 	
 	public void setNominal(double _leftLimit, double _rightLimit){
-//			this.leftNominal = _leftLimit;
-//			this.mDriveLeftMaster.configNominalOutputForward(_leftLimit, 0);
-//			this.mDriveLeftMaster.configNominalOutputReverse(-_leftLimit, 0);
-//			this.mDriveLeftSlave1.configNominalOutputForward(_leftLimit, 0);
-//			this.mDriveLeftSlave1.configNominalOutputReverse(-_leftLimit, 0);
-//			this.mDriveLeftSlave2.configNominalOutputForward(_leftLimit, 0);
-//			this.mDriveLeftSlave2.configNominalOutputReverse(-_leftLimit, 0);
-//			this.rightNominal = _rightLimit;
-//			this.mDriveRightMaster.configNominalOutputForward(_rightLimit, 0);
-//			this.mDriveRightMaster.configNominalOutputReverse(-_rightLimit, 0);
-//			this.mDriveRightSlave1.configNominalOutputForward(_rightLimit, 0);
-//			this.mDriveRightSlave1.configNominalOutputReverse(-_rightLimit, 0);
-//			this.mDriveRightSlave2.configNominalOutputForward(_rightLimit, 0);
-//			this.mDriveRightSlave2.configNominalOutputReverse(-_rightLimit, 0);
-
-//		System.out.println("Nominal set to " + _limit);
+//		this.mDriveLeftMaster.configNominalOutputForward(_leftLimit, 0);
+//		this.mDriveRightMaster.configNominalOutputForward(_rightLimit, 0);
+//		this.mDriveLeftSlave1.configNominalOutputForward(_leftLimit, 0);
+//		this.mDriveLeftSlave2.configNominalOutputForward(_leftLimit, 0);
+//		this.mDriveRightSlave1.configNominalOutputForward(_rightLimit, 0);
+//		this.mDriveRightSlave2.configNominalOutputForward(_rightLimit, 0);
+		
 		SmartDashboard.putNumber("Left Nominal", leftNominal);
 		SmartDashboard.putNumber("Right Nominal", rightNominal);
 	}

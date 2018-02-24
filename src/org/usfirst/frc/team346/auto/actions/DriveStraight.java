@@ -28,6 +28,8 @@ public class DriveStraight{
 	private double leftSpeed,rightSpeed;
 	private double angleKP = 25;
 	
+	/**Use DriveFollow instead.**/
+	@Deprecated
 	public DriveStraight(double _distance, double _percentSpeed, double _timeOutTime, double _tolerance) {
 		this.distance = _distance;
 		this.percentSpeed = _percentSpeed;

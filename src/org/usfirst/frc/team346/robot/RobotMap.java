@@ -1,18 +1,12 @@
 package org.usfirst.frc.team346.robot;
 
-import org.usfirst.frc.team346.auto.plans.AutoPlan;
-import org.usfirst.frc.team346.auto.plans.CrossBaseline;
-import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
-import org.usfirst.frc.team346.auto.plans.SideStart;
-import org.usfirst.frc.team346.auto.plans.SideStartFront;
-import org.usfirst.frc.team346.auto.plans.SwitchCube;
-import org.usfirst.frc.team346.auto.plans.Test;
+import org.usfirst.frc.team346.auto.plans.*;
 
 public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new DriveFollowTest();
+	public static final AutoPlan kAutoPlan = new NewSideScaleShoot();
 	
 	public static boolean kStartingOnLeft = false;
 	
@@ -117,10 +111,12 @@ public class RobotMap {
 	public static final double kDriveFollowI = 0;
 	public static final double kDriveFollowD = 0;
 	public static final double kDriveFollowF = 0.5;
-
-	public static final double kDriveFollowErrorScalerMultiplier = 3.0;
-	public static final double kDriveFollowErrorScalerDivider = 0.5;
-	public static final double kDriveFollowProfileErrorScalerMultiplier = 1.5;
+	
+	public static final double kRotateP = 0.045;
+	public static final double kRotateI = 0;
+	public static final double kRotateD = 0.2;
+	
+	public static final double kDriveFollowAngleErrorScaler = 0.03;//0.0225
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;
