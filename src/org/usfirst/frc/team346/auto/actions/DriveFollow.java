@@ -12,306 +12,231 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveFollow {
+public class DriveFollow implements Runnable {
 
 	private Drive sDrive;
 	private Gyro sGyro;
 	
-	private PIDSource mCourseSource;
-	private PIDOutput mCourseOutput;
-	private PIDController mCoursePID;
+	private double timeZero, timePrev, timeCurr, timeDelta, timePrevPublish;
+	private double headingCurr;
+	private double distancePrev, distanceCurr, distanceDelta;
+	private double velocityPrev, velocityCurr, velocityDelta, velocitySetLeft, velocitySetRight;
+	private double courseDistanceDelta, courseDistanceTotal, courseDistanceRemaining;
+	private double courseErrorDelta, courseErrorTotal;
 	
-	private final int DELTA = 0, PREV = 1, CURR = 2;
-	private double[] mTime = {0,0,0};
-	private double[] mHeading = {0};
-	private double[] mDistance = {0,0,0};
-	private double[] mVelocity = {0,0,0};
+	private final double courseDistanceSetpoint, velocitySetpointMag;
 	
-	private final int TOTAL = 1;
-	private double[] mCourseTraveled = {0,0};
-	private double[] mCourseError = {0,0};
-	private double[] mCourseRemaining = {0,0};
-	private double mCourseOutputPublish = 0;
+	private boolean inThresholdCountdownBegun;
+	private double timeInThreshold;
+	private final double thresholdTimeOutSec, thresholdVelocity, timeOutSec, updateFreq;
 	
-	private double mVelSetpoint, mDistanceSetpoint;
-	private double mLeftVel, mRightVel;
-	private final boolean mIsDrivingForward;
-	private boolean mIsDriving;
-	
-	private final double kTimeOutSeconds = 10.;
-	private final double kThresholdSeconds = 0.25;
-	private final double kThresholdFeet = 0.5;
-	private final double kThresholdVelocity = 0.1 * RobotMap.kDriveVelAverage;
-	private double mStartTime, mCountdown, mTimePrevPublish;
-	private boolean mCountdownStarted;
-	
+	private boolean isActive;
+	private boolean isDrivingForward;
 	
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
 	 * as well as the correct heading along the course.**/
-	public DriveFollow(double _distance, double _velocity) {
+	public DriveFollow(double _distanceFt, double _velocityFtPerDs) {
+		System.out.println("DriveF| created: d:" + _distanceFt + ",v:" + _velocityFtPerDs);
+		
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
 		
-		this.mCountdownStarted = false;
-		this.mDistanceSetpoint = _distance * 1024.;
-		this.mVelSetpoint = Math.abs(_velocity);
+		this.timeOutSec = 10.;
+		this.updateFreq = 0.01;
+		this.thresholdTimeOutSec = 0.25;
+		this.thresholdVelocity = 0.1 * RobotMap.kDriveVelAverage;
 		
-		this.mIsDrivingForward = (this.mDistanceSetpoint >= 0);
-		this.mIsDriving = true;
+		this.courseDistanceSetpoint = _distanceFt * 1024.;
+		this.velocitySetpointMag = Math.abs(_velocityFtPerDs);
+		
+		this.isDrivingForward = (this.courseDistanceSetpoint >= 0);
 	}
 	
-	/**This method to be used only for following straight lines, thus only a distance is required.**/
-	public void followLine() {
-		//Zeros the gyro and drive at the beginning of a course and sets "previous" values to startup values.
+	public void run() {
+		System.out.println("DriveF| run");
+		this.init();
+		
+		while(this.isDriving()) {
+			long lWaitTime = System.currentTimeMillis();
+			while(System.currentTimeMillis() - lWaitTime < this.updateFreq * 1000.) {
+			}
+			this.updateCycle();
+		}
+		
+		System.out.println("DriveF| run complete");
+	}
+	
+	private void init() {
+		this.timeZero = System.currentTimeMillis()/1000.;
+		this.isActive = true;
+		this.inThresholdCountdownBegun = false;
+		
 		this.sDrive.zeroEncoders();
+		this.sDrive.enable();
 		this.sGyro.zeroGyro();
 		
-		this.mIsDriving = true;
-		
-		this.updateFinal();
-		this.createCoursePID();
-		
-		this.mStartTime = System.currentTimeMillis()/1000.;
-		this.sDrive.enable();
-		
-		this.mCoursePID.setSetpoint(this.mDistanceSetpoint);
-		this.enablePID();
+		this.timePrev = System.currentTimeMillis()/1000;
+		this.distancePrev = this.sDrive.getAveragedPosition();
+		this.velocityPrev = this.sDrive.getAveragedVelocity();
 	}
-	
+
 	/**This method is run every cycle, calculating the error and adjusting the drive accordingly.**/
-	public void updateCycle(double _courseOutput) {
-		this.updateStart();
-		
-		double lSigmoidOutput;
-		if(this.mIsDrivingForward) {
-			lSigmoidOutput = reverseModSigmoid(Math.abs(this.mDistanceSetpoint/1024.), this.mCourseTraveled[TOTAL]/1024.);
-		}
-		else {
-			lSigmoidOutput = -reverseModSigmoid(Math.abs(this.mDistanceSetpoint/1024.), this.mCourseTraveled[TOTAL]/1024.);
-		}
-		
-//		this.setDriveToFollow(_courseOutput);
-		this.setDriveToFollow(lSigmoidOutput);
-		
+	public void updateCycle() {
+		this.checkDisabled();
+		this.updateValues();
 		this.publishValues();
 		
-		this.updateFinal();
-		this.checkDisabled();
+		double lSigmoidOutput = reverseModSigmoid(this.courseDistanceSetpoint/1024., this.courseDistanceTotal/1024.)
+									* (this.isDrivingForward ? 1. : -1.);
+		this.setDriveVelocity(lSigmoidOutput);
 		
-		if(Math.abs(this.mCourseRemaining[TOTAL]) < Math.abs(this.mDistanceSetpoint/2.)) {
-//			this.checkCompletion();
-			this.checkCompletionVelocity();	
-		}
+		this.checkCompletionVelocity();
+		this.updatePrevValues();
 	}
 	
 	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.**/
-	private void updateStart() {
-		this.mTime[CURR] = System.currentTimeMillis()/1000.;
-		this.mTime[DELTA] = this.mTime[CURR] - this.mTime[PREV];
+	private void updateValues() {
+		this.timeCurr = System.currentTimeMillis()/1000.;
+		this.timeDelta = this.timeCurr - this.timePrev;
 		
-		this.mHeading[DELTA] = this.sGyro.getAngle();
+		this.headingCurr = this.sGyro.getAngle();
 		
-		this.mDistance[CURR] = 1./2. * (this.sDrive.getLeftPosition() + this.sDrive.getRightPosition());
-		this.mDistance[DELTA] = this.mDistance[CURR] - this.mDistance[PREV];
+		this.distanceCurr = this.sDrive.getAveragedPosition();
+		this.distanceDelta = this.distanceCurr - this.distancePrev;
 		
-		this.mVelocity[CURR] = 1./2. * (this.sDrive.getLeftVelocity() + this.sDrive.getRightVelocity());
-		this.mVelocity[DELTA] = this.mVelocity[CURR] - this.mVelocity[PREV];
+		this.velocityCurr = this.sDrive.getAveragedVelocity();
+		this.velocityDelta = this.velocityCurr - this.velocityPrev;
 		
-		if(this.mIsDrivingForward) {
-			this.mCourseTraveled[DELTA] = this.mDistance[DELTA] * Math.cos(Math.toRadians(this.mHeading[DELTA]));	//course arc-length travelled so far
-			this.mCourseError[DELTA] = this.mDistance[DELTA] * Math.sin(Math.toRadians(this.mHeading[DELTA]));		//perpendicular error away from course
-		}
-		else {
-			this.mCourseTraveled[DELTA] = -this.mDistance[DELTA] * Math.cos(Math.toRadians(this.mHeading[DELTA]));	//course arc-length travelled so far
-			this.mCourseError[DELTA] = -this.mDistance[DELTA] * Math.sin(Math.toRadians(this.mHeading[DELTA]));		//perpendicular error away from course
-		}
+		this.courseDistanceDelta = this.distanceDelta * Math.cos(Math.toRadians(this.headingCurr)) * (this.isDrivingForward ? 1. : -1.);	//course arc-length travelled so far
+		this.courseErrorDelta = this.distanceDelta * Math.sin(Math.toRadians(this.headingCurr)) * (this.isDrivingForward ? 1. : -1.);		//perpendicular error away from course
 		
-		this.mCourseTraveled[TOTAL] += this.mCourseTraveled[DELTA];
-		this.mCourseError[TOTAL] += this.mCourseError[DELTA];
-		if(this.mIsDrivingForward) {
-			this.mCourseRemaining[TOTAL] = this.mDistanceSetpoint - this.mCourseTraveled[TOTAL];
-		}
-		else {
-			this.mCourseRemaining[TOTAL] = this.mDistanceSetpoint + this.mCourseTraveled[TOTAL];
-		}
-	}
-	
-	private void publishValues() {
-		if(System.currentTimeMillis() - this.mTimePrevPublish > 250) {
-			System.out.println("dT:" + this.mTime[DELTA] + " dH:" + this.mHeading[DELTA] + " cD:" + this.mDistance[CURR] + " cV:" + this.mVelocity[CURR]);
-			System.out.println("acT:" + this.mCourseTraveled[TOTAL] + " ccE:" + this.mCourseError[TOTAL] + " acR:" + this.mCourseRemaining[TOTAL]);
-			System.out.println("lV:" + this.mLeftVel + " rV:" + this.mRightVel);
-			System.out.println("cO:" + this.mCourseOutputPublish);
-			
-			this.mTimePrevPublish = System.currentTimeMillis();
-		}
-	}
-	
-	private void setDriveToFollow(double _courseOutput) {
-		this.mCourseOutputPublish = _courseOutput;
+		this.courseDistanceTotal += this.courseDistanceDelta;
+		this.courseErrorTotal += this.courseErrorDelta;
 		
-		mLeftVel = _courseOutput * mVelSetpoint;
-		mRightVel = _courseOutput * mVelSetpoint;
-		if(this.mIsDrivingForward) {
-			if(_courseOutput >= 0) {
-				if(this.mCourseError[TOTAL] >= 0) {
-//					this.mRightVel = _courseOutput * this.mVelSetpoint + this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mRightVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mLeftVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-				else if(mCourseError[TOTAL] < 0) {
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint - this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mLeftVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mRightVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-			}
-			else if(_courseOutput < 0) {
-				if(mCourseError[TOTAL] >= 0) {
-//					this.mRightVel = _courseOutput * this.mVelSetpoint - this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mRightVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-				else if(mCourseError[TOTAL] < 0) {
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint + this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mLeftVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mRightVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-			}
-		}
-		else {
-			if(_courseOutput >= 0) {
-				if(this.mCourseError[TOTAL] >= 0) {
-//					this.mRightVel = _courseOutput * this.mVelSetpoint + this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mRightVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*-Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mLeftVel = _courseOutput * mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-				else if(mCourseError[TOTAL] < 0) {
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint - this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mLeftVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*-Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mRightVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-			}
-			else if(_courseOutput < 0) {
-				if(mCourseError[TOTAL] >= 0) {
-//					this.mRightVel = _courseOutput * this.mVelSetpoint - this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mRightVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*-Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-				else if(mCourseError[TOTAL] < 0) {
-//					this.mLeftVel = _courseOutput * this.mVelSetpoint + this.mCourseError[TOTAL]/this.mTime[DELTA] * RobotMap.kDriveFollowErrorScalerMultiplier;
-					this.mLeftVel = _courseOutput * this.mVelSetpoint * (1+(RobotMap.kDriveFollowErrorScalerMultiplier*-Math.abs(this.mCourseError[TOTAL]/1024.)));
-//					this.mRightVel = _courseOutput * this.mVelSetpoint * this.reverseSigmoid(Math.abs(this.mCourseError[TOTAL]));
-				}
-			}
-		}
-		
-		if(this.mCountdownStarted) {
-			this.mLeftVel = 0.;
-			this.mRightVel = 0.;
-		}
-		
-		this.sDrive.drive(DriveMode.VELOCITY, this.mLeftVel, this.mRightVel);
+		this.courseDistanceRemaining = this.courseDistanceSetpoint - this.courseDistanceTotal * (this.isDrivingForward ? 1. : -1.);
 	}
 	
 	/**To be run at the end of each cycle to inform the next cycle of the previous values.**/
-	private void updateFinal() {
-		this.mTime[PREV] = this.mTime[CURR];
-		this.mDistance[PREV] = this.mDistance[CURR];
+	private void updatePrevValues() {
+		this.timePrev = this.timeCurr;
+		this.distancePrev = this.distanceCurr;
+		this.velocityPrev = this.velocityCurr;
 	}
 	
-	private void checkCompletion() {
-		this.checkDisabled();
-		if(Math.abs(this.mDistanceSetpoint - this.mCourseTraveled[TOTAL]) < this.kThresholdFeet) {
-			if(!this.mCountdownStarted) {
-				System.out.println("Countdown started");
-				this.mCountdown = System.currentTimeMillis()/1000.;
-				this.mCountdownStarted = true;
+	private void publishValues() {
+		if(System.currentTimeMillis() - this.timePrevPublish > 250) {
+			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + this.distanceCurr + " currV:" + this.velocityCurr);
+			System.out.println("courseDT:" + this.courseDistanceTotal + " courseET:" + this.courseErrorTotal + " courseDR:" + this.courseDistanceRemaining);
+			System.out.println("leftV:" + this.velocitySetLeft + " rightV" + this.velocitySetRight);
+			
+			this.timePrevPublish = System.currentTimeMillis();
+		}
+	}
+	
+	private void setDriveVelocity(double _courseOutput) {
+		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag;
+		this.velocitySetRight = _courseOutput * this.velocitySetpointMag;
+		
+		double lSign, rSign;
+		if(this.isDrivingForward) {
+			if(_courseOutput >= 0) {
+				if(this.courseErrorTotal >= 0) {
+					lSign = 0.;
+					rSign = 1.;
+				}
+				else {
+					lSign = 1.;
+					rSign = 0.;
+				}
 			}
-			if(System.currentTimeMillis()/1000. - this.mCountdown > this.kThresholdSeconds) {
-				System.out.println("Drive Follow| complete");
-				this.mIsDriving = false;
-				this.disablePID();
-				this.setDriveToFollow(0);
+			else {
+				if(this.courseErrorTotal >= 0) {
+					lSign = 0.;
+					rSign = 1.;
+				}
+				else {
+					lSign = 1.;
+					rSign = 0.;
+				}
 			}
 		}
-		else if(System.currentTimeMillis()/1000. - this.mCountdown > this.kThresholdSeconds) {
-			this.mCountdownStarted = false;
+		else {
+			if(_courseOutput >= 0) {
+				if(this.courseErrorTotal >= 0) {
+					lSign = 0.;
+					rSign = -1.;
+				}
+				else {
+					lSign = -1.;
+					rSign = 0.;
+				}
+			}
+			else {
+				if(this.courseErrorTotal >= 0) {
+					lSign = 0.;
+					rSign = -1.;
+				}
+				else {
+					lSign = -1.;
+					rSign = 0.;
+				}
+			}
 		}
+		
+		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag
+								* (1 + (lSign * RobotMap.kDriveFollowErrorScalerMultiplier * Math.abs(this.courseErrorTotal/this.courseDistanceSetpoint)) );	//TODO was errorTotal/1024
+		this.velocitySetRight = _courseOutput * this.velocitySetpointMag
+								* (1 + (rSign * RobotMap.kDriveFollowErrorScalerMultiplier * Math.abs(this.courseErrorTotal/this.courseDistanceSetpoint)) );	//TODO was errorTotal/1024
+		
+		if(this.inThresholdCountdownBegun) {
+			this.velocitySetLeft = 0.;
+			this.velocitySetRight = 0.;
+		}
+		
+		this.sDrive.drive(DriveMode.VELOCITY, this.velocitySetLeft, this.velocitySetRight);
 	}
 	
 	private void checkCompletionVelocity() {
 		this.checkDisabled();
-		if(Math.abs(this.mVelocity[CURR]) < Math.abs(this.kThresholdVelocity)) {
-			if(!this.mCountdownStarted) {
+//		if(Math.abs(this.courseDistanceRemaining) < Math.abs(this.courseDistanceSetpoint/2.)) {		TODO check below
+		if(Math.abs(this.courseDistanceTotal/1024.) <= 1) {
+				return;
+		}
+		
+		if(Math.abs(this.velocityCurr) < Math.abs(this.thresholdVelocity)) {
+			if(!this.inThresholdCountdownBegun) {
 				System.out.println("Velocity countdown started");
-				this.mCountdown = System.currentTimeMillis()/1000.;
-				this.mCountdownStarted = true;
+				this.timeInThreshold = System.currentTimeMillis()/1000.;
+				this.inThresholdCountdownBegun = true;
 			}
-			if(System.currentTimeMillis()/1000. - this.mCountdown > this.kThresholdSeconds) {
-				System.out.println("Drive Follow| complete");
-				this.mIsDriving = false;
-				this.disablePID();
-				this.setDriveToFollow(0);
+			if(System.currentTimeMillis()/1000. - this.timeInThreshold > this.thresholdTimeOutSec) {
+				System.out.println("Drive Follow| complete via velocity threshold");
+				this.stop();
 			}
 		}
-		else if(System.currentTimeMillis()/1000. - this.mCountdown > this.kThresholdSeconds) {
+		else if(System.currentTimeMillis()/1000. - this.timeInThreshold > this.thresholdTimeOutSec) {
 			System.out.println("Velocity countdown aborted");
-			this.mCountdown = System.currentTimeMillis()/1000.;
-			this.mCountdownStarted = false;
+			this.timeInThreshold = System.currentTimeMillis()/1000.;
+			this.inThresholdCountdownBegun = false;
 		}
+	}
+	
+	private void stop() {
+		System.out.println("DriveF| driving = false");
+		this.setDriveVelocity(0);
+		this.isActive = false;
 	}
 	
 	private void checkDisabled() {
-		if(System.currentTimeMillis()/1000. - this.mStartTime > this.kTimeOutSeconds || DriverStation.getInstance().isDisabled()) {
-			System.out.println("Drive Follow| timeout");
-			this.disablePID();
-			this.setDriveToFollow(0);
-			this.mIsDriving = false;
+		if(System.currentTimeMillis()/1000. - this.timeZero > this.timeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
+			System.out.println("Drive Follow| timeout or disabled");
+			this.stop();
 		}
 	}
 	
-	private void createCoursePID() {
-		System.out.println("Drive Follow| creating course PIDC");
-		
-		this.mCourseSource = new PIDSource() {
-			@Override
-			public void setPIDSourceType(PIDSourceType pidSource) { }
-			@Override
-			public PIDSourceType getPIDSourceType() {
-				return PIDSourceType.kDisplacement;
-			}
-			@Override
-			public double pidGet() {
-				return mCourseTraveled[TOTAL];
-			}
-		};
-		
-		/**Sets the drive velocity outputs to a fraction of their velocity setpoint based on remaining distance.**/
-		this.mCourseOutput = new PIDOutput() {
-			@Override
-			public void pidWrite(double _output) {
-				updateCycle(_output);
-			}
-		};
-		
-		this.mCoursePID = new PIDController(RobotMap.kDriveFollowP, RobotMap.kDriveFollowI, RobotMap.kDriveFollowD, RobotMap.kDriveFollowF,
-									   this.mCourseSource, this.mCourseOutput, RobotMap.kDriveFollowUpdateRate);
-	}
-	
-	private void enablePID() {
-		System.out.println("Drive Follow| enabling course PIDC");
-		this.mCoursePID.enable();
-	}
-	
-	private void disablePID() {
-		System.out.println("Drive Follow| disabling course PIDC");
-		this.mCoursePID.free();
-		this.mIsDriving = false;
-	}
-	
 	public boolean isDriving() {
-		return this.mIsDriving;
+		return this.isActive;
 	}
 	
 	private double reverseSigmoid(double _x) {
@@ -319,8 +244,8 @@ public class DriveFollow {
 	}
 	
 	private double reverseModSigmoid(double _width, double _x) {
-		double lWidthScaler = 12. /_width;
-		double lTranslator = _width /2.;
+		double lWidthScaler = 12. /Math.abs(_width);
+		double lTranslator = Math.abs(_width) /2.;
 		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x - lTranslator) ));
 	}
 
