@@ -2,6 +2,7 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.plans.AutoPlan;
 import org.usfirst.frc.team346.auto.plans.CrossBaseline;
+import org.usfirst.frc.team346.auto.plans.DriveFollowTest;
 import org.usfirst.frc.team346.auto.plans.SideStart;
 import org.usfirst.frc.team346.auto.plans.SideStartFront;
 import org.usfirst.frc.team346.auto.plans.SwitchCube;
@@ -11,19 +12,18 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new SideStartFront();
+	public static final AutoPlan kAutoPlan = new DriveFollowTest();
 	
-	public static boolean kPracticeBot = false;
 	public static boolean kStartingOnLeft = false;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 27;			//27-03
-	public static final int kDriveLeftSlave1Port = 7;			//13-02
-	public static final int kDriveLeftSlave2Port = 13;			//07-21
-	public static final int kDriveRightMasterPort = 26;			//26-01
-	public static final int kDriveRightSlave1Port = 18;			//18-05
-	public static final int kDriveRightSlave2Port = 17;			//17-08
+	public static final int kDriveLeftMasterPort = 3;			//27-03
+	public static final int kDriveLeftSlave1Port = 2;			//13-02
+	public static final int kDriveLeftSlave2Port = 21;			//07-21
+	public static final int kDriveRightMasterPort = 1;			//26-01
+	public static final int kDriveRightSlave1Port = 5;			//18-05
+	public static final int kDriveRightSlave2Port = 8;			//17-08
 
 	public static final int kIntakeLeftPort = 24;			    //24-
 	public static final int kIntakeRightPort = 20;				//20-
@@ -118,7 +118,7 @@ public class RobotMap {
 	public static final double kDriveFollowD = 0;
 	public static final double kDriveFollowF = 0.5;
 
-	public static final double kDriveFollowErrorScalerMultiplier = 2.0;
+	public static final double kDriveFollowErrorScalerMultiplier = 3.0;
 	public static final double kDriveFollowErrorScalerDivider = 0.5;
 	public static final double kDriveFollowProfileErrorScalerMultiplier = 1.5;
 	

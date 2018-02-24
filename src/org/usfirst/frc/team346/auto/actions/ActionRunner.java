@@ -9,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Tilter;
 
 import edu.wpi.first.wpilibj.Preferences;
 
-public class SubsystemActions {
+public class ActionRunner {
 	
 	private Tilter mTilter;
 	private Shooter mShooter;
@@ -18,7 +18,7 @@ public class SubsystemActions {
 	private Outtake mOuttake;
 	private Preferences mPref = Preferences.getInstance();
 	
-	public SubsystemActions() {
+	public ActionRunner() {
 		this.mTilter = Tilter.getInstance();
 		this.mShooter = Shooter.getInstance();
 		this.mIntake = Intake.getInstance();
@@ -27,23 +27,11 @@ public class SubsystemActions {
 	}
 	
 	public void shootToScaleFront() {
-		this.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
-		this.setShooter(RobotMap.kShooterLeftSetpointNuMid, RobotMap.kShooterRightSetpointNuMid);
-		this.waitUntilAtSpeed(1.5);
-		this.setOuttakePercentFront(1.0);
-		this.waitTime(1);
-		this.setOuttakePercentFront(0.0);
-		this.setShooterPercentFront(0.0);
+		new Thread(new ShootToScaleFront()).run();
 	}
 	
 	public void shootToScaleBack() {
-		this.setTilterPosNu(RobotMap.kTiltPosScaleBack);
-		this.setShooter(RobotMap.kShooterLeftSetpointNuBack, RobotMap.kShooterRightSetpointNuBack);
-		this.waitUntilAtSpeed(2.5);
-		this.setOuttakePercentFront(1.0);
-		this.waitTime(1);
-		this.setOuttakePercentFront(0.0);
-		this.setShooterPercentFront(0.0);
+		new Thread(new ShootToScaleBack()).run();
 	}
 	
 	public void tilterToSwitchBack() {
@@ -51,19 +39,11 @@ public class SubsystemActions {
 	}
 	
 	public void shootToSwitchBack() {
-		this.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
-		this.waitTime(0.5);
-		this.setOuttakePercentFront(-1.0);
-		this.setShooterPercentFront(-0.5);
-		this.waitTime(1);
-		this.setOuttakePercentFront(0.0);
-		this.setShooterPercentFront(0.0);
+		new Thread(new ShootToSwitchBack()).run();
 	}
 	
 	public void openIntake() {
-		this.mIntake.setSpeedIn(-1.0);
-		this.waitTime(0.15);
-		this.mIntake.setSpeedIn(0.0);
+		new Thread(new OpenIntakeArms()).run();
 	}
 	
 	public void setTilterPosNu(int _tiltPosNu) {
@@ -92,6 +72,10 @@ public class SubsystemActions {
 	
 	public void setOuttakePercentFront(double _percentFront) {
 		this.mOuttake.setSpeedFront(_percentFront);
+	}
+	
+	public void setJustIntakeIn(double _percentIn) {
+		this.mIntake.setSpeedIn(_percentIn);
 	}
 	
 	public void setIntakeIn(double _percentIn) {

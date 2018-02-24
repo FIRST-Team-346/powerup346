@@ -10,17 +10,19 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveFollow implements Runnable {
 
 	private Drive sDrive;
 	private Gyro sGyro;
+	private Preferences pref;
 	
 	private double timeZero, timePrev, timeCurr, timeDelta, timePrevPublish;
 	private double headingCurr;
 	private double distancePrev, distanceCurr, distanceDelta;
-	private double velocityPrev, velocityCurr, velocityDelta, velocitySetLeft, velocitySetRight;
+	private double velocityPrev, velocityCurr, velocityDelta, velocitySetLeft, velocitySetRight, outputPublish;
 	private double courseDistanceDelta, courseDistanceTotal, courseDistanceRemaining;
 	private double courseErrorDelta, courseErrorTotal;
 	
@@ -35,22 +37,27 @@ public class DriveFollow implements Runnable {
 	
 	/**The DriveFollow object aims to drive along a course, correcting for any accumulated area off-course
 	 * in order to return to the original course. This maintains the correct distance driven along the course
-	 * as well as the correct heading along the course.**/
-	public DriveFollow(double _distanceFt, double _velocityFtPerDs) {
-		System.out.println("DriveF| created: d:" + _distanceFt + ",v:" + _velocityFtPerDs);
+	 * as well as the correct heading along the course.
+	 * @param _velocityPercent use 0.6 for distances >= 5ft else 0.3**/
+	public DriveFollow(double _distanceFt, double _velocityPercent) {
+		System.out.println("DriveF| created: d:" + _distanceFt + ",v:" + _velocityPercent);
+		this.timeZero = System.currentTimeMillis()/1000.;
 		
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
+		this.pref = Preferences.getInstance();
 		
 		this.timeOutSec = 10.;
 		this.updateFreq = 0.01;
 		this.thresholdTimeOutSec = 0.25;
-		this.thresholdVelocity = 0.1 * RobotMap.kDriveVelAverage;
+		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
 		
 		this.courseDistanceSetpoint = _distanceFt * 1024.;
-		this.velocitySetpointMag = Math.abs(_velocityFtPerDs);
+		this.velocitySetpointMag = Math.abs(_velocityPercent);
 		
 		this.isDrivingForward = (this.courseDistanceSetpoint >= 0);
+		
+		this.isActive = true;
 	}
 	
 	public void run() {
@@ -126,9 +133,9 @@ public class DriveFollow implements Runnable {
 	
 	private void publishValues() {
 		if(System.currentTimeMillis() - this.timePrevPublish > 250) {
-			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + this.distanceCurr + " currV:" + this.velocityCurr);
-			System.out.println("courseDT:" + this.courseDistanceTotal + " courseET:" + this.courseErrorTotal + " courseDR:" + this.courseDistanceRemaining);
-			System.out.println("leftV:" + this.velocitySetLeft + " rightV" + this.velocitySetRight);
+			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + (this.distanceCurr/1024.) + " currV:" + this.velocityCurr);
+			System.out.println("courseDT:" + (this.courseDistanceTotal/1024.) + " courseET:" + (this.courseErrorTotal/1024.) + " courseDR:" + (this.courseDistanceRemaining/1024.));
+			System.out.println("leftV:" + this.velocitySetLeft + " rightV:" + this.velocitySetRight + " output:" + this.outputPublish);
 			
 			this.timePrevPublish = System.currentTimeMillis();
 		}
@@ -137,70 +144,88 @@ public class DriveFollow implements Runnable {
 	private void setDriveVelocity(double _courseOutput) {
 		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag;
 		this.velocitySetRight = _courseOutput * this.velocitySetpointMag;
+		this.outputPublish = _courseOutput;
 		
 		double lSign, rSign;
+//		if(this.isDrivingForward) {
+//			if(_courseOutput >= 0) {
+//				if(this.courseErrorTotal >= 0) {
+//					lSign = -1.;//
+//					rSign = 1.;
+//				}
+//				else {
+//					lSign = 1.;
+//					rSign = -1.;//
+//				}
+//			}
+//			else {
+//				if(this.courseErrorTotal >= 0) {
+//					lSign = -1.;//
+//					rSign = 1.;
+//				}
+//				else {
+//					lSign = 1.;
+//					rSign = -1.;//
+//				}
+//			}
+//		}
+//		else {
+//			if(_courseOutput >= 0) {
+//				if(this.courseErrorTotal >= 0) {
+//					lSign = -1;//
+//					rSign = -1.;
+//				}
+//				else {
+//					lSign = -1.;
+//					rSign = -1;//
+//				}
+//			}
+//			else {
+//				if(this.courseErrorTotal >= 0) {
+//					lSign = -1;//
+//					rSign = -1.;
+//				}
+//				else {
+//					lSign = -1.;
+//					rSign = -1;//
+//				}
+//			}
+//		}
+//		
+////	double multiplier = RobotMap.kDriveFollowErrorScalerMultiplier;
+//		double multiplier = this.pref.getDouble("dfMult", 0);
+//		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag
+//								* (1 + (lSign * multiplier * Math.abs(this.courseErrorTotal/1024.)) );	//TODO was errorTotal/1024
+//		this.velocitySetRight = _courseOutput * this.velocitySetpointMag
+//								* (1 + (rSign * multiplier * Math.abs(this.courseErrorTotal/1024.)) );	//TODO was errorTotal/1024
+
+//		double multiplier = RobotMap.kDriveFollowErrorScalerMultiplier;
+		double multiplier = this.pref.getDouble("dfMult", 0);
 		if(this.isDrivingForward) {
-			if(_courseOutput >= 0) {
-				if(this.courseErrorTotal >= 0) {
-					lSign = 0.;
-					rSign = 1.;
-				}
-				else {
-					lSign = 1.;
-					rSign = 0.;
-				}
-			}
-			else {
-				if(this.courseErrorTotal >= 0) {
-					lSign = 0.;
-					rSign = 1.;
-				}
-				else {
-					lSign = 1.;
-					rSign = 0.;
-				}
-			}
+			lSign = (this.headingCurr >= 0) ? -1. : 1.;
+			rSign = (this.headingCurr >= 0) ? 1. : -1.;
 		}
 		else {
-			if(_courseOutput >= 0) {
-				if(this.courseErrorTotal >= 0) {
-					lSign = 0.;
-					rSign = -1.;
-				}
-				else {
-					lSign = -1.;
-					rSign = 0.;
-				}
-			}
-			else {
-				if(this.courseErrorTotal >= 0) {
-					lSign = 0.;
-					rSign = -1.;
-				}
-				else {
-					lSign = -1.;
-					rSign = 0.;
-				}
-			}
+			lSign = (this.headingCurr >= 0) ? 1. : -1.;
+			rSign = (this.headingCurr >= 0) ? -1. : 1.;
 		}
-		
-		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag
-								* (1 + (lSign * RobotMap.kDriveFollowErrorScalerMultiplier * Math.abs(this.courseErrorTotal/this.courseDistanceSetpoint)) );	//TODO was errorTotal/1024
-		this.velocitySetRight = _courseOutput * this.velocitySetpointMag
-								* (1 + (rSign * RobotMap.kDriveFollowErrorScalerMultiplier * Math.abs(this.courseErrorTotal/this.courseDistanceSetpoint)) );	//TODO was errorTotal/1024
+		this.velocitySetLeft = this.velocitySetpointMag * _courseOutput
+				* (1 + (multiplier * this.headingCurr) );	//TODO was errorTotal/1024
+		this.velocitySetRight = this.velocitySetpointMag * _courseOutput
+				* (1 + (multiplier * this.headingCurr) );	//TODO was errorTotal/1024
 		
 		if(this.inThresholdCountdownBegun) {
 			this.velocitySetLeft = 0.;
 			this.velocitySetRight = 0.;
 		}
 		
-		this.sDrive.drive(DriveMode.VELOCITY, this.velocitySetLeft, this.velocitySetRight);
+		this.sDrive.drive(DriveMode.PERCENT_VELOCITY, this.velocitySetLeft, this.velocitySetRight);
 	}
 	
 	private void checkCompletionVelocity() {
 		this.checkDisabled();
 //		if(Math.abs(this.courseDistanceRemaining) < Math.abs(this.courseDistanceSetpoint/2.)) {		TODO check below
-		if(Math.abs(this.courseDistanceTotal/1024.) <= 1) {
+		if(Math.abs(this.courseDistanceTotal/this.courseDistanceSetpoint) <= 0.333) {
 				return;
 		}
 		
@@ -236,17 +261,25 @@ public class DriveFollow implements Runnable {
 	}
 	
 	public boolean isDriving() {
+		if(System.currentTimeMillis()/1000. - this.timeZero > this.timeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
+			System.out.println("DF| is not driving from timeouts");
+			return false;
+		}
 		return this.isActive;
 	}
 	
-	private double reverseSigmoid(double _x) {
-		return 1. /(1. + Math.pow(Math.E, _x ));
-	}
-	
 	private double reverseModSigmoid(double _width, double _x) {
-		double lWidthScaler = 12. /Math.abs(_width);
-		double lTranslator = Math.abs(_width) /2.;
-		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x - lTranslator) ));
+//		double lWidthScaler = 12. /Math.abs(_width);
+//		double lTranslator = -Math.abs(_width) /2.;
+		double lWidthScaler;
+		if(Math.abs(_width) >= 5.5) {
+			lWidthScaler = 0.5;
+		}
+		else {
+			lWidthScaler = 2.0;
+		}
+		double lTranslator = -Math.abs(_width) + this.pref.getDouble("dfStopDistance", 0);
+		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x + lTranslator) ));
 	}
 
 }

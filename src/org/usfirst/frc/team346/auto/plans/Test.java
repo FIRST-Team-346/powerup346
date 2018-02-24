@@ -3,7 +3,7 @@ package org.usfirst.frc.team346.auto.plans;
 import org.usfirst.frc.team346.auto.actions.DriveFollow;
 import org.usfirst.frc.team346.auto.actions.DriveStraight;
 import org.usfirst.frc.team346.auto.actions.Rotate;
-import org.usfirst.frc.team346.auto.actions.SubsystemActions;
+import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
@@ -15,7 +15,7 @@ public class Test extends AutoPlan{
 	Rotate mRotate;
 	DriveStraight mDriveStraight;
 	DriveFollow mDriveFollow;
-	SubsystemActions mAction = new SubsystemActions();
+	ActionRunner mAction = new ActionRunner();
 	
 	Preferences pref = Preferences.getInstance();
 	

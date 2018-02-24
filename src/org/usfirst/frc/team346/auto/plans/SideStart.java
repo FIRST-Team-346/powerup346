@@ -2,7 +2,7 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.actions.DriveStraight;
 import org.usfirst.frc.team346.auto.actions.Rotate;
-import org.usfirst.frc.team346.auto.actions.SubsystemActions;
+import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
@@ -13,7 +13,7 @@ public class SideStart extends AutoPlan {
 	
 	Rotate mRotate;
 	DriveStraight mDriveStraight;
-	SubsystemActions mAction;
+	ActionRunner mAction;
 	Preferences pref = Preferences.getInstance();
 	
 	double sideScaler;
@@ -25,7 +25,7 @@ public class SideStart extends AutoPlan {
 	}
 	
 	public void run(Robot _robot, String _layout) {
-		this.mAction = new SubsystemActions();
+		this.mAction = new ActionRunner();
 		
 		sideScaler = (_layout.charAt(0)=='L')? 1 : -1;
 //		this.mAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
