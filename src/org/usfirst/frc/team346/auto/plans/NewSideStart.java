@@ -39,6 +39,8 @@ public class NewSideStart extends AutoPlan {
 	}
 	
 	public void goodScale() {
+		
+		
 		super.driveUsingDF(28);
 		
 		this.sRotator.rotate(45 * this.scaleLeft, 0.5, 5, 1.5);
@@ -68,27 +70,27 @@ public class NewSideStart extends AutoPlan {
 	}
 	
 	public void goodSwitchBadScale() {
-		super.driveUsingDF(15);
+		super.driveUsingDF(16.5);
 		
-		this.sRotator.rotate(90 * this.switchLeft, 0.5, 5, 1.5);
+		this.sRotator.rotate(-90 * this.switchLeft, 0.5, 5, 1.5);
 		
-		this.driveUsingDF(2);
+		this.driveUsingDF(-2);
 		
 		//shoot during the small drive ^
 //		this.sAction.shootToSwitchBack();
 		
 		if(this.switchLeft == 1) {
 			this.sRotatorSS.setSingleSide(Hand.kLeft);
-			this.sRotatorSS.rotate(-90, 0.5, 5, 1.5);
+			this.sRotatorSS.rotate(90, 0.5, 5, 1.5);
 		}
 		else {
 			this.sRotatorSS.setSingleSide(Hand.kRight);
-			this.sRotatorSS.rotate(90, 0.5, 5, 1.5);
+			this.sRotatorSS.rotate(-90, 0.5, 5, 1.5);
 		}
 		
-		super.driveUsingDF(8.5);
+		super.driveUsingDF(9);
 		
-		this.sRotator.rotate((90+35) * this.switchLeft, 0.5, 5, 1.5);
+		this.sRotator.rotate((90+45) * this.switchLeft, 0.5, 5, 1.5);
 		
 		super.driveUsingDF(3);
 		
@@ -102,22 +104,35 @@ public class NewSideStart extends AutoPlan {
 	}
 	
 	public void badSwitchBadScale() {
-		super.driveUsingDF(25);
+		if(RobotMap.kStartingOnLeft == 1) {
+			super.driveUsingDF(25.5);
+		}
+		else {
+			super.driveUsingDF(26);
+		}
+		this.sRotator.rotate(90 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
+		System.out.println(this.sGyro.getAngle());
 		
-		this.sRotator.rotate(90 * RobotMap.kStartingOnLeft, 0.5, 3, 1.5);
-		
-		super.driveUsingDF(13);
+		if(RobotMap.kStartingOnLeft == 1) {
+			super.driveUsingDF(12.5);
+		}
+		else {
+			super.driveUsingDF(13);
+		}
 		//slows down to drive over the conduit without ramping 80ft in the air
 		super.driveUsingDF(11);
 		
-		this.sRotator.rotate(90 * RobotMap.kStartingOnLeft, 0.5, 3, 1.5);
+		this.sRotator.rotate(-90 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
 		
-		super.driveUsingDF(-4);
+		super.driveUsingDF(4.5);
 		
 //		this.sAction.shootToScaleBack();
 			super.waitTime(2);
+			
+		this.sRotator.rotate(-180 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
+
 		
-		super.driveUsingDF(6);
+//		super.driveUsingDF(-6);
 	}
 	
 }

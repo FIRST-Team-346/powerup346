@@ -6,8 +6,9 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new NewCenterStart();
+	public static final AutoPlan kAutoPlan = new NewSideStart();
 	
+	//-1 if starting on right
 	public static double kStartingOnLeft = 1;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
@@ -116,7 +117,7 @@ public class RobotMap {
 	public static final double kRotateI = 0;
 	public static final double kRotateD = 0.2;
 	
-	public static final double kDriveFollowAngleErrorScaler = 0.03;//0.0225
+	public static final double kDriveFollowAngleErrorScaler = 0.02;//0.0225
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;

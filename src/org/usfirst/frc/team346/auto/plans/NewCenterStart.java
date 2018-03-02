@@ -54,7 +54,7 @@ public class NewCenterStart extends AutoPlan {
 		this.sRotatorSS.setSingleSide(Hand.kRight);
 		this.sRotatorSS.rotate(45, 0.5, 3, 1.5);
 		
-		this.driveUsingDF(-9.5);
+		this.driveUsingDF(-8.5);
 		
 		this.sRotatorSS.setSingleSide(Hand.kLeft);
 		this.sRotatorSS.rotate(-45, 0.5, 3, 1.5);

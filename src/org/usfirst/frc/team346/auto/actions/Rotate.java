@@ -82,7 +82,6 @@ public class Rotate {
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
 		System.out.println("Rotating to: " + angleSetpoint);
-		this.drive.setNominal(this.minPercent, this.minPercent);
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 500) {
 			this.PublishData();
 			if(!driverStation.isAutonomous()) {
@@ -97,11 +96,9 @@ public class Rotate {
 			}
 			
 			if(Math.abs(gyro.getAngle() - angleSetpoint) < tolerance) {
-				this.drive.setNominal(0,0);
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
-					this.drive.setNominal(0,0);
 
 				}
 				else if(System.currentTimeMillis() - l_thresholdStartTime >= 1000) {
@@ -121,19 +118,16 @@ public class Rotate {
 					}
 				}
 			}
-			else {
-				this.drive.setNominal(this.minPercent, this.minPercent);
-			}
+		
 			
 			this.anglePID.enable();
 		}
 		this.disablePID();
-		this.drive.setNominal(0,0);
-		System.out.println("Set Nominal to 0");
 
 		
 		System.out.println("Rotate completed via timeout");
 		System.out.println("Current angle: " + this.gyro.getAngle());
+		System.out.println("");
 	}
 	
 	public void setPID(double _P, double _I, double _D) {
