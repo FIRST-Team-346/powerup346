@@ -42,6 +42,10 @@ public class ActionRunner {
 		new Thread(new ShootToSwitchBack()).run();
 	}
 	
+	public void shootToSwitchFront() {
+		
+	}
+	
 	public void openIntake() {
 		new Thread(new OpenIntakeArms()).run();
 	}

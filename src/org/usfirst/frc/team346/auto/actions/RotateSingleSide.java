@@ -35,12 +35,19 @@ public class RotateSingleSide {
 		drive = Drive.getInstance();
 		gyro = Gyro.getInstance();	
 		updateFreq = 0.02;
-//		this.createPID();
+		
+		this.leftEnabled = 1.;
+		this.rightEnabled = 1.;
 	}
 	
-	public void rotateSingleSide(double _angle, Hand _side, double _percentSpeed, double _timeOutTime, double _tolerance) {
+	public void setSingleSide(Hand _side) {
+		this.side = _side;
+		this.leftEnabled = (this.side == Hand.kLeft) ? 1. : 0.65;
+		this.rightEnabled = (this.side == Hand.kRight) ? 1. : 0.65;
+	}
+	
+	public void rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
 		angleSetpoint = _angle;
-		side = _side;
 		percentSpeed = _percentSpeed;
 		timeOutTime  = _timeOutTime;
 		tolerance = _tolerance;
@@ -50,10 +57,6 @@ public class RotateSingleSide {
 		this.drive.zeroEncoders();
 		this.drive.enable();
 		this.drive.setSpeedPIDs();
-		
-		this.leftEnabled = (this.side == Hand.kLeft) ? 1. : 0.75;
-		this.rightEnabled = (this.side == Hand.kRight) ? 1. : 0.75;
-		System.out.println("leftE:" + this.leftEnabled + "rightE:" + this.rightEnabled);
 		
 		this.runPID();
 	}
@@ -110,7 +113,7 @@ public class RotateSingleSide {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= 1000) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 250) {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
@@ -128,20 +131,14 @@ public class RotateSingleSide {
 				}
 			}
 			else {
-				if(this.side == Hand.kLeft && Math.abs(this.leftSetPercent) < this.minPercent) {
-					if(this.leftSetPercent >= 0) {
-						this.leftSetPercent = this.minPercent;
-					}
-					else {
-						this.leftSetPercent = -this.minPercent;
+				if(Math.abs(this.leftSetPercent) < this.minPercent) {
+					if(this.leftEnabled == 1) {
+						this.leftSetPercent = this.minPercent * (this.leftSetPercent >= 0 ? 1. : -1.);
 					}
 				}
-				if(this.side == Hand.kRight && Math.abs(this.rightSetPercent) < this.minPercent) {
-					if(this.rightSetPercent >= 0) {
-						this.rightSetPercent = this.minPercent;
-					}
-					else {
-						this.rightSetPercent = -this.minPercent;
+				if(Math.abs(this.rightSetPercent) < this.minPercent) {
+					if(this.rightEnabled == 1) {
+						this.rightSetPercent = this.minPercent * (this.rightSetPercent >= 0 ? 1. : -1.);
 					}
 				}
 				this.drive.drive(DriveMode.PERCENT, this.leftSetPercent, this.rightSetPercent);

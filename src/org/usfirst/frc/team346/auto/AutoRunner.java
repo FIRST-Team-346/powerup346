@@ -9,16 +9,15 @@ public class AutoRunner {
 	
 	private boolean mRunning = false;
 	private String mLayout = "000";
-	private Robot sRobot;
+	private double mSwitchSide = 0, mScaleSide = 0;
 	
 	DriverStation sDriverStation;
 	
 	AutoPlan mAutoPlan;
 	
-	public AutoRunner(Robot _robot) {
+	public AutoRunner() {
 		this.sDriverStation = DriverStation.getInstance();
 		this.mAutoPlan = RobotMap.kAutoPlan;
-		this.sRobot = _robot;
 	}
 	
 	public void run() {
@@ -45,6 +44,8 @@ public class AutoRunner {
 		if(this.mLayout == "000") {
 			this.receiveLayout();
 		}
+		this.mSwitchSide = (this.mLayout.charAt(0) == 'L') ? 1. : -1.;
+		this.mScaleSide = (this.mLayout.charAt(1) == 'L') ? 1. : -1.;
 		return this.mLayout;
 	}
 	
@@ -54,7 +55,8 @@ public class AutoRunner {
 		}
 		System.out.println("Auto Runner| goal: " + this.mAutoPlan.getGoal());
 		System.out.println("Auto Runner| field layout: " + this.getLayout());
-		this.mAutoPlan.run(this.sRobot, this.getLayout());
+//		this.mAutoPlan.run(this.sRobot, this.getLayout());
+		this.mAutoPlan.run(this.mSwitchSide, this.mScaleSide);
 	}
 	
 	private void complete() {

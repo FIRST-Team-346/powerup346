@@ -16,18 +16,15 @@ public class SideStartFront extends AutoPlan {
 	ActionRunner mAction;
 	Preferences pref = Preferences.getInstance();
 	
-	double sideScaler;
-	
 	Gyro mGyro = Gyro.getInstance();
 	
 	public String getGoal() {
 		return "cross baseline, place 1 cube in switch";
 	}
 	
-	public void run(Robot _robot, String _layout) {
+	public void run(double _switchLeft, double _scaleLeft) {
 		this.mAction = new ActionRunner();
 		
-		sideScaler = (_layout.charAt(0)=='L')? 1 : -1;
 //		this.mAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
 //		this.mAction.openIntake();
 		
@@ -41,7 +38,7 @@ public class SideStartFront extends AutoPlan {
 		this.mGyro.zeroGyro();
 		this.mRotate = new Rotate();
 		this.mRotate.setPID(pref.getDouble("angleP", 0), pref.getDouble("angleI", 0), pref.getDouble("angleD", 0));
-		this.mRotate.rotate(-120*sideScaler, 0.5, 5, 3);
+		this.mRotate.rotate(-120*_scaleLeft, 0.5, 5, 3);
 		
 		this.mAction.openIntake();
 		this.mAction.shootToScaleFront();

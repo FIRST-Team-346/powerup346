@@ -46,6 +46,7 @@ public class Robot extends IterativeRobot {
 	
 	private double mPreviousTime;
 	private final double kUpdateRateMillis = 100;
+	private boolean mCameraAdded;
 	
 	public Robot() {
 		this.robotInit();
@@ -69,9 +70,10 @@ public class Robot extends IterativeRobot {
 		this.sDriverStation = DriverStation.getInstance();
 		
 		this.sControlBoard = new ControlBoard(this);
-		this.sAutoRunner = new AutoRunner(this);
+		this.sAutoRunner = new AutoRunner();
 		
 		this.mPreviousTime = System.currentTimeMillis();
+		this.mCameraAdded = false;
 	}
 	
 	public void autonomousInit() {
@@ -88,11 +90,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-
 		System.out.println("Teleop Init| begun");
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		
-    	CameraServer.getInstance().startAutomaticCapture();
+		if(!this.mCameraAdded) {
+			CameraServer.getInstance().startAutomaticCapture();
+			this.mCameraAdded = true;
+		}
 		
 		this.zeroDevices();
 //		this.sTilter.disable();

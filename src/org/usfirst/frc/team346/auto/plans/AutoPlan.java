@@ -10,8 +10,8 @@ public class AutoPlan {
 		return "default goal";
 	}
 	
-	public void run(Robot _robot, String _layout) {
-		System.out.println("default run; check that your run takes the _layout parameter");
+	public void run(double _switchLeft, double _scaleLeft) {
+		System.out.println("default run; check that your run takes the layout parameters");
 	}
 	
 	public void driveUsingDF(double _distanceFt) {

@@ -29,7 +29,7 @@ public class DriveFollow implements Runnable {
 	private final double courseDistanceSetpoint, velocitySetpointMag;
 	
 	private boolean inThresholdCountdownBegun;
-	private double timeInThreshold;
+	private double timeEnteredThreshold;
 	private final double thresholdTimeOutSec, thresholdVelocity, timeOutSec, updateFreq;
 	
 	private boolean isActive;
@@ -49,12 +49,12 @@ public class DriveFollow implements Runnable {
 		
 		this.timeOutSec = 10.;
 		this.updateFreq = 0.01;
-		this.thresholdTimeOutSec = 0.25;
+		this.thresholdTimeOutSec = 0.125;
 		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
 		
 		this.courseDistanceSetpoint = _distanceFt * 1024.;
 //		this.velocitySetpointMag = Math.abs(_velocityPercent);						//TODO: velocity isn't used right now
-		if(Math.abs(this.courseDistanceSetpoint) >= 0) {
+		if(Math.abs(_distanceFt) >= 5.5) {
 			this.velocitySetpointMag = 0.6;
 		}
 		else {
@@ -139,9 +139,9 @@ public class DriveFollow implements Runnable {
 	
 	private void publishValues() {
 		if(System.currentTimeMillis() - this.timePrevPublish > 250) {
-			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + (this.distanceCurr/1024.) + " currV:" + this.velocityCurr);
-			System.out.println("courseDT:" + (this.courseDistanceTotal/1024.) + " courseET:" + (this.courseErrorTotal/1024.) + " courseDR:" + (this.courseDistanceRemaining/1024.));
-			System.out.println("leftV:" + this.velocitySetLeft + " rightV:" + this.velocitySetRight + " output:" + this.outputPublish);
+//			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + (this.distanceCurr/1024.) + " currV:" + this.velocityCurr);
+//			System.out.println("courseDT:" + (this.courseDistanceTotal/1024.) + " courseET:" + (this.courseErrorTotal/1024.) + " courseDR:" + (this.courseDistanceRemaining/1024.));
+//			System.out.println("leftV:" + this.velocitySetLeft + " rightV:" + this.velocitySetRight + " output:" + this.outputPublish);
 			
 			this.timePrevPublish = System.currentTimeMillis();
 		}
@@ -165,9 +165,9 @@ public class DriveFollow implements Runnable {
 		double multiplier = RobotMap.kDriveFollowAngleErrorScaler;
 		
 		this.velocitySetLeft = this.velocitySetpointMag * _courseOutput
-				* (1 + (multiplier * this.headingCurr) );
+				* (1 + (lSign * multiplier * Math.abs(this.headingCurr)) );
 		this.velocitySetRight = this.velocitySetpointMag * _courseOutput
-				* (1 + (multiplier * this.headingCurr) );
+				* (1 + (rSign * multiplier * Math.abs(this.headingCurr)) );
 		
 		if(this.inThresholdCountdownBegun) {
 			this.velocitySetLeft = 0.;
@@ -179,24 +179,24 @@ public class DriveFollow implements Runnable {
 	
 	private void checkCompletionVelocity() {
 		this.checkDisabled();
-		if(Math.abs(this.courseDistanceTotal/this.courseDistanceSetpoint) <= 0.333) {
+		if(System.currentTimeMillis()/1000. - this.timeZero < 0.5) {
 				return;
 		}
 		
 		if(Math.abs(this.velocityCurr) < Math.abs(this.thresholdVelocity)) {
 			if(!this.inThresholdCountdownBegun) {
 				System.out.println("Velocity countdown started");
-				this.timeInThreshold = System.currentTimeMillis()/1000.;
+				this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 				this.inThresholdCountdownBegun = true;
 			}
-			if(System.currentTimeMillis()/1000. - this.timeInThreshold > this.thresholdTimeOutSec) {
+			if(System.currentTimeMillis()/1000. - this.timeEnteredThreshold > this.thresholdTimeOutSec) {
 				System.out.println("Drive Follow| complete via velocity threshold");
 				this.stop();
 			}
 		}
-		else if(System.currentTimeMillis()/1000. - this.timeInThreshold > this.thresholdTimeOutSec) {
-			System.out.println("Velocity countdown aborted");
-			this.timeInThreshold = System.currentTimeMillis()/1000.;
+		else if(System.currentTimeMillis()/1000. - this.timeEnteredThreshold > this.thresholdTimeOutSec) {
+//			System.out.println("Velocity countdown aborted");
+			this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 			this.inThresholdCountdownBegun = false;
 		}
 	}
@@ -232,13 +232,13 @@ public class DriveFollow implements Runnable {
 		}
 		
 		double lStopDistance;
-		if(Math.abs(this.courseDistanceSetpoint) >= 5.5) {
+		if(Math.abs(_width) >= 5.5) {
 			lStopDistance = 4.5;
 		}
-		else if(Math.abs(this.courseDistanceSetpoint) > 1.5) {
+		else if(Math.abs(_width) > 1.5) {
 			lStopDistance = 1.2;
 		}
-		else if(Math.abs(this.courseDistanceSetpoint) == 1.5) {
+		else if(Math.abs(_width) == 1.5) {
 			lStopDistance = 1.1;
 		}
 		else {

@@ -6,9 +6,9 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new NewSideScaleShoot();
+	public static final AutoPlan kAutoPlan = new NewCenterStart();
 	
-	public static boolean kStartingOnLeft = false;
+	public static double kStartingOnLeft = 1;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	

@@ -24,15 +24,17 @@ public class Test extends AutoPlan{
 		return "test";
 	}
 	
-	public void run(Robot _robot, String _layout) {
+	public void run(double _switchLeft, double _scaleLeft) {
 		this.mGyro.calibrate();
 		
 		this.mRotateSS = new RotateSingleSide();
 		if(this.pref.getBoolean("ssLeft", true)) {
-			this.mRotateSS.rotateSingleSide(pref.getDouble("angle", 0), Hand.kLeft, 0.5, 5, 1.5);
+			this.mRotateSS.setSingleSide(Hand.kLeft);
+			this.mRotateSS.rotate(pref.getDouble("angle", 0), 0.5, 5, 1.5);
 		}
 		else {
-			this.mRotateSS.rotateSingleSide(pref.getDouble("angle", 0), Hand.kRight, 0.5, 5, 1.5);
+			this.mRotateSS.setSingleSide(Hand.kRight);
+			this.mRotateSS.rotate(pref.getDouble("angle", 0), 0.5, 5, 1.5);
 		}
 
 	}
