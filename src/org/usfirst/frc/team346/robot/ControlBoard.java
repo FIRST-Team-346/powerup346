@@ -14,7 +14,7 @@ public class ControlBoard {
 	private Joystick mController;
 	private Joystick mButtonBoard;
 	
-	private final boolean IS_DRONE_CONTROLLER = false;
+	private final boolean IS_DRONE_CONTROLLER = true;
 	private boolean mIsThrottleTurnMode = false;
 	
 	@SuppressWarnings("unused")
@@ -55,24 +55,11 @@ public class ControlBoard {
 	}
     
 	private void driveXboxController() {
-//		if(this.mController.getRawButtonPressed(LEFT_CLICK)) {
-//			this.mIsThrottleTurnMode = !this.mIsThrottleTurnMode;
-//		}
-//		
-//		if(this.mIsThrottleTurnMode) {
-//			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
-//		}
-//		else {
-////			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-//			this.sRobot.sDrive.drive(DriveMode.PERCENT_VELOCITY, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
-//			
-//		}
-		
 		this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 	}
 	
 	private void driveDroneController() {
-		this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(DRONE_RIGHT_STICK_Y), this.mController.getRawAxis(DRONE_LEFT_STICK_X));
+		this.sRobot.sDrive.driveThrottleTurn(-10./9. * this.mController.getRawAxis(DRONE_RIGHT_STICK_Y), 20./19. * this.mController.getRawAxis(DRONE_LEFT_STICK_X));
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -81,7 +68,7 @@ public class ControlBoard {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
 			this.sRobot.sIntake.setSpeedIn(-1.0);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sIntake.setSpeedIn(0.5);
 		}
 		else {
@@ -93,7 +80,7 @@ public class ControlBoard {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
 			this.sRobot.sLoader.setSpeedIn(-1.0);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sLoader.setSpeedIn(1.0);
 		}
 		else {
@@ -134,14 +121,14 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(LEFT_TRIGGER_BUTTON)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
 		//Temp button 13 to flip over tall cube without running reverse intake
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButton13)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTiltDownFlipCube)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut) || this.mController.getRawButton(RIGHT_TRIGGER_BUTTON)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
 			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
 				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
 			}
@@ -172,7 +159,7 @@ public class ControlBoard {
 			}
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn) || this.mController.getRawButton(this.LEFT_TRIGGER_BUTTON)) {
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sShooter.setPercentFront(-0.6);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
@@ -201,7 +188,7 @@ public class ControlBoard {
 			this.sRobot.sClimber.raiseHook(false);
 		}
 		
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb) || this.mController.getRawButton(this.TRIANGLE)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimb)) {
 			this.sRobot.sClimber.setOn();
 		}
 		else {
@@ -212,14 +199,14 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void checkLights() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButton9)) {
-			this.sRobot.sLights.setColor(Color.BLUE);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonLights)) {
+			this.sRobot.sLights.setColor(Color.RED);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
 			this.sRobot.sLights.setColor(Color.PURPLE);
 		}
 		else {
-			this.sRobot.sLights.setColor(Color.OFF);
+			this.sRobot.sLights.setColor(Color.CYAN);
 		}
 	}
 	

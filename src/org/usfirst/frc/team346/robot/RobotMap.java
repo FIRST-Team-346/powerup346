@@ -6,7 +6,7 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new NewSideStart();
+	public static final AutoPlan kAutoPlan = new DriveFollowTune();
 	
 	//-1 if starting on right
 	public static double kStartingOnLeft = 1;
@@ -57,26 +57,28 @@ public class RobotMap {
 	public static final int KDroneControllerPort = 2;
 	public static final double kThrottleTurnRotationStrength = 0.6;
 	
-	public static final int kButtonIntakeIn = 3;
-	public static final int kButtonIntakeOut = 2;
+	public static final int kButtonIntakeIn = 12;
+	public static final int kButtonIntakeOut = 3;
 
-	public static final int kButtonOuttakeFront = 6;
-	public static final int kButtonOuttakeBack = 7;
+	public static final int kButtonOuttakeFront = 10;
+	public static final int kButtonOuttakeBack = 13;
 	
-	public static final int kButtonTilterScaleHigh = 4;
-	public static final int kButtonTilterScaleLow = 8;
-	public static final int kButtonTilterVault = 12;
-	public static final int kButtonTilterSwitchBack = 15;
-	public static final int kButtonTilterScaleBack = 14;
+	public static final int kButtonTilterScaleHigh = 5;
+	public static final int kButtonTilterScaleLow = 14;
+	public static final int kButtonTilterVault = 15;
+	public static final int kButtonTilterSwitchBack = 6;
+	public static final int kButtonTilterScaleBack = 7;
 	
-	public static final int kButtonShooterOn = 10;
-	public static final int kButtonShooterOff = 11;
+	public static final int kButtonShooterOn = 11;
+	public static final int kButtonShooterOff = 4;
 	
-	public static final int kButtonClimb = 1;
+	public static final int kButtonClimb = 8;
 	
-	public static final int kButtonClimbRaiseHook = 5;
-	public static final int kButton9 = 9;
-	public static final int kButton13 = 13;
+	public static final int kButtonClimbRaiseHook = 1;
+	
+	public static final int kButtonLights = 9;
+	public static final int kButton2 = 2;
+	public static final int kButtonTiltDownFlipCube = 16;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
@@ -117,7 +119,7 @@ public class RobotMap {
 	public static final double kRotateI = 0;
 	public static final double kRotateD = 0.2;
 	
-	public static final double kDriveFollowAngleErrorScaler = 0.02;//0.0225
+	public static final double kDriveFollowAngleErrorScaler = 0.0225;//0.0225
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;

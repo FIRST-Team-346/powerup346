@@ -29,12 +29,10 @@ public class Test extends AutoPlan{
 		
 		this.mRotateSS = new RotateSingleSide();
 		if(this.pref.getBoolean("ssLeft", true)) {
-			this.mRotateSS.setSingleSide(Hand.kLeft);
-			this.mRotateSS.rotate(pref.getDouble("angle", 0), 0.5, 5, 1.5);
+			this.mRotateSS.rotateSingleSide(Hand.kLeft, pref.getDouble("angle", 0), 0.5, 5, 1.5);
 		}
 		else {
-			this.mRotateSS.setSingleSide(Hand.kRight);
-			this.mRotateSS.rotate(pref.getDouble("angle", 0), 0.5, 5, 1.5);
+			this.mRotateSS.rotateSingleSide(Hand.kRight, pref.getDouble("angle", 0), 0.5, 5, 1.5);
 		}
 
 	}

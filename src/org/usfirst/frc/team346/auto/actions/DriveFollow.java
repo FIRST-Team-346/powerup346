@@ -163,6 +163,7 @@ public class DriveFollow implements Runnable {
 		}
 		
 		double multiplier = RobotMap.kDriveFollowAngleErrorScaler;
+		multiplier = this.pref.getDouble("dfMult", 0);						//TODO
 		
 		this.velocitySetLeft = this.velocitySetpointMag * _courseOutput
 				* (1 + (lSign * multiplier * Math.abs(this.headingCurr)) );
@@ -244,6 +245,8 @@ public class DriveFollow implements Runnable {
 		else {
 			lStopDistance = Math.abs(_width) /2.;
 		}
+		
+		lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		
 		double lTranslator = -Math.abs(_width) + lStopDistance;
 		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x + lTranslator) ));

@@ -99,7 +99,6 @@ public class Robot extends IterativeRobot {
 		}
 		
 		this.zeroDevices();
-//		this.sTilter.disable();
 		
 		System.out.println("Teleop Init| complete");
 	}

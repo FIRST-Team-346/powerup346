@@ -32,13 +32,11 @@ public class NewCenterStart extends AutoPlan {
 	}
 	
 	public void leftSwitch() {
-		this.sRotatorSS.setSingleSide(Hand.kLeft);
-		this.sRotatorSS.rotate(-45, 0.5, 3, 1.5);
+		this.sRotatorSS.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
 		
 		this.driveUsingDF(-9);
 		
-		this.sRotatorSS.setSingleSide(Hand.kRight);
-		this.sRotatorSS.rotate(45, 0.5, 3, 1.5);
+		this.sRotatorSS.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
 		
 		this.driveUsingDF(-2);
 		
@@ -51,13 +49,11 @@ public class NewCenterStart extends AutoPlan {
 	}
 	
 	public void rightSwitch() {
-		this.sRotatorSS.setSingleSide(Hand.kRight);
-		this.sRotatorSS.rotate(45, 0.5, 3, 1.5);
+		this.sRotatorSS.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
 		
 		this.driveUsingDF(-8.5);
 		
-		this.sRotatorSS.setSingleSide(Hand.kLeft);
-		this.sRotatorSS.rotate(-45, 0.5, 3, 1.5);
+		this.sRotatorSS.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
 		
 		this.driveUsingDF(-2);
 		

@@ -4,7 +4,7 @@ import org.usfirst.frc.team346.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.Preferences;
 
-public class DriveFollowTest extends AutoPlan {
+public class DriveFollowTune extends AutoPlan {
 	
 	Gyro sGyro = Gyro.getInstance();
 	Preferences mPref = Preferences.getInstance();

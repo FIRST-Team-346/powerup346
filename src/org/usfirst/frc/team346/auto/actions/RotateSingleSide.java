@@ -40,10 +40,23 @@ public class RotateSingleSide {
 		this.rightEnabled = 1.;
 	}
 	
-	public void setSingleSide(Hand _side) {
+	public void rotateSingleSide(Hand _side, double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
+		angleSetpoint = _angle;
+		percentSpeed = _percentSpeed;
+		timeOutTime  = _timeOutTime;
+		tolerance = _tolerance;
+		
 		this.side = _side;
 		this.leftEnabled = (this.side == Hand.kLeft) ? 1. : 0.65;
 		this.rightEnabled = (this.side == Hand.kRight) ? 1. : 0.65;
+		
+		this.createPID();
+		this.anglePID.setSetpoint(angleSetpoint);
+		this.drive.zeroEncoders();
+		this.drive.enable();
+		this.drive.setSpeedPIDs();
+		
+		this.runPID();
 	}
 	
 	public void rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
@@ -51,6 +64,9 @@ public class RotateSingleSide {
 		percentSpeed = _percentSpeed;
 		timeOutTime  = _timeOutTime;
 		tolerance = _tolerance;
+		
+		this.leftEnabled = 1.;
+		this.rightEnabled = 1.;
 		
 		this.createPID();
 		this.anglePID.setSetpoint(angleSetpoint);

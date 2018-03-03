@@ -80,12 +80,10 @@ public class NewSideStart extends AutoPlan {
 //		this.sAction.shootToSwitchBack();
 		
 		if(this.switchLeft == 1) {
-			this.sRotatorSS.setSingleSide(Hand.kLeft);
-			this.sRotatorSS.rotate(90, 0.5, 5, 1.5);
+			this.sRotatorSS.rotateSingleSide(Hand.kLeft, 90, 0.5, 5, 1.5);
 		}
 		else {
-			this.sRotatorSS.setSingleSide(Hand.kRight);
-			this.sRotatorSS.rotate(-90, 0.5, 5, 1.5);
+			this.sRotatorSS.rotateSingleSide(Hand.kRight, -90, 0.5, 5, 1.5);
 		}
 		
 		super.driveUsingDF(9);

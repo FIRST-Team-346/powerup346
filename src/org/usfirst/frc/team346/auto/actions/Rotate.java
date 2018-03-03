@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Rotate {
@@ -18,6 +19,7 @@ public class Rotate {
 	
 	private Drive drive;
 	private Gyro gyro;
+	private Preferences pref = Preferences.getInstance();
 	
 	private PIDSource angleSource;
 	private PIDOutput angleOutput;
@@ -74,7 +76,8 @@ public class Rotate {
 				}
 			}
 		};
-		this.anglePID = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD, this.angleSource, this.angleOutput, 0.02);
+		this.anglePID = new PIDController(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0), this.angleSource, this.angleOutput, 0.02);
+//		this.anglePID = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD, this.angleSource, this.angleOutput, 0.02);
 	}
 	
 	private void runPID() {
