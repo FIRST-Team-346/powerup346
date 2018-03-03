@@ -2,7 +2,6 @@ package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
-import org.usfirst.frc.team346.subsystems.Lights.Color;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
@@ -59,7 +58,9 @@ public class ControlBoard {
 	}
 	
 	private void driveDroneController() {
-		this.sRobot.sDrive.driveThrottleTurn(-10./9. * this.mController.getRawAxis(DRONE_RIGHT_STICK_Y), 20./19. * this.mController.getRawAxis(DRONE_LEFT_STICK_X));
+		this.sRobot.sDrive.driveThrottleTurn(1./0.77 * this.mController.getRawAxis(DRONE_RIGHT_STICK_Y),  1./0.9 * this.mController.getRawAxis(DRONE_LEFT_STICK_X));
+//		SmartDashboard.putNumber("droneControllerRight", this.mController.getRawAxis(DRONE_RIGHT_STICK_Y));
+//		SmartDashboard.putNumber("droneControllerLeft", this.mController.getRawAxis(DRONE_LEFT_STICK_X));
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,7 +97,7 @@ public class ControlBoard {
 			this.sRobot.sOuttake.setSpeedFront(-1.0);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeFront)) {
-			this.sRobot.sOuttake.setSpeedFront(0.75);
+			this.sRobot.sOuttake.setSpeedFront(1.0);
 		}
 		else {
 			this.sRobot.sOuttake.setSpeedFront(0.0);
@@ -124,14 +125,13 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
-		//Temp button 13 to flip over tall cube without running reverse intake
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTiltDownFlipCube)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
-			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
-				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
-			}
+//			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
+//				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
+//			}
 		}
 		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
 			this.sRobot.sTilter.checkDrivePosition();
@@ -149,9 +149,13 @@ public class ControlBoard {
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterOn)) {
-			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh || this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleBack) {
+			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuHigh);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuHigh);
+			}
+			else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleBack) {
+				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuBack);
+				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuBack);
 			}
 			else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleLow) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuLow);
@@ -160,7 +164,7 @@ public class ControlBoard {
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sShooter.setPercentFront(-0.6);
+			this.sRobot.sShooter.setPercentFront(-0.5);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sShooter.setPercentFront(-0.25);
@@ -200,13 +204,13 @@ public class ControlBoard {
 
 	public void checkLights() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonLights)) {
-			this.sRobot.sLights.setColor(Color.RED);
+			this.sRobot.sLights.setRed();
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
-			this.sRobot.sLights.setColor(Color.PURPLE);
-		}
+//		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
+//			this.sRobot.sLights.setColor(Color.PURPLE);
+//		}
 		else {
-			this.sRobot.sLights.setColor(Color.CYAN);
+			this.sRobot.sLights.setBlue();
 		}
 	}
 	

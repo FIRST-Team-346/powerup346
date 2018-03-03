@@ -4,6 +4,8 @@ import org.usfirst.frc.team346.auto.actions.DriveFollow;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoPlan {
 	
 	public String getGoal() {
@@ -15,6 +17,10 @@ public class AutoPlan {
 	}
 	
 	public void driveUsingDF(double _distanceFt) {
+		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+			return;
+		}
+		
 		DriveFollow DF = new DriveFollow(_distanceFt, 0);
 		new Thread(DF).start();
 		while (DF.isDriving()) {
@@ -25,6 +31,9 @@ public class AutoPlan {
 	public void waitTime(double _seconds) {
 		long initialTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - initialTime < Math.abs(_seconds) * 1000.) {
+			if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+				return;
+			}
 		}
 	}
 	

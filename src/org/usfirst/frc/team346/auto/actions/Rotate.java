@@ -6,6 +6,7 @@ import org.usfirst.frc.team346.subsystems.Gyro;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -15,7 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Rotate {
 
-	private double angleSetpoint, percentSpeed, timeOutTime, tolerance;
+	private double angleSetpoint, percentSpeed, timeOutTime, tolerance, updateFreq;
+	private Hand side;
 	
 	private Drive drive;
 	private Gyro gyro;
@@ -25,16 +27,42 @@ public class Rotate {
 	private PIDOutput angleOutput;
 	private PIDController anglePID;
 	
-	private double leftSideEnabled = 1, rightSideEnabled = 1;
-	private final double minPercent = 0.225;
+	private double leftEnabled, rightEnabled;
+	private double leftSetPercent, rightSetPercent;
+	private double minPercent = 0.;
 	
 	private DriverStation driverStation = DriverStation.getInstance();
 	
 	public Rotate() {
 		drive = Drive.getInstance();
 		gyro = Gyro.getInstance();	
+		updateFreq = 0.02;
+		
+		this.leftEnabled = 1.;
+		this.rightEnabled = 1.;
+	}
+	
+	public void rotateSingleSide(Hand _side, double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
+		angleSetpoint = _angle;
+		percentSpeed = _percentSpeed;
+		timeOutTime  = _timeOutTime;
+		tolerance = _tolerance;
+		this.minPercent = 0.2;
+		
+		this.side = _side;
+		this.leftEnabled = (this.side == Hand.kLeft) ? 1. : 0.65;
+		this.rightEnabled = (this.side == Hand.kRight) ? 1. : 0.65;
+		
+		this.gyro.zeroGyro();
+		
 		this.createPID();
-
+		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
+		this.anglePID.setSetpoint(angleSetpoint);
+		this.drive.zeroEncoders();
+		this.drive.enable();
+		this.drive.setSpeedPIDs();
+		
+		this.runPID();
 	}
 	
 	public void rotate(double _angle, double _percentSpeed, double _timeOutTime, double _tolerance) {
@@ -42,12 +70,20 @@ public class Rotate {
 		percentSpeed = _percentSpeed;
 		timeOutTime  = _timeOutTime;
 		tolerance = _tolerance;
+		this.minPercent = 0.;
+		
+		this.leftEnabled = 1.;
+		this.rightEnabled = 1.;
 		
 		this.gyro.zeroGyro();
+		
 		this.createPID();
+		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
 		this.anglePID.setSetpoint(angleSetpoint);
+		this.drive.zeroEncoders();
 		this.drive.enable();
 		this.drive.setSpeedPIDs();
+		
 		this.runPID();
 	}
 	
@@ -70,14 +106,12 @@ public class Rotate {
 				}
 				else {
 					SmartDashboard.putNumber("anglePIDOutput", _output);
-//					drive.drive(DriveMode.PERCENTVElOCITY, _output * percentSpeed, _output * percentSpeed);
-					drive.drive(DriveMode.PERCENT, _output*leftSideEnabled*percentSpeed, -_output*rightSideEnabled*percentSpeed);
-//					System.out.println("output" + (-1200. * _output * percentSpeed) + "," + (-1200. * _output * percentSpeed));
+					leftSetPercent = _output * percentSpeed * leftEnabled;
+					rightSetPercent = -_output * percentSpeed * rightEnabled;
 				}
 			}
 		};
-		this.anglePID = new PIDController(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0), this.angleSource, this.angleOutput, 0.02);
-//		this.anglePID = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD, this.angleSource, this.angleOutput, 0.02);
+		this.anglePID = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD, this.angleSource, this.angleOutput, this.updateFreq);
 	}
 	
 	private void runPID() {
@@ -85,8 +119,9 @@ public class Rotate {
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
 		System.out.println("Rotating to: " + angleSetpoint);
-		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 500) {
-			this.PublishData();
+		
+		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
+			this.publishData();
 			if(!driverStation.isAutonomous()) {
 				anglePID.disable();
 				
@@ -99,12 +134,12 @@ public class Rotate {
 			}
 			
 			if(Math.abs(gyro.getAngle() - angleSetpoint) < tolerance) {
+				this.drive.drive(DriveMode.PERCENT, 0, 0);
 				if(!l_inThreshold) {
 					l_thresholdStartTime = System.currentTimeMillis();
 					l_inThreshold = true;
-
 				}
-				else if(System.currentTimeMillis() - l_thresholdStartTime >= 1000) {
+				else if(System.currentTimeMillis() - l_thresholdStartTime >= 250) {
 					if(Math.abs((gyro.getAngle() - angleSetpoint)) < tolerance) {
 						anglePID.disable();
 						
@@ -121,16 +156,26 @@ public class Rotate {
 					}
 				}
 			}
-		
+			else {
+				if(Math.abs(this.leftSetPercent) < this.minPercent) {
+					if(this.leftEnabled == 1) {
+						this.leftSetPercent = this.minPercent * (this.leftSetPercent >= 0 ? 1. : -1.);
+					}
+				}
+				if(Math.abs(this.rightSetPercent) < this.minPercent) {
+					if(this.rightEnabled == 1) {
+						this.rightSetPercent = this.minPercent * (this.rightSetPercent >= 0 ? 1. : -1.);
+					}
+				}
+				this.drive.drive(DriveMode.PERCENT, this.leftSetPercent, this.rightSetPercent);
+			}
 			
 			this.anglePID.enable();
 		}
 		this.disablePID();
-
 		
 		System.out.println("Rotate completed via timeout");
 		System.out.println("Current angle: " + this.gyro.getAngle());
-		System.out.println("");
 	}
 	
 	public void setPID(double _P, double _I, double _D) {
@@ -138,20 +183,12 @@ public class Rotate {
 		System.out.println(this.anglePID.getP());
 	}
 	
-	public void setLeftSide(double _leftSideScale) {
-		this.leftSideEnabled = _leftSideScale;		
-	}
-	
-	public void setRightSide(double _rightSideScale) {
-		this.rightSideEnabled = _rightSideScale;
-	}
-	
-	
 	public void disablePID(){
 		this.anglePID.disable();
+		this.anglePID.free();
 	}
 	
-	public void PublishData() {
+	public void publishData() {
 		this.drive.publishPercent();
 	}
 	

@@ -43,7 +43,7 @@ public class ActionRunner {
 	}
 	
 	public void shootToSwitchFront() {
-		
+		new Thread(new ShootToSwitchFront()).run();
 	}
 	
 	public void openIntake() {
@@ -83,6 +83,7 @@ public class ActionRunner {
 	}
 	
 	public void setIntakeIn(double _percentIn) {
+		this.setTilterPosNu(RobotMap.kTiltPosNeutral);
 		this.mIntake.setSpeedIn(_percentIn);
 		this.mLoader.setSpeedIn(_percentIn >= 0 ? 1.0 : 0.0);
 		this.mShooter.setPercentFront(_percentIn >= 0 ? -0.5 : 0.5);

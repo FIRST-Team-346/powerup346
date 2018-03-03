@@ -2,8 +2,6 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
-import org.usfirst.frc.team346.auto.actions.RotateSingleSide;
-import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
 
@@ -14,7 +12,6 @@ public class NewCenterStart extends AutoPlan {
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
 	Rotate sRotator = new Rotate();
-	RotateSingleSide sRotatorSS = new RotateSingleSide();
 	
 	public String getGoal() {
 		return "shoot forward to scale";
@@ -32,36 +29,54 @@ public class NewCenterStart extends AutoPlan {
 	}
 	
 	public void leftSwitch() {
-		this.sRotatorSS.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sRotator.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
 		
-		this.driveUsingDF(-9);
+		super.driveUsingDF(-9);
+		this.sAction.openIntake();
 		
-		this.sRotatorSS.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
+		this.sRotator.rotate(45, 0.5, 3, 1.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
-		this.driveUsingDF(-2);
+		super.driveUsingDF(-5.0);
 		
-//		this.sAction.shootToSwitchBack();
-			super.waitTime(1);
+		this.sAction.shootToSwitchBack();
+//			super.waitTime(0.5);
 		
-		this.driveUsingDF(2.5);
+		super.driveUsingDF(3);
 		
 		this.sRotator.rotate(90, 0.5, 3, 1.5);
+		
+		super.driveUsingDF(7.0);
+		
+		this.sRotator.rotate(90, 0.5, 3, 1.5);
+		
+		super.driveUsingDF(18);
 	}
 	
 	public void rightSwitch() {
-		this.sRotatorSS.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sRotator.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
 		
-		this.driveUsingDF(-8.5);
+		super.driveUsingDF(-7.5);
+		this.sAction.openIntake();
 		
-		this.sRotatorSS.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
+		this.sRotator.rotate(-45, 0.5, 3, 1.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
-		this.driveUsingDF(-2);
+		super.driveUsingDF(-5.5);
 		
-//		this.sAction.shootToSwitchBack();
-			super.waitTime(1);
+		this.sAction.shootToSwitchBack();
+//			super.waitTime(0.5);
 		
-		this.driveUsingDF(2.5);
+		super.driveUsingDF(3);
 		
 		this.sRotator.rotate(-90, 0.5, 3, 1.5);
+		
+		super.driveUsingDF(7.0);
+		
+		this.sRotator.rotate(-90, 0.5, 3, 1.5);
+		
+		super.driveUsingDF(18);
 	}
 }

@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.Preferences;
 
 public class Test extends AutoPlan{
 
-	Rotate mRotate;
-	RotateSingleSide mRotateSS;
+	Rotate mRotate = new Rotate();
 	DriveStraight mDriveStraight;
 	DriveFollow mDriveFollow;
 	ActionRunner mAction = new ActionRunner();
@@ -25,16 +24,33 @@ public class Test extends AutoPlan{
 	}
 	
 	public void run(double _switchLeft, double _scaleLeft) {
-		this.mGyro.calibrate();
-		
-		this.mRotateSS = new RotateSingleSide();
-		if(this.pref.getBoolean("ssLeft", true)) {
-			this.mRotateSS.rotateSingleSide(Hand.kLeft, pref.getDouble("angle", 0), 0.5, 5, 1.5);
+		this.mGyro.calibrate();	
+		if(_switchLeft == -1 && _scaleLeft == 1) {
+			this.mRotate.rotateSingleSide(Hand.kLeft, pref.getDouble("rotateAngle", 0), 0.5, 5, 1.5);
+		}
+		else if(_switchLeft == -1 && _scaleLeft == -1){
+			this.mRotate.rotateSingleSide(Hand.kRight, pref.getDouble("rotateAngle", 0), 0.5, 5, 1.5);
 		}
 		else {
-			this.mRotateSS.rotateSingleSide(Hand.kRight, pref.getDouble("angle", 0), 0.5, 5, 1.5);
+			this.mRotate.rotate(pref.getDouble("rotateAngle", 0), 0.5, 5, 1.5);
 		}
-
+		super.waitTime(1);
+		System.out.println("Rotate final angle:" + this.mGyro.getAngle());
+		
+//		this.mAction.openIntake();
+//		System.out.println("Intake opened.");
+//		super.waitTime(5);
+//		this.mAction.shootToScaleBack();
+//		System.out.println("Shot to scale back.");
+//		super.waitTime(5);
+//		this.mAction.shootToScaleFront();
+//		System.out.println("Shot to scale front.");
+//		super.waitTime(5);
+//		this.mAction.shootToSwitchBack();
+//		System.out.println("Shot to switch back.");
+//		super.waitTime(5);
+//		this.mAction.shootToSwitchFront();
+//		System.out.println("Shot to switch front.");
 	}
 	
 }

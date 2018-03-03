@@ -17,17 +17,6 @@ public class Lights implements Subsystem{
 	Solenoid rightGreen;
 	Solenoid rightBlue;
 	
-	private Color mCurrentColor;
-	public enum Color {
-		RED,
-		YELLOW,
-		GREEN,
-		CYAN,
-		BLUE,
-		PURPLE,
-		OFF;
-	}
-	
 	public static Lights lightsInstance = new Lights();
 	
 	public static Lights getInstance() {
@@ -58,40 +47,6 @@ public class Lights implements Subsystem{
 		rightRed.set(Math.random() < 0.5);
 		rightGreen.set(Math.random() < 0.5);
 		rightBlue.set(Math.random() < 0.5);
-	}
-	
-	public void setColor(Color _color) {
-		this.mCurrentColor = _color;
-		
-		switch(_color) {
-		case RED : {
-			this.setRed();
-		}
-		
-		case YELLOW : {
-			this.setYellow();
-		}
-		
-		case GREEN : {
-			this.setGreen();
-		}
-		
-		case CYAN : {
-			this.setCyan();
-		}
-		
-		case BLUE : {
-			this.setBlue();
-		}
-		
-		case PURPLE : {
-			this.setPurple();
-		}
-		
-		default : {
-			this.setBlack();
-		}
-		}
 	}
 	
 	public void setRed() {
@@ -183,6 +138,5 @@ public class Lights implements Subsystem{
 	
 	@Override
 	public void publishData() {
-		SmartDashboard.putString("Color", this.mCurrentColor.toString());
 	}
 }

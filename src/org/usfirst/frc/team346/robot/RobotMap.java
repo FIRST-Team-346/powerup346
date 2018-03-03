@@ -6,19 +6,19 @@ public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
 
-	public static final AutoPlan kAutoPlan = new DriveFollowTune();
+	public static final AutoPlan kAutoPlan = new NewSideStart();
 	
 	//-1 if starting on right
 	public static double kStartingOnLeft = 1;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 3;			//27-03
-	public static final int kDriveLeftSlave1Port = 2;			//13-02
-	public static final int kDriveLeftSlave2Port = 21;			//07-21
-	public static final int kDriveRightMasterPort = 1;			//26-01
-	public static final int kDriveRightSlave1Port = 5;			//18-05
-	public static final int kDriveRightSlave2Port = 8;			//17-08
+	public static final int kDriveLeftMasterPort = 27;			//27-03
+	public static final int kDriveLeftSlave1Port = 13;			//13-02
+	public static final int kDriveLeftSlave2Port = 7;			//07-21
+	public static final int kDriveRightMasterPort = 26;			//26-01
+	public static final int kDriveRightSlave1Port = 18;			//18-05
+	public static final int kDriveRightSlave2Port = 17;			//17-08
 
 	public static final int kIntakeLeftPort = 24;			    //24-
 	public static final int kIntakeRightPort = 20;				//20-
@@ -55,7 +55,7 @@ public class RobotMap {
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
 	public static final int KDroneControllerPort = 2;
-	public static final double kThrottleTurnRotationStrength = 0.6;
+	public static final double kThrottleTurnRotationStrength = 0.8;
 	
 	public static final int kButtonIntakeIn = 12;
 	public static final int kButtonIntakeOut = 3;
@@ -82,7 +82,7 @@ public class RobotMap {
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
-	public static final double kDriveLeftVelMax = 3000.;
+	public static final double kDriveLeftVelMax = 2000.;
 
 	//leftvelP was 0.75 on left side scale front
 	public static final double kDriveVelLeftP = 0.70;
@@ -90,14 +90,14 @@ public class RobotMap {
 	public static final double kDriveVelLeftD = 0;
 	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
 		
-	public static final double kDriveRightVelMax = 3000.;
+	public static final double kDriveRightVelMax = 1900.;
 
 	public static final double kDriveVelRightP = 0.65;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
 	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;
 	
-	public static final double kDriveVelAverage = 3000.;
+	public static final double kDriveVelAverage = 1950.;
 	
 	public static final double kDrivePosLeftP = 0;
 	public static final double kDrivePosLeftI = 0;
@@ -140,28 +140,28 @@ public class RobotMap {
 	public static final double kShooterRightD = 10.0;
 	public static final double kShooterRightF = 0.041;
 	
-	public static final int kShooterLeftSetpointNuLow = 12650;
-	public static final int kShooterRightSetpointNuLow = 12500;
-	public static final int kShooterLeftSetpointNuMid = 14200;
-	public static final int kShooterRightSetpointNuMid = 14350;
-	public static final int kShooterLeftSetpointNuHigh = 15750;
-	public static final int kShooterRightSetpointNuHigh = 15600;
-	public static final int kShooterLeftSetpointNuBack = 21850;
-	public static final int kShooterRightSetpointNuBack = 21400;
+	public static final int kShooterLeftSetpointNuLow = 11650;
+	public static final int kShooterRightSetpointNuLow = 11500;
+	public static final int kShooterLeftSetpointNuMid = 12650;
+	public static final int kShooterRightSetpointNuMid = 12500;
+	public static final int kShooterLeftSetpointNuHigh = 14750;
+	public static final int kShooterRightSetpointNuHigh = 14600;
+	public static final int kShooterLeftSetpointNuBack = 14750;
+	public static final int kShooterRightSetpointNuBack = 14600;
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 85;
-	public static final int kTiltPosRange 		= 329;
+	public static final int kTiltPosNeutral 	= 188;
+	public static final int kTiltPosRange 		= 342;
 	
-	public static final int kTiltPosDrive		= 17  + kTiltPosNeutral;
-	public static final int kTiltPosSwitchBack 	= 65  + kTiltPosNeutral;
+	public static final int kTiltPosDrive		= 55  + kTiltPosNeutral;//27
+	public static final int kTiltPosSwitchBack 	= 55  + kTiltPosNeutral;
 	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
-	public static final int kTiltPosScaleLow 	= 250 + kTiltPosNeutral;
-	public static final int kTiltPosScaleHigh 	= 275 + kTiltPosNeutral;
-	public static final int kTiltPosScaleBack 	= 324 + kTiltPosNeutral;
+	public static final int kTiltPosScaleLow 	= 240 + kTiltPosNeutral;
+	public static final int kTiltPosScaleHigh 	= 255 + kTiltPosNeutral;
+	public static final int kTiltPosScaleBack 	= 330 + kTiltPosNeutral;
 	
 	public static final int kTilterDesiredVelocityNu = 50;
 	public static final int kTilterDesiredAccelerationNu = 100;

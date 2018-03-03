@@ -153,6 +153,7 @@ public class Drive implements Subsystem{
 	
 	public void driveThrottleTurn(double _throttle, double _turn) {
 		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
+		_throttle = (Math.abs(_throttle) <= 0.1)? 0 : _throttle;
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, -_throttle + this.mTurn);

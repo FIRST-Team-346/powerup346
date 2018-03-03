@@ -8,7 +8,9 @@ public class OpenIntakeArms implements Runnable {
 	
 	public void run() {
 		this.action.setJustIntakeIn(-1.0);
-		this.action.waitTime(0.2);
+		double lOpenTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - lOpenTime < 0.4 * 1000.) {
+		}
 		this.action.setJustIntakeIn(0.0);
 	}
 

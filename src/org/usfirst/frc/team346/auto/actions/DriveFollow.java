@@ -180,7 +180,7 @@ public class DriveFollow implements Runnable {
 	
 	private void checkCompletionVelocity() {
 		this.checkDisabled();
-		if(System.currentTimeMillis()/1000. - this.timeZero < 0.5) {
+		if(System.currentTimeMillis()/1000. - this.timeZero < 0.75) {
 				return;
 		}
 		
@@ -235,18 +235,19 @@ public class DriveFollow implements Runnable {
 		double lStopDistance;
 		if(Math.abs(_width) >= 5.5) {
 			lStopDistance = 4.5;
+			lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		}
 		else if(Math.abs(_width) > 1.5) {
 			lStopDistance = 1.2;
+			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else if(Math.abs(_width) == 1.5) {
 			lStopDistance = 1.1;
+			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else {
 			lStopDistance = Math.abs(_width) /2.;
 		}
-		
-		lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		
 		double lTranslator = -Math.abs(_width) + lStopDistance;
 		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x + lTranslator) ));

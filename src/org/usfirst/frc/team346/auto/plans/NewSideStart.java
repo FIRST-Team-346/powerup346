@@ -2,7 +2,6 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
-import org.usfirst.frc.team346.auto.actions.RotateSingleSide;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
@@ -14,7 +13,6 @@ public class NewSideStart extends AutoPlan {
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
 	Rotate sRotator = new Rotate();
-	RotateSingleSide sRotatorSS = new RotateSingleSide();
 	
 	private double switchLeft, scaleLeft;
 	
@@ -39,27 +37,31 @@ public class NewSideStart extends AutoPlan {
 	}
 	
 	public void goodScale() {
-		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
 		super.driveUsingDF(28);
 		
-		this.sRotator.rotate(45 * this.scaleLeft, 0.5, 5, 1.5);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuMid, RobotMap.kShooterRightSetpointNuMid);
+		this.sRotator.rotate(45 * this.scaleLeft, 0.5, 3, 2.);
 		
-//		this.sAction.shootToScaleFront();
-//		this.sAction.openIntake();
-			super.waitTime(2);
+		this.sAction.setOuttakePercentFront(1);
+			super.waitTime(1);
+		this.sAction.setShooter(0, 0);
+		this.sAction.setOuttakePercentFront(0);
 		
-		this.sRotator.rotate((45+60) * this.scaleLeft, 0.5, 5, 1.5);
+		this.sAction.openIntake();
 		
+		this.sRotator.rotate((45+60) * this.scaleLeft, 0.5, 3, 1.5);
+		
+		this.sAction.setIntakeIn(1);
 		super.driveUsingDF(6);
-		
-//		this.sAction.setIntakeIn(1);
-		super.waitTime(1);
-//		this.sAction.setIntakeIn(0);
+		this.sAction.setIntakeIn(0);
 		
 		if(this.switchLeft == this.scaleLeft) {
-//			this.sAction.shootToSwitchFront();
-				super.waitTime(0.5);
+			this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
+			super.waitTime(0.25);
+			this.sAction.shootToSwitchFront();
+//				super.waitTime(0.5);
 			super.driveUsingDF(-6);
 			this.sRotator.rotate(-(45+60+45) * this.scaleLeft, 0.5, 5, 1.5);
 		}
@@ -72,29 +74,31 @@ public class NewSideStart extends AutoPlan {
 	public void goodSwitchBadScale() {
 		super.driveUsingDF(16.5);
 		
+		this.sAction.openIntake();
 		this.sRotator.rotate(-90 * this.switchLeft, 0.5, 5, 1.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
 		this.driveUsingDF(-2);
 		
 		//shoot during the small drive ^
-//		this.sAction.shootToSwitchBack();
+		this.sAction.shootToSwitchBack();
 		
 		if(this.switchLeft == 1) {
-			this.sRotatorSS.rotateSingleSide(Hand.kLeft, 90, 0.5, 5, 1.5);
+			this.sRotator.rotateSingleSide(Hand.kLeft, 90, 0.5, 5, 1.5);
 		}
 		else {
-			this.sRotatorSS.rotateSingleSide(Hand.kRight, -90, 0.5, 5, 1.5);
+			this.sRotator.rotateSingleSide(Hand.kRight, -90, 0.5, 5, 1.5);
 		}
 		
 		super.driveUsingDF(9);
 		
 		this.sRotator.rotate((90+45) * this.switchLeft, 0.5, 5, 1.5);
 		
+		this.sAction.setIntakeIn(1);
 		super.driveUsingDF(3);
 		
-//		this.sAction.setIntakeIn(1);
-		super.waitTime(0.25);
-//		this.sAction.setIntakeIn(0);
+//		super.waitTime(0.25);
+		this.sAction.setIntakeIn(0);
 		
 		super.driveUsingDF(-3.5);
 		
@@ -124,13 +128,12 @@ public class NewSideStart extends AutoPlan {
 		
 		super.driveUsingDF(4.5);
 		
-//		this.sAction.shootToScaleBack();
-			super.waitTime(2);
+		this.sAction.shootToScaleBack();
+//			super.waitTime(2);
 			
 		this.sRotator.rotate(-180 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
 
-		
-//		super.driveUsingDF(-6);
+		super.driveUsingDF(-6);
 	}
 	
 }

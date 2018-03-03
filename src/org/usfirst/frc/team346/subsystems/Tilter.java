@@ -84,7 +84,7 @@ public class Tilter implements Subsystem {
 	}
 	
 	public void checkDrivePosition() {
-		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 1000) {
+		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 2000) {
 			this.setSetpointNu(RobotMap.kTiltPosDrive);
 		}
 	}
@@ -162,13 +162,13 @@ public class Tilter implements Subsystem {
 	
 	/**Publishes data about the Tilter subsystem to the SmartDashboard.**/
 	public void publishData() {
-		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
+//		SmartDashboard.putNumber("TilterVoltage", this.mTilter.getMotorOutputVoltage());
 		SmartDashboard.putNumber("TilterPosition", this.getPositionNu());
 		SmartDashboard.putNumber("TilterVelocity", this.getVelocityNu());
-		SmartDashboard.putNumber("TilterOutput", this.mTilter.getMotorOutputPercent());
+//		SmartDashboard.putNumber("TilterOutput", this.mTilter.getMotorOutputPercent());
 		SmartDashboard.putNumber("TilterAcceleration", this.getAccelerationNu());
-		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
-		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
+//		SmartDashboard.putNumber("TilterMaxVel", this.getMaxVelNu());
+//		SmartDashboard.putNumber("TilterMaxAccel", this.getMaxAccelNu());
 		SmartDashboard.putNumber("TilterSetpoint", this.mTilterSetpointNu);
 	}
 	
