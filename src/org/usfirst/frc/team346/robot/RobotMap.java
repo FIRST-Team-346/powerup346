@@ -38,17 +38,15 @@ public class RobotMap {
 	
 	public static final int kPCMPort = 0;
 	
-	public static final int kClimberSolenoidChannel = 5;
-	
 	public static final int kLightLeftPositive = 0;
-	public static final int kLightLeftGreenChannel = 1;
 	public static final int kLightLeftRedChannel = 2;
+	public static final int kLightLeftGreenChannel = 1;
 	public static final int kLightLeftBlueChannel = 3;
 	
 	public static final int kLightRightPositive = 7;
-	public static final int kLightRightBlueChannel = 4;
 	public static final int kLightRightRedChannel = 5;
 	public static final int kLightRightGreenChannel = 6;
+	public static final int kLightRightBlueChannel = 4;
 	
 //	CONTROLLER PORTS/BUTTONS--------------------------------------------------------
 	
@@ -61,16 +59,17 @@ public class RobotMap {
 	public static final int kButtonIntakeOut = 3;
 
 	public static final int kButtonOuttakeFront = 10;
-	public static final int kButtonOuttakeBack = 13;
+	public static final int kButtonOuttakeBack = 15;
 	
-	public static final int kButtonTilterScaleHigh = 5;
-	public static final int kButtonTilterScaleLow = 14;
-	public static final int kButtonTilterVault = 15;
-	public static final int kButtonTilterSwitchBack = 6;
+	public static final int kButtonTilterScaleLow = 5;
+	public static final int kButtonTilterScaleHigh = 6;
 	public static final int kButtonTilterScaleBack = 7;
+	public static final int kButtonTilterVault = 14;
+	public static final int kButtonTilterSwitchBack = 13;
+	public static final int kButtonTiltDownFlipCube = 16;
 	
 	public static final int kButtonShooterOn = 11;
-	public static final int kButtonShooterOff = 4;
+	public static final int kButtonShooterTilterOff = 4;
 	
 	public static final int kButtonClimb = 8;
 	
@@ -78,7 +77,6 @@ public class RobotMap {
 	
 	public static final int kButtonLights = 9;
 	public static final int kButton2 = 2;
-	public static final int kButtonTiltDownFlipCube = 16;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
@@ -115,11 +113,11 @@ public class RobotMap {
 	public static final double kDriveFollowD = 0;
 	public static final double kDriveFollowF = 0.5;
 	
-	public static final double kRotateP = 0.045;
-	public static final double kRotateI = 0;
-	public static final double kRotateD = 0.2;
+	public static final double kRotateP = 0.045;							//0.05 - 0.045
+	public static final double kRotateI = 0;								//0    - 0
+	public static final double kRotateD = 0.2;								//0.4  - 0.2
 	
-	public static final double kDriveFollowAngleErrorScaler = 0.0225;//0.0225
+	public static final double kDriveFollowAngleErrorScaler = 0.0225;		//0.0225
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;
@@ -156,7 +154,7 @@ public class RobotMap {
 	public static final int kTiltPosNeutral 	= 188;
 	public static final int kTiltPosRange 		= 342;
 	
-	public static final int kTiltPosDrive		= 55  + kTiltPosNeutral;//27
+	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
 	public static final int kTiltPosSwitchBack 	= 55  + kTiltPosNeutral;
 	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
 	public static final int kTiltPosScaleLow 	= 240 + kTiltPosNeutral;

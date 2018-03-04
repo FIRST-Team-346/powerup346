@@ -94,7 +94,7 @@ public class Shooter implements Subsystem {
 	}
 	
 	public void holdSpeedSetpoint() {
-		if(!this.mIsDisabled && this.mIsInVelocityMode) {
+		if(this.isInVelocityModeAndOn()) {
 			this.mLeftShooter.set(ControlMode.Velocity, this.mLeftSetpointNu);
 			this.mRightShooter.set(ControlMode.Velocity, this.mRightSetpointNu);
 		}
@@ -123,6 +123,10 @@ public class Shooter implements Subsystem {
 	
 	public boolean isInVelocityMode() {
 		return this.mIsInVelocityMode;
+	}
+	
+	public boolean isInVelocityModeAndOn() {
+		return (this.mIsInVelocityMode && !this.mIsDisabled);
 	}
 
 	public void disable() {

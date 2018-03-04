@@ -1,11 +1,9 @@
 package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.robot.Robot;
-import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ControlBoard {
 
@@ -14,7 +12,6 @@ public class ControlBoard {
 	private Joystick mButtonBoard;
 	
 	private final boolean IS_DRONE_CONTROLLER = true;
-	private boolean mIsThrottleTurnMode = false;
 	
 	@SuppressWarnings("unused")
 	private Preferences mPref;
@@ -59,8 +56,6 @@ public class ControlBoard {
 	
 	private void driveDroneController() {
 		this.sRobot.sDrive.driveThrottleTurn(1./0.77 * this.mController.getRawAxis(DRONE_RIGHT_STICK_Y),  1./0.9 * this.mController.getRawAxis(DRONE_LEFT_STICK_X));
-//		SmartDashboard.putNumber("droneControllerRight", this.mController.getRawAxis(DRONE_RIGHT_STICK_Y));
-//		SmartDashboard.putNumber("droneControllerLeft", this.mController.getRawAxis(DRONE_LEFT_STICK_X));
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -70,7 +65,7 @@ public class ControlBoard {
 			this.sRobot.sIntake.setSpeedIn(-1.0);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sIntake.setSpeedIn(0.5);
+			this.sRobot.sIntake.setSpeedIn(0.65);
 		}
 		else {
 			this.sRobot.sIntake.setSpeedIn(0.0);
@@ -91,7 +86,7 @@ public class ControlBoard {
 	
 	public void checkOuttake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sOuttake.setSpeedFront(-0.15);
+			this.sRobot.sOuttake.setSpeedFront(-0.25);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sOuttake.setSpeedFront(-1.0);
@@ -107,7 +102,10 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkTilter() {
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleHigh)) {
+		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterTilterOff)) {
+			this.sRobot.sTilter.disable();
+		}
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleHigh)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosScaleHigh);
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleLow)) {
@@ -128,28 +126,28 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTiltDownFlipCube)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosNeutral);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
+//		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
 //			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
 //				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
 //			}
-		}
-		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
-			this.sRobot.sTilter.checkDrivePosition();
-		}
-		
-//		this.sRobot.sTilter.setMotionMagicVelocityNu(this.pref.getInt("tiltVelNu", 0));
-//		this.sRobot.sTilter.setMotionMagicAccelerationNu(this.pref.getInt("tiltAccelNu", 0));
-//		this.sRobot.sTilter.setPID(this.pref.getDouble("tiltP", 0), this.pref.getDouble("tiltI", 0), this.pref.getDouble("tiltD", 0));
+//		}
+//		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
+//			this.sRobot.sTilter.checkDrivePosition();
+//		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkShooter() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterOff)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff)) {
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterOn)) {
-			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh) {
+			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleLow) {
+				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuLow);
+				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuLow);
+			}
+			else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuHigh);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuHigh);
 			}
@@ -157,14 +155,33 @@ public class ControlBoard {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuBack);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuBack);
 			}
-			else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleLow) {
+			this.sRobot.sShooter.holdSpeedSetpoint();
+		}
+		else if(this.sRobot.sShooter.isInVelocityModeAndOn()) {
+			if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleLow)) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuLow);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuLow);
 			}
-			this.sRobot.sShooter.holdSpeedSetpoint();
+			else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleHigh)) {
+				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuHigh);
+				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuHigh);
+			}
+			else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleBack)) {
+				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuBack);
+				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuBack);
+			}
+			else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)) {
+				this.sRobot.sShooter.disable();
+			}
+			else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterVault)) {
+				this.sRobot.sShooter.disable();
+			}
+			else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTiltDownFlipCube)) {
+				this.sRobot.sShooter.disable();
+			}
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sShooter.setPercentFront(-0.5);
+			this.sRobot.sShooter.setPercentFront(-0.6);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sShooter.setPercentFront(-0.25);
@@ -173,7 +190,7 @@ public class ControlBoard {
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeFront)) {
-			this.sRobot.sShooter.setPercentFront(0.6);
+			this.sRobot.sShooter.setPercentFront(0.7);
 		}
 		else {
 			this.sRobot.sShooter.disable();
@@ -185,10 +202,8 @@ public class ControlBoard {
 	public void checkClimber() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
 			this.sRobot.sClimber.raiseHook(true);
-			SmartDashboard.putBoolean("Servo Enabled", true);
 		}
 		else {
-			SmartDashboard.putBoolean("Servo Enabled", false);
 			this.sRobot.sClimber.raiseHook(false);
 		}
 		

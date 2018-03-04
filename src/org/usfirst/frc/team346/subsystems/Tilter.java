@@ -84,7 +84,7 @@ public class Tilter implements Subsystem {
 	}
 	
 	public void checkDrivePosition() {
-		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 2000) {
+		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 1500) {
 			this.setSetpointNu(RobotMap.kTiltPosDrive);
 		}
 	}
