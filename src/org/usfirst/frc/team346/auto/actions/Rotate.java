@@ -31,8 +31,6 @@ public class Rotate {
 	private double leftSetPercent, rightSetPercent;
 	private double minPercent = 0.;
 	
-	private DriverStation driverStation = DriverStation.getInstance();
-	
 	public Rotate() {
 		drive = Drive.getInstance();
 		gyro = Gyro.getInstance();	
@@ -115,6 +113,8 @@ public class Rotate {
 	}
 	
 	private void runPID() {
+		this.isDisabled();
+		
 		long l_driveStartTime = System.currentTimeMillis();
 		double l_thresholdStartTime = l_driveStartTime;
 		boolean l_inThreshold = false;
@@ -122,7 +122,7 @@ public class Rotate {
 		
 		while(System.currentTimeMillis() - l_driveStartTime < timeOutTime * 1000) {
 			this.publishData();
-			if(!driverStation.isAutonomous()) {
+			if(this.isDisabled()) {
 				anglePID.disable();
 				
 				drive.drive(DriveMode.VELOCITY, 0, 0);
@@ -186,6 +186,14 @@ public class Rotate {
 	public void disablePID(){
 		this.anglePID.disable();
 		this.anglePID.free();
+	}
+	
+	private boolean isDisabled() {
+		if(DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
+			this.disablePID();
+			return true;
+		}
+		return false;
 	}
 	
 	public void publishData() {

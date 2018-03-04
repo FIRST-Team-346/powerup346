@@ -25,7 +25,6 @@ public class NewSideStart extends AutoPlan {
 	public void run(double _switchLeft, double _scaleLeft) {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
-		this.sGyro.calibrate();
 		
 		if(RobotMap.kStartingOnLeft == _scaleLeft) {
 			Lights.getInstance().setGreen();

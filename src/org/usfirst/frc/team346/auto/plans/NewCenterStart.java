@@ -20,8 +20,6 @@ public class NewCenterStart extends AutoPlan {
 	}
 	
 	public void run(double _switchLeft, double _scaleLeft) {
-		this.sGyro.calibrate();
-		
 		if(_switchLeft == 1) {
 			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.leftSwitch();

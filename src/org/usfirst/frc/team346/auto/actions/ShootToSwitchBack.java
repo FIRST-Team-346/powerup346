@@ -9,6 +9,8 @@ public class ShootToSwitchBack implements Runnable {
 	private ActionRunner action = new ActionRunner();
 	
 	public void run() {
+		if(this.action.isDisabled()) return;
+		
 		this.action.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		this.action.setOuttakePercentFront(-1.0);
 		this.action.setShooterPercentFront(-0.5);

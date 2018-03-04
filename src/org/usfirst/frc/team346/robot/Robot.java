@@ -55,6 +55,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
+		this.sGyro.calibrate();
 		
 		this.sIntake = Intake.getInstance();
 		this.sOuttake = Outtake.getInstance();
