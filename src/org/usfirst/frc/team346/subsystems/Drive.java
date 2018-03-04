@@ -340,7 +340,6 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, 0);
 		this.mDriveRightSlave1.set(ControlMode.Follower, this.mDriveRightMaster.getDeviceID());
 		this.mDriveRightSlave1.set(ControlMode.Follower, this.mDriveRightMaster.getDeviceID());
-		System.out.println("Drive train enabled.");
 	}
 	
 	public void disable() {
@@ -350,7 +349,6 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.set(ControlMode.Disabled, 0);
 //		this.mDriveRightSlave1.set(ControlMode.Disabled, 0);
 //		this.mDriveRightSlave2.set(ControlMode.Disabled, 0);
-		System.out.println("Drive train disabled.");
 	}
 	
 }

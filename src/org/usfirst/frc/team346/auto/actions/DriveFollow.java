@@ -40,14 +40,14 @@ public class DriveFollow implements Runnable {
 	 * as well as the correct heading along the course.
 	 * @param _velocityPercent use 0.6 for distances >= 5ft else 0.3**/
 	public DriveFollow(double _distanceFt, double _velocityPercent) {
-		System.out.println("DriveF| created: d:" + _distanceFt + ",v:" + _velocityPercent);
 		this.timeZero = System.currentTimeMillis()/1000.;
+		this.checkDisabled();
 		
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
 		this.pref = Preferences.getInstance();
 		
-		this.timeOutSec = 10.;
+		this.timeOutSec = 5.;
 		this.updateFreq = 0.01;
 		this.thresholdTimeOutSec = 0.125;
 		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
@@ -67,12 +67,15 @@ public class DriveFollow implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("DriveF| run");
+		this.timeZero = System.currentTimeMillis()/1000.;
+		this.checkDisabled();
+		System.out.println("DriveF| drive " + this.courseDistanceSetpoint/1024.);
 		this.init();
 		
 		while(this.isDriving()) {
 			long lWaitTime = System.currentTimeMillis();
 			while(System.currentTimeMillis() - lWaitTime < this.updateFreq * 1000.) {
+				this.checkDisabled();
 			}
 			this.updateCycle();
 		}
@@ -87,6 +90,7 @@ public class DriveFollow implements Runnable {
 		
 		this.sDrive.zeroEncoders();
 		this.sDrive.enable();
+		this.sDrive.setSpeedPIDs();
 		this.sGyro.zeroGyro();
 		
 		this.timePrev = System.currentTimeMillis()/1000;
@@ -148,6 +152,8 @@ public class DriveFollow implements Runnable {
 	}
 	
 	private void setDriveVelocity(double _courseOutput) {
+		this.checkDisabled();
+		
 		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag;
 		this.velocitySetRight = _courseOutput * this.velocitySetpointMag;
 		this.outputPublish = _courseOutput;
@@ -186,7 +192,6 @@ public class DriveFollow implements Runnable {
 		
 		if(Math.abs(this.velocityCurr) < Math.abs(this.thresholdVelocity)) {
 			if(!this.inThresholdCountdownBegun) {
-				System.out.println("Velocity countdown started");
 				this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 				this.inThresholdCountdownBegun = true;
 			}
@@ -196,16 +201,15 @@ public class DriveFollow implements Runnable {
 			}
 		}
 		else if(System.currentTimeMillis()/1000. - this.timeEnteredThreshold > this.thresholdTimeOutSec) {
-//			System.out.println("Velocity countdown aborted");
 			this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 			this.inThresholdCountdownBegun = false;
 		}
 	}
 	
 	private void stop() {
-		System.out.println("DriveF| driving = false");
 		this.setDriveVelocity(0);
 		this.isActive = false;
+		Thread.currentThread().interrupt();
 	}
 	
 	private void checkDisabled() {
@@ -216,10 +220,7 @@ public class DriveFollow implements Runnable {
 	}
 	
 	public boolean isDriving() {
-		if(System.currentTimeMillis()/1000. - this.timeZero > this.timeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
-			System.out.println("DF| is not driving from timeouts");
-			return false;
-		}
+		this.checkDisabled();
 		return this.isActive;
 	}
 	
