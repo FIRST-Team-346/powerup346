@@ -4,7 +4,9 @@ import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Lights;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class NewCenterStart extends AutoPlan {
@@ -21,9 +23,11 @@ public class NewCenterStart extends AutoPlan {
 		this.sGyro.calibrate();
 		
 		if(_switchLeft == 1) {
+			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.leftSwitch();
 		}
 		else {
+			Lights.getInstance().setLeftBlueRightRed((DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.rightSwitch();
 		}
 	}

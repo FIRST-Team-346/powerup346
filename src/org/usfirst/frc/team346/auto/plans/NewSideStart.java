@@ -5,7 +5,9 @@ import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Lights;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class NewSideStart extends AutoPlan {
@@ -26,12 +28,15 @@ public class NewSideStart extends AutoPlan {
 		this.sGyro.calibrate();
 		
 		if(RobotMap.kStartingOnLeft == _scaleLeft) {
+			Lights.getInstance().setGreen();
 			this.goodScale();
 		}
 		else if(RobotMap.kStartingOnLeft == _switchLeft && RobotMap.kStartingOnLeft != _scaleLeft) {
+			Lights.getInstance().setLeftGreenRightRed(false);
 			this.goodSwitchBadScale();
 		}
 		else {
+			Lights.getInstance().setLeftGreenRightRed(true);
 			this.badSwitchBadScale();
 		}
 	}

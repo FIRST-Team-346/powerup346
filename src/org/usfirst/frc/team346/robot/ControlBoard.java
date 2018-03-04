@@ -218,14 +218,29 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void checkLights() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonLights)) {
+		if(this.sRobot.sShooter.isAtSpeed()) {
+			this.sRobot.sLights.setGreen();
+		}
+		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleLow) {
+			this.sRobot.sLights.setPurple();
+		}
+		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleHigh) {
+			this.sRobot.sLights.setPurple();
+		}
+		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosScaleBack) {
+			this.sRobot.sLights.setPurple();
+		}
+		else if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosVault) {
+			this.sRobot.sLights.setBlue();
+		}
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
 			this.sRobot.sLights.setRed();
 		}
-//		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonClimbRaiseHook)) {
-//			this.sRobot.sLights.setColor(Color.PURPLE);
-//		}
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonLights)) {
+			this.sRobot.sLights.setRandom();
+		}
 		else {
-			this.sRobot.sLights.setBlue();
+			this.sRobot.sLights.setCyan();
 		}
 	}
 	

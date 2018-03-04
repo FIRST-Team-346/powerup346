@@ -49,6 +49,48 @@ public class Lights implements Subsystem{
 		rightBlue.set(Math.random() < 0.5);
 	}
 	
+	public void setLeftBlueRightRed(boolean _invert) {
+		if(!_invert) {
+			leftRed.set(false);
+			leftGreen.set(false);
+			leftBlue.set(true);
+			
+			rightRed.set(true);
+			rightGreen.set(false);
+			rightBlue.set(false);
+		}
+		else {
+			leftRed.set(true);
+			leftGreen.set(false);
+			leftBlue.set(false);
+			
+			rightRed.set(false);
+			rightGreen.set(false);
+			rightBlue.set(true);
+		}
+	}
+	
+	public void setLeftGreenRightRed(boolean _invert) {
+		if(!_invert) {
+			leftRed.set(false);
+			leftGreen.set(true);
+			leftBlue.set(false);
+			
+			rightRed.set(true);
+			rightGreen.set(false);
+			rightBlue.set(false);
+		}
+		else {
+			leftRed.set(true);
+			leftGreen.set(false);
+			leftBlue.set(false);
+			
+			rightRed.set(false);
+			rightGreen.set(true);
+			rightBlue.set(false);
+		}
+	}
+	
 	public void setRed() {
 		leftRed.set(true);
 		leftGreen.set(false);
