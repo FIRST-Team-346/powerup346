@@ -1,15 +1,8 @@
 package org.usfirst.frc.team346.robot;
 
-import org.usfirst.frc.team346.auto.plans.*;
-
 public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
-
-	public static final AutoPlan kAutoPlan = new NewSideStart();
-	
-	//-1 if starting on right
-	public static double kStartingOnLeft = 1;
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	

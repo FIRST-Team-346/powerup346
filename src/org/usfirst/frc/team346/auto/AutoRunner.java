@@ -17,10 +17,12 @@ public class AutoRunner {
 	
 	public AutoRunner() {
 		this.sDriverStation = DriverStation.getInstance();
-		this.mAutoPlan = RobotMap.kAutoPlan;
+//		this.mAutoPlan = RobotMap.kAutoPlan;
 	}
 	
-	public void run() {
+	public void run(AutoPlan _plan) {
+		this.mAutoPlan = _plan;
+		
 		this.mRunning = true;
 		System.out.println("Auto Runner| booting up");
 		this.receiveLayout();

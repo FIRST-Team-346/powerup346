@@ -1,6 +1,7 @@
 package org.usfirst.frc.team346.robot;
 
 import org.usfirst.frc.team346.auto.AutoRunner;
+import org.usfirst.frc.team346.auto.plans.*;
 import org.usfirst.frc.team346.subsystems.Climber;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
@@ -16,6 +17,8 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -36,6 +39,8 @@ public class Robot extends IterativeRobot {
 	public Shooter sShooter;
 	public Climber sClimber;
 	public Lights sLights;
+	
+	public SendableChooser<AutoPlan> autoChooser;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -71,17 +76,25 @@ public class Robot extends IterativeRobot {
 		this.sDriverStation = DriverStation.getInstance();
 		
 		this.sControlBoard = new ControlBoard(this);
-		this.sAutoRunner = new AutoRunner();
 		
 		this.mPreviousTime = System.currentTimeMillis();
 		this.mCameraAdded = false;
+		
+		this.sAutoRunner = new AutoRunner();
+		
+		this.autoChooser.addDefault("CenterAuto", new NewCenterStart());
+		this.autoChooser.addObject("LeftSideAuto", new NewSideStart(true));
+		this.autoChooser.addObject("RightSideAuto", new NewSideStart(false));
+		SmartDashboard.putData("AutoChooser", this.autoChooser);
+		
+		this.sGyro.calibrate();
 	}
 	
 	public void autonomousInit() {
 		System.out.println("Autonomous Init| begun");
 		this.zeroDevices();
 		
-		this.sAutoRunner.run();
+		this.sAutoRunner.run((AutoPlan) this.autoChooser.getSelected());
 		
 		System.out.println("Autonomous Init| complete");
 	}
@@ -140,7 +153,6 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledInit() {
 		this.zeroDevices();
-		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);
 		this.sClimber.disable();
 		this.sTilter.disable();
 		this.sShooter.setPercentFront(0);
@@ -151,7 +163,6 @@ public class Robot extends IterativeRobot {
 	public void zeroDevices() {
 		this.sGyro.zeroGyro();
 		this.sDrive.zeroEncoders();
-//		this.sShooter.zeroEncoders();
 		
 		this.sDrive.setNominal(0,0);
 		this.sDrive.drive(DriveMode.PERCENT, 0.0, 0.0);

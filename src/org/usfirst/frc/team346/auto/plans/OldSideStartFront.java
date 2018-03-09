@@ -9,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.Preferences;
 
-public class SideStartFront extends AutoPlan {
+public class OldSideStartFront extends AutoPlan {
 	
 	Rotate mRotate;
 	DriveStraight mDriveStraight;

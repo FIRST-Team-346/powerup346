@@ -16,7 +16,11 @@ public class NewSideStart extends AutoPlan {
 	ActionRunner sAction = new ActionRunner();
 	Rotate sRotator = new Rotate();
 	
-	private double switchLeft, scaleLeft;
+	private double startingOnLeft, switchLeft, scaleLeft;
+	
+	public NewSideStart(boolean _startingOnLeft) {
+		this.startingOnLeft = (_startingOnLeft)? 1. : -1.;
+	}
 	
 	public String getGoal() {
 		return "shoot forward to scale";
@@ -26,11 +30,11 @@ public class NewSideStart extends AutoPlan {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
-		if(RobotMap.kStartingOnLeft == _scaleLeft) {
+		if(this.startingOnLeft == _scaleLeft) {
 			Lights.getInstance().setGreen();
 			this.goodScale();
 		}
-		else if(RobotMap.kStartingOnLeft == _switchLeft && RobotMap.kStartingOnLeft != _scaleLeft) {
+		else if(this.startingOnLeft == _switchLeft && this.startingOnLeft != _scaleLeft) {
 			Lights.getInstance().setLeftGreenRightRed(false);
 			this.goodSwitchBadScale();
 		}
@@ -110,16 +114,16 @@ public class NewSideStart extends AutoPlan {
 	}
 	
 	public void badSwitchBadScale() {
-		if(RobotMap.kStartingOnLeft == 1) {
+		if(this.startingOnLeft == 1) {
 			super.driveUsingDF(25.5);
 		}
 		else {
 			super.driveUsingDF(26);
 		}
-		this.sRotator.rotate(90 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
+		this.sRotator.rotate(90 * this.startingOnLeft, 0.5, 3, 2);
 		System.out.println(this.sGyro.getAngle());
 		
-		if(RobotMap.kStartingOnLeft == 1) {
+		if(this.startingOnLeft == 1) {
 			super.driveUsingDF(12.5);
 		}
 		else {
@@ -128,14 +132,14 @@ public class NewSideStart extends AutoPlan {
 		//slows down to drive over the conduit without ramping 80ft in the air
 		super.driveUsingDF(11);
 		
-		this.sRotator.rotate(-90 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
+		this.sRotator.rotate(-90 * this.startingOnLeft, 0.5, 3, 2);
 		
 		super.driveUsingDF(4.5);
 		
 		this.sAction.shootToScaleBack();
 //			super.waitTime(2);
 			
-		this.sRotator.rotate(-180 * RobotMap.kStartingOnLeft, 0.5, 3, 2);
+		this.sRotator.rotate(-180 * this.startingOnLeft, 0.5, 3, 2);
 
 		super.driveUsingDF(-6);
 	}
