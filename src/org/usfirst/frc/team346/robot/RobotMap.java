@@ -9,7 +9,7 @@ public class RobotMap {
 	public static final int kDriveLeftMasterPort = 27;			//27-03
 	public static final int kDriveLeftSlave1Port = 13;			//13-02
 	public static final int kDriveLeftSlave2Port = 7;			//07-21
-	public static final int kDriveRightMasterPort = 26;			//26-01
+	public static final int kDriveRightMasterPort = 16;			//26-01
 	public static final int kDriveRightSlave1Port = 18;			//18-05
 	public static final int kDriveRightSlave2Port = 17;			//17-08
 
@@ -121,41 +121,39 @@ public class RobotMap {
 	
 //	SHOOTER PID/SUBSYSTEM VALUES----------------------------------------------------
 	
-	public static final double kShooterLeftP = 0.2;
+	public static final double kShooterLeftP = 0.15;
 	public static final double kShooterLeftI = 0;
 	public static final double kShooterLeftD = 10.0;
 	public static final double kShooterLeftF = 0.041;
 	
-	public static final double kShooterRightP = 0.2;
+	public static final double kShooterRightP = 0.15;
 	public static final double kShooterRightI = 0;
-	public static final double kShooterRightD = 10.0;
+	public static final double kShooterRightD = 20.0;
 	public static final double kShooterRightF = 0.041;
 	
-	public static final int kShooterLeftSetpointNuLow = 11650;
-	public static final int kShooterRightSetpointNuLow = 11500;
-	public static final int kShooterLeftSetpointNuMid = 12650;
-	public static final int kShooterRightSetpointNuMid = 12500;
-	public static final int kShooterLeftSetpointNuHigh = 14750;
-	public static final int kShooterRightSetpointNuHigh = 14600;
-	public static final int kShooterLeftSetpointNuBack = 14750;
-	public static final int kShooterRightSetpointNuBack = 14600;
+	public static final int kShooterLeftSetpointNuLow = 11000;		//11650
+	public static final int kShooterRightSetpointNuLow = 11000;		//11500
+	public static final int kShooterLeftSetpointNuHigh = 13000;		//14750
+	public static final int kShooterRightSetpointNuHigh = 13000;	//14600
+	public static final int kShooterLeftSetpointNuBack = 11700;		//14750
+	public static final int kShooterRightSetpointNuBack = 11700;	//14600
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 188;
-	public static final int kTiltPosRange 		= 342;
+	public static final int kTiltPosNeutral 	= 175;
+	public static final int kTiltPosRange 		= 350;
 	
-	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
-	public static final int kTiltPosSwitchBack 	= 55  + kTiltPosNeutral;
-	public static final int kTiltPosVault 		= 160 + kTiltPosNeutral;
+//	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
+	public static final int kTiltPosSwitchBack 	= 60  + kTiltPosNeutral;
+	public static final int kTiltPosVault 		= 150 + kTiltPosNeutral;
 	public static final int kTiltPosScaleLow 	= 240 + kTiltPosNeutral;
-	public static final int kTiltPosScaleHigh 	= 255 + kTiltPosNeutral;
+	public static final int kTiltPosScaleHigh 	= 250 + kTiltPosNeutral;//255
 	public static final int kTiltPosScaleBack 	= 330 + kTiltPosNeutral;
 	
-	public static final int kTilterDesiredVelocityNu = 50;
-	public static final int kTilterDesiredAccelerationNu = 100;
+	public static final int kTilterDesiredVelocityNu = 40;
+	public static final int kTilterDesiredAccelerationNu = 90;
 	
 	public static final int kTilterMaxVelocityNu = 83;
 	public static final double kTilterP = 8.0;

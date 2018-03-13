@@ -1,6 +1,7 @@
 package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.actions.DriveFollow;
+import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.auto.actions.RotateThread;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive;
@@ -41,6 +42,24 @@ public class AutoPlan {
 		while (RT.isRotating()) {
 		}
 		System.out.println("DF| driving complete, final angle:" + Gyro.getInstance().getAngle());
+	}
+	
+	public void rotate(double _angleDegrees, double _timeOutTime) {
+		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+			return;
+		}
+		
+		Rotate rt = new Rotate();
+		rt.rotate(_angleDegrees, 0.5, _timeOutTime, 1.5);
+	}
+	
+	public void rotateSingleSide(Hand _side, double _angleDegrees, double _timeOutTime) {
+		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+			return;
+		}
+		
+		Rotate rt = new Rotate();
+		rt.rotateSingleSide(_side, _angleDegrees, 0.5, _timeOutTime, 1.5);
 	}
 	
 	public void rotateUsingRT(Hand _side, double _angleDegrees) {

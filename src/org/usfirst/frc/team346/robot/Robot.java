@@ -82,9 +82,14 @@ public class Robot extends IterativeRobot {
 		
 		this.sAutoRunner = new AutoRunner();
 		
+		this.autoChooser = new SendableChooser<AutoPlan>();
 		this.autoChooser.addDefault("CenterAuto", new NewCenterStart());
 		this.autoChooser.addObject("LeftSideAuto", new NewSideStart(true));
 		this.autoChooser.addObject("RightSideAuto", new NewSideStart(false));
+		this.autoChooser.addObject("LeftSideNoConduit", new NewSideStartNoConduit(true));
+		this.autoChooser.addObject("RightSideNoConduit", new NewSideStartNoConduit(false));
+		this.autoChooser.addObject("BaselineDriveFollow", new BaselineDriveFollow());
+		this.autoChooser.addObject("Nothing", new Nothing());
 		SmartDashboard.putData("AutoChooser", this.autoChooser);
 		
 		this.sGyro.calibrate();

@@ -38,7 +38,7 @@ public class Tilter implements Subsystem {
 		this.mTilter = new TalonSRX(RobotMap.kTilterPort);
 		this.mTilter.setNeutralMode(NeutralMode.Brake);
 		
-		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 5);
+		this.mTilter.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
 		this.mTilter.setInverted(true);
 		this.mTilter.setSensorPhase(true);
 		
@@ -76,16 +76,21 @@ public class Tilter implements Subsystem {
 		this.mTilterSetPosPrevTime = System.currentTimeMillis();
 		
 		if(this.mTilterSetpointNu == RobotMap.kTiltPosNeutral) {
-			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu);
+			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu - 3.);
 		}
 		else {
 			this.mTilter.set(ControlMode.MotionMagic, this.mTilterSetpointNu + this.UNDERSHOOT_CONSTANT);
 		}
 	}
 	
-	public void checkDrivePosition() {
-		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 1500) {
-			this.setSetpointNu(RobotMap.kTiltPosDrive);
+	@Deprecated
+	public void increaseSlopConstantNu(int _increaseSlopConstantNu) {
+		this.UNDERSHOOT_CONSTANT += _increaseSlopConstantNu;
+	}
+	
+	public void checkandSetDrivePosition() {
+		if(System.currentTimeMillis() - this.mTilterSetPosPrevTime > 5.0 * 1000.) {
+			this.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
 	}
 	

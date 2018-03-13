@@ -21,64 +21,66 @@ public class NewCenterStart extends AutoPlan {
 	
 	public void run(double _switchLeft, double _scaleLeft) {
 		if(_switchLeft == 1) {
-			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
+			Lights.getInstance().setLeftBlueRightRed((DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.leftSwitch();
 		}
 		else {
-			Lights.getInstance().setLeftBlueRightRed((DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
+			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.rightSwitch();
 		}
 	}
 	
 	public void leftSwitch() {
+		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
-		this.sRotator.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
+		
+		this.rotateSingleSide(Hand.kLeft, -45, 2);
+//		this.sRotator.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
 		
 		super.driveUsingDF(-9);
-		this.sAction.openIntake();
 		
-		this.sRotator.rotate(45, 0.5, 3, 1.5);
+		this.sAction.setJustIntakeIn(-1);
+		
+		this.rotate(45, 2);
+//		this.sRotator.rotate(45, 0.5, 3, 1.5);
+		
+		this.sAction.setJustIntakeIn(0);
+		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
-		super.driveUsingDF(-5.0);
+		super.driveUsingDF(-7.0);
 		
 		this.sAction.shootToSwitchBack();
-//			super.waitTime(0.5);
 		
 		super.driveUsingDF(3);
 		
 		this.sRotator.rotate(90, 0.5, 3, 1.5);
-		
-		super.driveUsingDF(7.0);
-		
-		this.sRotator.rotate(90, 0.5, 3, 1.5);
-		
-		super.driveUsingDF(18);
 	}
 	
 	public void rightSwitch() {
+		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
-		this.sRotator.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
+		
+		this.rotateSingleSide(Hand.kRight, 45, 2);
+//		this.sRotator.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
 		
 		super.driveUsingDF(-7.5);
-		this.sAction.openIntake();
 		
-		this.sRotator.rotate(-45, 0.5, 3, 1.5);
+		this.sAction.setJustIntakeIn(-1);
+		
+		this.rotate(-45, 2);
+//		this.sRotator.rotate(-45, 0.5, 3, 1.5);
+		
+		this.sAction.setJustIntakeIn(0);
+		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
-		super.driveUsingDF(-5.5);
+		super.driveUsingDF(-7.5);
 		
 		this.sAction.shootToSwitchBack();
-//			super.waitTime(0.5);
 		
 		super.driveUsingDF(3);
 		
-		this.sRotator.rotate(-90, 0.5, 3, 1.5);
-		
-		super.driveUsingDF(7.0);
-		
-		this.sRotator.rotate(-90, 0.5, 3, 1.5);
-		
-		super.driveUsingDF(18);
+		this.sRotator.rotate(-90, 0.5, 3, 2);
 	}
 }

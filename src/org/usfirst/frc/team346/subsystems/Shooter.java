@@ -50,13 +50,13 @@ public class Shooter implements Subsystem {
 	
 	private void initEncoders() {
 		//Sets the Talon to get input from the QuadEncoder plugged into it.
-		this.mLeftShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mLeftShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		//Gets the motor to spin in the direction we want and that positive sensor is
 		//in phase with positive motor output.
 		this.mLeftShooter.setInverted(false);
 		this.mLeftShooter.setSensorPhase(true);
 		
-		this.mRightShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 5);
+		this.mRightShooter.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		this.mRightShooter.setInverted(true);
 		this.mRightShooter.setSensorPhase(true);
 	}
@@ -102,10 +102,10 @@ public class Shooter implements Subsystem {
 	
 	public boolean isAtSpeed() {
 		boolean lLeftAtSpeed = false, lRightAtSpeed = false;
-		if(Math.abs(this.mLeftShooter.getSelectedSensorVelocity(0) - this.mLeftSetpointNu) < 50) {
+		if(Math.abs(this.mLeftShooter.getSelectedSensorVelocity(0) - this.mLeftSetpointNu) < 200) {
 			lLeftAtSpeed = true;
 		}
-		if(Math.abs(this.mRightShooter.getSelectedSensorVelocity(0) - this.mRightSetpointNu) < 50) {
+		if(Math.abs(this.mRightShooter.getSelectedSensorVelocity(0) - this.mRightSetpointNu) < 200) {
 			lRightAtSpeed = true;
 		};
 		return (lLeftAtSpeed && lRightAtSpeed);

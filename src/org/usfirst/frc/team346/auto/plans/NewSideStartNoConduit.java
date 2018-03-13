@@ -10,7 +10,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class NewSideStart extends AutoPlan {
+public class NewSideStartNoConduit extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -18,7 +18,7 @@ public class NewSideStart extends AutoPlan {
 	
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
-	public NewSideStart(boolean _startingOnLeft) {
+	public NewSideStartNoConduit(boolean _startingOnLeft) {
 		this.startingOnLeft = (_startingOnLeft)? 1. : -1.;
 	}
 	
@@ -49,7 +49,7 @@ public class NewSideStart extends AutoPlan {
 		
 		super.driveUsingDF(28);
 		
-		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuLow, RobotMap.kShooterRightSetpointNuLow);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuHigh, RobotMap.kShooterRightSetpointNuHigh);
 		this.rotate(45 * this.scaleLeft, 2);
 //		this.sRotator.rotate(45 * this.scaleLeft, 0.5, 3, 2.);
 		
@@ -114,51 +114,28 @@ public class NewSideStart extends AutoPlan {
 		
 		this.sAction.setIntakeIn(1);
 		super.driveUsingDF(3);
-		
-//		super.waitTime(0.25);
-		this.sAction.setIntakeIn(0);
-		
-		super.driveUsingDF(-3.5);
-		
-		this.rotate(-30 * this.startingOnLeft, 2);
-//		this.sRotator.rotate(-30 * this.switchLeft, 0.5, 5, 1.5);
 	}
 	
 	public void badSwitchBadScale() {
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
-		
-		super.driveUsingDF(25.);
-		this.sAction.setJustIntakeIn(-1);
-		this.rotate(-90 * this.startingOnLeft, 2);
-//		this.sRotator.rotate(90 * this.startingOnLeft, 0.5, 3, 2);
-		this.sAction.setJustIntakeIn(0);
-		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		if(this.startingOnLeft == 1) {
-			super.driveUsingDF(-12.5);
+			this.rotateSingleSide(Hand.kRight, -90, 2);
 		}
 		else {
-			super.driveUsingDF(-13);
+			this.rotateSingleSide(Hand.kLeft, 90, 2);
 		}
-		//slows down to drive over the conduit without ramping 80ft in the air
-		super.driveUsingDF(-11);
 		
-		this.rotate(90 * this.startingOnLeft, 2);
-//		this.sRotator.rotate(-90 * this.startingOnLeft, 0.5, 3, 2);
+		super.waitTime(4);
 		
-		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuHigh, RobotMap.kShooterRightSetpointNuHigh);
-//		super.driveUsingDF(4.5);
-		super.waitTime(1.5);
+		super.driveUsingDF(-18);
 		
-		this.sAction.setOuttakePercentFront(1);
-		super.waitTime(1);
-		this.sAction.setOuttakePercentFront(0);
-		this.sAction.setShooterPercentFront(0);
-			
-//		this.rotate(180 * this.startingOnLeft, 2);
-//		this.sAction.setJustIntakeIn(1);
-//		this.sRotator.rotate(-180 * this.startingOnLeft, 0.5, 3, 2);
-//
-//		super.driveUsingDF(6);
+		this.sAction.setJustIntakeIn(-1);
+		super.rotate(-90 * this.startingOnLeft, 2);
+		this.sAction.setJustIntakeIn(0);
+		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		super.driveUsingDF(-10);
+		this.sAction.setOuttakePercentFront(-1);
 	}
 	
 }

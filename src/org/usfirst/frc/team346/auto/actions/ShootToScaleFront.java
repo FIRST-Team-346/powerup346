@@ -9,8 +9,8 @@ public class ShootToScaleFront implements Runnable {
 	private ActionRunner action = new ActionRunner();
 	
 	public void run() {
-		this.action.setTilterPosNu(RobotMap.kTiltPosScaleLow);
-		this.action.setShooter(RobotMap.kShooterLeftSetpointNuMid, RobotMap.kShooterRightSetpointNuMid);
+		this.action.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
+		this.action.setShooter(RobotMap.kShooterLeftSetpointNuHigh, RobotMap.kShooterRightSetpointNuHigh);
 		this.action.waitUntilAtSpeed(2.0);
 		this.action.setOuttakePercentFront(1.0);
 		double lShootTime = System.currentTimeMillis();

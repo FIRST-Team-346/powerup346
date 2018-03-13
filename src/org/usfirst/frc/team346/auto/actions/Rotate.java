@@ -21,7 +21,7 @@ public class Rotate {
 	
 	private Drive drive;
 	private Gyro gyro;
-	private Preferences pref = Preferences.getInstance();
+//	private Preferences pref = Preferences.getInstance();
 	
 	private PIDSource angleSource;
 	private PIDOutput angleOutput;
@@ -30,6 +30,8 @@ public class Rotate {
 	private double leftEnabled, rightEnabled;
 	private double leftSetPercent, rightSetPercent;
 	private double minPercent = 0.;
+	
+	private boolean pidCreated = false;
 	
 	public Rotate() {
 		drive = Drive.getInstance();
@@ -54,7 +56,7 @@ public class Rotate {
 		this.gyro.zeroGyro();
 		
 		this.createPID();
-		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
+//		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
 		this.anglePID.setSetpoint(angleSetpoint);
 		this.drive.zeroEncoders();
 		this.drive.enable();
@@ -76,7 +78,7 @@ public class Rotate {
 		this.gyro.zeroGyro();
 		
 		this.createPID();
-		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
+//		this.setPID(this.pref.getDouble("rotateP", 0), RobotMap.kRotateI, this.pref.getDouble("rotateD", 0));			//TODO
 		this.anglePID.setSetpoint(angleSetpoint);
 		this.drive.zeroEncoders();
 		this.drive.enable();
@@ -110,6 +112,7 @@ public class Rotate {
 			}
 		};
 		this.anglePID = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD, this.angleSource, this.angleOutput, this.updateFreq);
+		this.pidCreated = true;
 	}
 	
 	private void runPID() {
@@ -184,8 +187,10 @@ public class Rotate {
 	}
 	
 	public void disablePID(){
-		this.anglePID.disable();
-		this.anglePID.free();
+		if(this.pidCreated = true) {
+			this.setPID(0, 0, 0);
+			this.pidCreated = false;
+		}
 	}
 	
 	private boolean isDisabled() {
