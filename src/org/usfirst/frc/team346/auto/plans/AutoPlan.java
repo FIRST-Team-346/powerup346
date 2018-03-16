@@ -16,7 +16,7 @@ public class AutoPlan {
 		return "default goal";
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		System.out.println("default run; check that your run takes the layout parameters");
 	}
 	
@@ -30,18 +30,6 @@ public class AutoPlan {
 		while (DF.isDriving()) {
 		}
 		System.out.println("DF| driving complete, final distance:" + Drive.getInstance().getAveragedPosition()/1024.);
-	}
-	
-	public void rotateUsingRT(double _angleDegrees) {
-		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
-			return;
-		}
-		
-		RotateThread RT = new RotateThread(_angleDegrees, 0.5);
-		new Thread(RT).start();
-		while (RT.isRotating()) {
-		}
-		System.out.println("DF| driving complete, final angle:" + Gyro.getInstance().getAngle());
 	}
 	
 	public void rotate(double _angleDegrees, double _timeOutTime) {
@@ -62,6 +50,18 @@ public class AutoPlan {
 		rt.rotateSingleSide(_side, _angleDegrees, 0.5, _timeOutTime, 1.5);
 	}
 	
+	public void rotateUsingRT(double _angleDegrees) {
+		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+			return;
+		}
+		
+		RotateThread RT = new RotateThread(_angleDegrees, 0.5);
+		new Thread(RT).start();
+		while (RT.isRotating()) {
+		}
+		System.out.println("RT| rotating complete, final angle:" + Gyro.getInstance().getAngle());
+	}
+	
 	public void rotateUsingRT(Hand _side, double _angleDegrees) {
 		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
 			return;
@@ -71,7 +71,7 @@ public class AutoPlan {
 		new Thread(RT).start();
 		while (RT.isRotating()) {
 		}
-		System.out.println("DF| driving complete, final angle:" + Gyro.getInstance().getAngle());
+		System.out.println("RT| rotating complete, final angle:" + Gyro.getInstance().getAngle());
 	}
 	
 	public void waitTime(double _seconds) {

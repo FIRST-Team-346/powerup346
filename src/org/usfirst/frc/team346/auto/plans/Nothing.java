@@ -6,7 +6,7 @@ public class Nothing extends AutoPlan {
 		return "run nothing";
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		
 	}
 }

@@ -19,38 +19,36 @@ public class NewCenterStart extends AutoPlan {
 		return "shoot forward to scale";
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		if(_switchLeft == 1) {
-			Lights.getInstance().setLeftBlueRightRed((DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
+//			Lights.getInstance().setLeftBlueRightRed((DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.leftSwitch();
 		}
 		else {
-			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
+//			Lights.getInstance().setLeftBlueRightRed(!(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue));
 			this.rightSwitch();
 		}
 	}
 	
 	public void leftSwitch() {
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
 		this.rotateSingleSide(Hand.kLeft, -45, 2);
-//		this.sRotator.rotateSingleSide(Hand.kLeft, -45, 0.5, 3, 1.5);
 		
 		super.driveUsingDF(-9);
 		
-		this.sAction.setJustIntakeIn(-1);
+//		this.sAction.setJustIntakeIn(-1);
 		
 		this.rotate(45, 2);
-//		this.sRotator.rotate(45, 0.5, 3, 1.5);
 		
-		this.sAction.setJustIntakeIn(0);
+//		this.sAction.setJustIntakeIn(0);
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+//		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
 		super.driveUsingDF(-7.0);
 		
-		this.sAction.shootToSwitchBack();
+//		this.sAction.shootToSwitchBack();
 		
 		super.driveUsingDF(3);
 		
@@ -59,25 +57,23 @@ public class NewCenterStart extends AutoPlan {
 	
 	public void rightSwitch() {
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
 		this.rotateSingleSide(Hand.kRight, 45, 2);
-//		this.sRotator.rotateSingleSide(Hand.kRight, 45, 0.5, 3, 1.5);
 		
 		super.driveUsingDF(-7.5);
 		
-		this.sAction.setJustIntakeIn(-1);
+//		this.sAction.setJustIntakeIn(-1);
 		
 		this.rotate(-45, 2);
-//		this.sRotator.rotate(-45, 0.5, 3, 1.5);
 		
-		this.sAction.setJustIntakeIn(0);
+//		this.sAction.setJustIntakeIn(0);
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+//		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		
 		super.driveUsingDF(-7.5);
 		
-		this.sAction.shootToSwitchBack();
+//		this.sAction.shootToSwitchBack();
 		
 		super.driveUsingDF(3);
 		

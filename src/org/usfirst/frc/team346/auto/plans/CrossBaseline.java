@@ -11,7 +11,7 @@ public class CrossBaseline extends AutoPlan {
 		return "cross baseline, using only percent voltage";
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		double lInitialTime = System.currentTimeMillis() /1000.;
 		while(System.currentTimeMillis()/1000. - lInitialTime < 5) {
 			this.sDrive.drive(DriveMode.PERCENT, 0.5, 0.5);

@@ -6,12 +6,12 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 27;			//27-03
-	public static final int kDriveLeftSlave1Port = 13;			//13-02
-	public static final int kDriveLeftSlave2Port = 7;			//07-21
-	public static final int kDriveRightMasterPort = 16;			//26-01
-	public static final int kDriveRightSlave1Port = 18;			//18-05
-	public static final int kDriveRightSlave2Port = 17;			//17-08
+	public static final int kDriveLeftMasterPort = 1;			//27-01
+	public static final int kDriveLeftSlave1Port = 8;			//13-08
+	public static final int kDriveLeftSlave2Port = 5;			//07-05
+	public static final int kDriveRightMasterPort = 3;			//16-03
+	public static final int kDriveRightSlave1Port = 2;			//18-02
+	public static final int kDriveRightSlave2Port = 21;			//17-21
 
 	public static final int kIntakeLeftPort = 24;			    //24-
 	public static final int kIntakeRightPort = 20;				//20-
@@ -111,6 +111,8 @@ public class RobotMap {
 	public static final double kRotateD = 0.2;								//0.4  - 0.2
 	
 	public static final double kDriveFollowAngleErrorScaler = 0.0225;		//0.0225
+	public static final double kDriveFollowStopFeetHigh = 4.5;				//4.5  - 
+	public static final double kDriveFollowStopFeetLow = 1.2;				//1.2  - 
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;

@@ -9,7 +9,7 @@ public class BaselineDriveFollow extends AutoPlan {
 		return "cross baseline using drivefollow";
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		super.driveUsingDF(16);
 		this.action.setJustIntakeIn(-1);
 		super.waitTime(2);

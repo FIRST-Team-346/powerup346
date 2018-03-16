@@ -1,5 +1,6 @@
 package org.usfirst.frc.team346.robot;
 
+import org.usfirst.frc.team346.auto.AutoBuilder;
 import org.usfirst.frc.team346.auto.AutoRunner;
 import org.usfirst.frc.team346.auto.plans.*;
 import org.usfirst.frc.team346.subsystems.Climber;
@@ -40,7 +41,8 @@ public class Robot extends IterativeRobot {
 	public Climber sClimber;
 	public Lights sLights;
 	
-	public SendableChooser<AutoPlan> autoChooser;
+	public SendableChooser<AutoBuilder> autoChooser;
+	public SendableChooser<Boolean> autoStartingOnLeft;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -62,16 +64,16 @@ public class Robot extends IterativeRobot {
 		this.sGyro = Gyro.getInstance();
 		this.sGyro.calibrate();
 		
-		this.sIntake = Intake.getInstance();
-		this.sOuttake = Outtake.getInstance();
-		this.sLoader = Loader.getInstance();
-		
-		this.sTilter = Tilter.getInstance();
-		this.sShooter = Shooter.getInstance();
-		
-		this.sLights = Lights.getInstance();
-		
-		this.sClimber = Climber.getInstance();
+//		this.sIntake = Intake.getInstance();
+//		this.sOuttake = Outtake.getInstance();
+//		this.sLoader = Loader.getInstance();
+//		
+//		this.sTilter = Tilter.getInstance();
+//		this.sShooter = Shooter.getInstance();
+//		
+//		this.sLights = Lights.getInstance();
+//		
+//		this.sClimber = Climber.getInstance();
 		
 		this.sDriverStation = DriverStation.getInstance();
 		
@@ -82,14 +84,17 @@ public class Robot extends IterativeRobot {
 		
 		this.sAutoRunner = new AutoRunner();
 		
-		this.autoChooser = new SendableChooser<AutoPlan>();
-		this.autoChooser.addDefault("CenterAuto", new NewCenterStart());
-		this.autoChooser.addObject("LeftSideAuto", new NewSideStart(true));
-		this.autoChooser.addObject("RightSideAuto", new NewSideStart(false));
-		this.autoChooser.addObject("LeftSideNoConduit", new NewSideStartNoConduit(true));
-		this.autoChooser.addObject("RightSideNoConduit", new NewSideStartNoConduit(false));
-		this.autoChooser.addObject("BaselineDriveFollow", new BaselineDriveFollow());
-		this.autoChooser.addObject("Nothing", new Nothing());
+		this.autoStartingOnLeft = new SendableChooser<Boolean>();
+		this.autoStartingOnLeft.addDefault("Left", true);
+		this.autoStartingOnLeft.addObject("Right", false);
+		SmartDashboard.putData("AutoStartingOnLeft", this.autoStartingOnLeft);
+		
+		this.autoChooser = new SendableChooser<AutoBuilder>();
+		this.autoChooser.addDefault("CenterSwitch", new AutoBuilder( new NewCenterStart() ));
+		this.autoChooser.addObject("SideStandard", new AutoBuilder( new GoodScale(), new GoodScale(), new GoodSwitchBadScale(), new BadSwitchBadScale() ));
+		this.autoChooser.addObject("BaselineDriveFollow", new AutoBuilder( new BaselineDriveFollow() ));
+		this.autoChooser.addObject("Nothing", new AutoBuilder( new Nothing() ));
+		this.autoChooser.addObject("Test", new AutoBuilder( new Test() ));
 		SmartDashboard.putData("AutoChooser", this.autoChooser);
 		
 		this.sGyro.calibrate();
@@ -99,7 +104,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Autonomous Init| begun");
 		this.zeroDevices();
 		
-		this.sAutoRunner.run((AutoPlan) this.autoChooser.getSelected());
+		this.sAutoRunner.run((boolean) this.autoStartingOnLeft.getSelected(), (AutoBuilder) this.autoChooser.getSelected());
 		
 		System.out.println("Autonomous Init| complete");
 	}
@@ -113,7 +118,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		
 		if(!this.mCameraAdded) {
-			CameraServer.getInstance().startAutomaticCapture();
+//			CameraServer.getInstance().startAutomaticCapture();
 			this.mCameraAdded = true;
 		}
 		
@@ -124,13 +129,13 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 		this.sControlBoard.drive();
-		this.sControlBoard.checkIntake();
-		this.sControlBoard.checkLoader();
-		this.sControlBoard.checkOuttake();
-		this.sControlBoard.checkTilter();
-		this.sControlBoard.checkShooter();
-		this.sControlBoard.checkClimber();
-		this.sControlBoard.checkLights();
+//		this.sControlBoard.checkIntake();
+//		this.sControlBoard.checkLoader();
+//		this.sControlBoard.checkOuttake();
+//		this.sControlBoard.checkTilter();
+//		this.sControlBoard.checkShooter();
+//		this.sControlBoard.checkClimber();
+//		this.sControlBoard.checkLights();
 		
 		this.publishData();
 	}
@@ -149,8 +154,8 @@ public class Robot extends IterativeRobot {
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
-				this.sTilter.publishData();
-				this.sShooter.publishData();
+//				this.sTilter.publishData();
+//				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
 		}
@@ -158,11 +163,11 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledInit() {
 		this.zeroDevices();
-		this.sClimber.disable();
-		this.sTilter.disable();
-		this.sShooter.setPercentFront(0);
-		this.sShooter.disable();
-		this.sLights.setBlack();
+//		this.sClimber.disable();
+//		this.sTilter.disable();
+//		this.sShooter.setPercentFront(0);
+//		this.sShooter.disable();
+//		this.sLights.setBlack();
 	}
 	
 	public void zeroDevices() {

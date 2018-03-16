@@ -234,15 +234,15 @@ public class DriveFollow implements Runnable {
 		
 		double lStopDistance;
 		if(Math.abs(_width) >= 5.5) {
-			lStopDistance = 4.5;
+			lStopDistance = RobotMap.kDriveFollowStopFeetHigh;
 //			lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		}
 		else if(Math.abs(_width) > 1.5) {
-			lStopDistance = 1.2;
+			lStopDistance = RobotMap.kDriveFollowStopFeetLow;
 //			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else if(Math.abs(_width) == 1.5) {
-			lStopDistance = 1.1;
+			lStopDistance = RobotMap.kDriveFollowStopFeetLow - 0.1;
 //			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else {

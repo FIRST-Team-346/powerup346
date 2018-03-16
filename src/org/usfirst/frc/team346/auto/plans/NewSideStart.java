@@ -18,15 +18,12 @@ public class NewSideStart extends AutoPlan {
 	
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
-	public NewSideStart(boolean _startingOnLeft) {
-		this.startingOnLeft = (_startingOnLeft)? 1. : -1.;
-	}
-	
 	public String getGoal() {
 		return "side start, starting on left: " + this.startingOnLeft;
 	}
 	
-	public void run(double _switchLeft, double _scaleLeft) {
+	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
+		this.startingOnLeft = _startingLeft;
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
