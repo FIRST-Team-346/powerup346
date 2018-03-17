@@ -3,6 +3,13 @@ package org.usfirst.frc.team346.robot;
 import org.usfirst.frc.team346.auto.AutoBuilder;
 import org.usfirst.frc.team346.auto.AutoRunner;
 import org.usfirst.frc.team346.auto.plans.*;
+import org.usfirst.frc.team346.auto.plans.firstcomp.NewBadScale;
+import org.usfirst.frc.team346.auto.plans.firstcomp.NewCenterStart;
+import org.usfirst.frc.team346.auto.plans.firstcomp.NewGoodScaleMaybeSwitch;
+import org.usfirst.frc.team346.auto.plans.firstcomp.NewGoodSwitchBadScale;
+import org.usfirst.frc.team346.auto.plans.safe.CrossBaseline;
+import org.usfirst.frc.team346.auto.plans.safe.Nothing;
+import org.usfirst.frc.team346.auto.plans.safe.Test;
 import org.usfirst.frc.team346.subsystems.Climber;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
@@ -64,16 +71,16 @@ public class Robot extends IterativeRobot {
 		this.sGyro = Gyro.getInstance();
 		this.sGyro.calibrate();
 		
-//		this.sIntake = Intake.getInstance();
-//		this.sOuttake = Outtake.getInstance();
-//		this.sLoader = Loader.getInstance();
-//		
-//		this.sTilter = Tilter.getInstance();
-//		this.sShooter = Shooter.getInstance();
-//		
-//		this.sLights = Lights.getInstance();
-//		
-//		this.sClimber = Climber.getInstance();
+		this.sIntake = Intake.getInstance();
+		this.sOuttake = Outtake.getInstance();
+		this.sLoader = Loader.getInstance();
+		
+		this.sTilter = Tilter.getInstance();
+		this.sShooter = Shooter.getInstance();
+		
+		this.sLights = Lights.getInstance();
+		
+		this.sClimber = Climber.getInstance();
 		
 		this.sDriverStation = DriverStation.getInstance();
 		
@@ -90,9 +97,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("AutoStartingOnLeft", this.autoStartingOnLeft);
 		
 		this.autoChooser = new SendableChooser<AutoBuilder>();
-		this.autoChooser.addDefault("CenterSwitch", new AutoBuilder( new NewCenterStart() ));
-		this.autoChooser.addObject("SideStandard", new AutoBuilder( new GoodScale(), new GoodScale(), new GoodSwitchBadScale(), new BadSwitchBadScale() ));
-		this.autoChooser.addObject("BaselineDriveFollow", new AutoBuilder( new BaselineDriveFollow() ));
+		this.autoChooser.addDefault("CenterSwitchVault", new AutoBuilder( new CenterSwitchVault() ));
+		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchThenGoodScale(), new SwitchPBadSwitchMaybeBadScale(), new SwitchPGoodSwitchThenCross(), new SwitchPBadSwitchMaybeBadScale() ));
+		this.autoChooser.addObject("SideScalePriority", new AutoBuilder( new ScalePGoodScaleTwice(), new ScalePGoodScaleTwice(), new ScalePBadScaleMaybeBadSwitch(), new ScalePBadScaleMaybeBadSwitch() ));
+		this.autoChooser.addObject("Baseline", new AutoBuilder( new CrossBaseline() ));
 		this.autoChooser.addObject("Nothing", new AutoBuilder( new Nothing() ));
 		this.autoChooser.addObject("Test", new AutoBuilder( new Test() ));
 		SmartDashboard.putData("AutoChooser", this.autoChooser);
@@ -118,7 +126,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Field layout: " + this.sAutoRunner.getLayout());
 		
 		if(!this.mCameraAdded) {
-//			CameraServer.getInstance().startAutomaticCapture();
+			CameraServer.getInstance().startAutomaticCapture();
 			this.mCameraAdded = true;
 		}
 		
@@ -129,13 +137,13 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 		this.sControlBoard.drive();
-//		this.sControlBoard.checkIntake();
-//		this.sControlBoard.checkLoader();
-//		this.sControlBoard.checkOuttake();
-//		this.sControlBoard.checkTilter();
-//		this.sControlBoard.checkShooter();
-//		this.sControlBoard.checkClimber();
-//		this.sControlBoard.checkLights();
+		this.sControlBoard.checkIntake();
+		this.sControlBoard.checkLoader();
+		this.sControlBoard.checkOuttake();
+		this.sControlBoard.checkTilter();
+		this.sControlBoard.checkShooter();
+		this.sControlBoard.checkClimber();
+		this.sControlBoard.checkLights();
 		
 		this.publishData();
 	}
@@ -154,7 +162,7 @@ public class Robot extends IterativeRobot {
 //				this.sIntake.publishData();
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
-//				this.sTilter.publishData();
+				this.sTilter.publishData();
 //				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
@@ -163,11 +171,11 @@ public class Robot extends IterativeRobot {
 	
 	public void disabledInit() {
 		this.zeroDevices();
-//		this.sClimber.disable();
-//		this.sTilter.disable();
-//		this.sShooter.setPercentFront(0);
-//		this.sShooter.disable();
-//		this.sLights.setBlack();
+		this.sClimber.disable();
+		this.sTilter.disable();
+		this.sShooter.setPercentFront(0);
+		this.sShooter.disable();
+		this.sLights.setBlack();
 	}
 	
 	public void zeroDevices() {

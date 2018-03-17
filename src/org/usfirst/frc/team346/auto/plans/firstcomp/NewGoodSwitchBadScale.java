@@ -1,5 +1,6 @@
-package org.usfirst.frc.team346.auto.plans;
+package org.usfirst.frc.team346.auto.plans.firstcomp;
 
+import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.RobotMap;
@@ -8,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class GoodSwitchBadScale extends AutoPlan {
+public class NewGoodSwitchBadScale extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();

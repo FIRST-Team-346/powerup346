@@ -1,5 +1,6 @@
-package org.usfirst.frc.team346.auto.plans;
+package org.usfirst.frc.team346.auto.plans.firstcomp;
 
+import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.Robot;

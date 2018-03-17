@@ -1,4 +1,6 @@
-package org.usfirst.frc.team346.auto.plans;
+package org.usfirst.frc.team346.auto.plans.safe;
+
+import org.usfirst.frc.team346.auto.AutoPlan;
 
 public class Nothing extends AutoPlan {
 	

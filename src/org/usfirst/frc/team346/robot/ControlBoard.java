@@ -65,7 +65,7 @@ public class ControlBoard {
 			this.sRobot.sIntake.setSpeedIn(-1.0);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sIntake.setSpeedIn(0.65);
+			this.sRobot.sIntake.setSpeedIn(this.mPref.getDouble("intakePercent", 0));//0.65
 		}
 		else {
 			this.sRobot.sIntake.setSpeedIn(0.0);
@@ -117,7 +117,8 @@ public class ControlBoard {
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterVault)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosVault);
 		}
-		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)) {
+		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterSwitchBack)
+		|| this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosSwitchBack);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {

@@ -1,8 +1,5 @@
 package org.usfirst.frc.team346.auto;
 
-import org.usfirst.frc.team346.auto.plans.AutoPlan;
-import org.usfirst.frc.team346.robot.Robot;
-import org.usfirst.frc.team346.robot.RobotMap;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoRunner {
@@ -40,10 +37,9 @@ public class AutoRunner {
 	}
 	
 	public void receiveLayout() {
-		if(this.mLayout == "000") {
-			//Gets the layout of the field from the DriverStation/Field Management System
-			this.mLayout = this.sDriverStation.getGameSpecificMessage();
-		}
+		//Gets the layout of the field from the DriverStation/Field Management System
+		this.mLayout = this.sDriverStation.getGameSpecificMessage();
+		
 		this.mSwitchOnLeft = (this.mLayout.charAt(0) == 'L') ? 1. : -1.;
 		this.mScaleOnLeft = (this.mLayout.charAt(1) == 'L') ? 1. : -1.;
 		
@@ -70,15 +66,19 @@ public class AutoRunner {
 		}
 		
 		if(this.mIsGoodSwitch && this.mIsGoodScale) {
+			System.out.println("GoodGood");
 			this.mAutoPlan = this.mAutoBuildPlan.getGG();
 		}
 		else if(!this.mIsGoodSwitch && this.mIsGoodScale) {
+			System.out.println("BadGood");
 			this.mAutoPlan = this.mAutoBuildPlan.getBG();
 		}
 		else if(this.mIsGoodSwitch && !this.mIsGoodScale) {
+			System.out.println("GoodBad");
 			this.mAutoPlan = this.mAutoBuildPlan.getGB();
 		}
 		else if(!this.mIsGoodSwitch && !this.mIsGoodScale) {
+			System.out.println("BadBad");
 			this.mAutoPlan = this.mAutoBuildPlan.getBB();
 		}
 		

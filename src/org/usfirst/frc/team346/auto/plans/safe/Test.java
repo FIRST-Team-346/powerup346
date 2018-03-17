@@ -1,5 +1,6 @@
-package org.usfirst.frc.team346.auto.plans;
+package org.usfirst.frc.team346.auto.plans.safe;
 
+import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.*;
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.robot.RobotMap;

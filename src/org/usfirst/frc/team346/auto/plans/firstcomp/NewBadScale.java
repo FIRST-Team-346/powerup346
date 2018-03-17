@@ -1,5 +1,6 @@
-package org.usfirst.frc.team346.auto.plans;
+package org.usfirst.frc.team346.auto.plans.firstcomp;
 
+import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.Robot;
@@ -10,7 +11,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class BadSwitchBadScale extends AutoPlan {
+public class NewBadScale extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -28,10 +29,10 @@ public class BadSwitchBadScale extends AutoPlan {
 		this.scaleLeft = _scaleLeft;
 		
 //		Lights.getInstance().setGreen();
-		this.badSwitchBadScale();
+		this.badScaleThenIntake();
 	}
 	
-	public void badSwitchBadScale() {
+	public void badScaleThenIntake() {
 //		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
 		
 		super.driveUsingDF(25.);

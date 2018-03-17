@@ -49,7 +49,7 @@ public class DriveFollow implements Runnable {
 		
 		this.timeOutSec = 5.;
 		this.updateFreq = 0.01;
-		this.thresholdTimeOutSec = 0.125;
+		this.thresholdTimeOutSec = 0.05;
 		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
 		
 		this.courseDistanceSetpoint = _distanceFt * 1024.;
@@ -213,7 +213,7 @@ public class DriveFollow implements Runnable {
 	
 	private void checkDisabled() {
 		if(System.currentTimeMillis()/1000. - this.timeZero > this.timeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
-			System.out.println("Drive Follow| timeout or disabled");
+//			System.out.println("Drive Follow| timeout or disabled");
 			this.stop();
 		}
 	}

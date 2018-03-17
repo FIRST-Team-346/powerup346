@@ -104,6 +104,7 @@ public class RotateThread implements Runnable {
 			}
 			this.setAnglePID(0, 0, 0);
 			this.anglePIDController.disable();
+			this.sDrive.drive(DriveMode.PERCENT_VELOCITY, 0, 0);
 		}
 		System.out.println("RotateT| run complete");
 	}
@@ -173,20 +174,21 @@ public class RotateThread implements Runnable {
 		this.velocitySetRight = _courseOutput * this.velocitySetpointMag;
 		this.outputPublish = _courseOutput;
 		
-		double lSign = (this.isRotatingClockwise) ? 1. : -1.;
-		double rSign = (this.isRotatingClockwise) ? -1. : 1.;
+//		double lSign = (this.isRotatingClockwise) ? 1. : -1.;
+//		double rSign = (this.isRotatingClockwise) ? -1. : 1.;
 		
-		double mult = this.pref.getDouble("rtMult", 0);	//TODO
+		double lSign = 1.;
+		double rSign = -1.;
 		
-		this.velocitySetLeft = mult * this.velocitySetpointMag * _courseOutput * lSign * this.leftEnabled;
-		this.velocitySetRight = mult * this.velocitySetpointMag * _courseOutput * rSign * this.rightEnabled;
+		this.velocitySetLeft = this.velocitySetpointMag * _courseOutput * lSign * this.leftEnabled;
+		this.velocitySetRight = this.velocitySetpointMag * _courseOutput * rSign * this.rightEnabled;
 		
 		if(this.hasNeverEnteredAngleThreshold) {
 			if(Math.abs(this.velocitySetLeft) < this.minVelocityPercent) {
-				this.velocitySetLeft = this.minVelocityPercent * lSign * this.leftEnabled;
+				this.velocitySetLeft = this.minVelocityPercent * lSign * _courseOutput/Math.abs(_courseOutput) * this.leftEnabled;
 			}
 			if(Math.abs(this.velocitySetRight) < this.minVelocityPercent) {
-				this.velocitySetRight = this.minVelocityPercent * rSign * this.rightEnabled;
+				this.velocitySetRight = this.minVelocityPercent * rSign * _courseOutput/Math.abs(_courseOutput) * this.rightEnabled;
 			}
 		}
 		
@@ -238,13 +240,12 @@ public class RotateThread implements Runnable {
 	
 	private void stop() {
 		this.isActive = false;
-		this.sDrive.drive(DriveMode.PERCENT_VELOCITY, 0, 0);
 //		Thread.currentThread().interrupt();
 	}
 	
 	private void checkDisabled() {
 		if(System.currentTimeMillis()/1000. - this.timeZero > this.timeOutSec || DriverStation.getInstance().isDisabled() || !DriverStation.getInstance().isAutonomous()) {
-			System.out.println("RotateT| timeout or disabled");
+//			System.out.println("RotateT| timeout or disabled");
 			this.stop();
 		}
 	}
@@ -253,23 +254,6 @@ public class RotateThread implements Runnable {
 		this.checkDisabled();
 		return this.isActive;
 	}
-	
-//	private double reverseModSigmoid(double _width, double _x) {
-//		double lAngleWidthScaler;
-//		lAngleWidthScaler = 2;
-//		
-//		double lStopAngle;
-//		lStopAngle = this.pref.getDouble("rtStopAngle", 0);
-//		
-//		if((this.isRotatingClockwise && _x > _width) || (!this.isRotatingClockwise && _x < _width)) {
-//			double lTranslator = -Math.abs(_width) + lStopAngle;
-//			return -1. /(1. + Math.pow(Math.E, -lAngleWidthScaler * (_x - lTranslator) ));
-//		}
-//		else {
-//			double lTranslator = -Math.abs(_width) + lStopAngle;
-//			return 1. /(1. + Math.pow(Math.E, lAngleWidthScaler * (_x + lTranslator) ));
-//		}
-//	}
 	
 	private void createPID() {
 		this.anglePIDSource = new PIDSource() {		

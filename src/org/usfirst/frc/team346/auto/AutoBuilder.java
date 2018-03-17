@@ -1,14 +1,12 @@
 package org.usfirst.frc.team346.auto;
 
-import org.usfirst.frc.team346.auto.plans.AutoPlan;
-
 public class AutoBuilder {
 
 	private AutoPlan gg, bg, gb, bb;
 	
 	public AutoBuilder(AutoPlan _GSwitchGScale, AutoPlan _BSwitchGScale, AutoPlan _GSwitchBScale, AutoPlan _BSwitchBScale) {
 		this.gg = _GSwitchGScale;
-		this.bg = _BSwitchBScale;
+		this.bg = _BSwitchGScale;
 		this.gb = _GSwitchBScale;
 		this.bb = _BSwitchBScale;
 	}

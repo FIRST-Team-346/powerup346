@@ -6,12 +6,12 @@ public class RobotMap {
 	
 //	COMPONENT PORTS-----------------------------------------------------------------
 	
-	public static final int kDriveLeftMasterPort = 1;			//27-01
-	public static final int kDriveLeftSlave1Port = 8;			//13-08
-	public static final int kDriveLeftSlave2Port = 5;			//07-05
-	public static final int kDriveRightMasterPort = 3;			//16-03
-	public static final int kDriveRightSlave1Port = 2;			//18-02
-	public static final int kDriveRightSlave2Port = 21;			//17-21
+	public static final int kDriveLeftMasterPort = 27;			//27-01
+	public static final int kDriveLeftSlave1Port = 13;			//13-08
+	public static final int kDriveLeftSlave2Port = 7;			//07-05
+	public static final int kDriveRightMasterPort = 16;			//16-03
+	public static final int kDriveRightSlave1Port = 11;			//11-02
+	public static final int kDriveRightSlave2Port = 4;			//04-21
 
 	public static final int kIntakeLeftPort = 24;			    //24-
 	public static final int kIntakeRightPort = 20;				//20-
@@ -110,6 +110,8 @@ public class RobotMap {
 	public static final double kRotateI = 0;								//0    - 0
 	public static final double kRotateD = 0.2;								//0.4  - 0.2
 	
+	public static final double kRotateThreadVelPercent = 0.325;
+	
 	public static final double kDriveFollowAngleErrorScaler = 0.0225;		//0.0225
 	public static final double kDriveFollowStopFeetHigh = 4.5;				//4.5  - 
 	public static final double kDriveFollowStopFeetLow = 1.2;				//1.2  - 
@@ -144,7 +146,7 @@ public class RobotMap {
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 175;
+	public static final int kTiltPosNeutral 	= 155;
 	public static final int kTiltPosRange 		= 350;
 	
 //	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
