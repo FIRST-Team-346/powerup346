@@ -146,8 +146,8 @@ public class RobotMap {
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 155;
-	public static final int kTiltPosRange 		= 350;
+	public static final int kTiltPosNeutral 	= 1315;
+	public static final int kTiltPosRange 		= 370;
 	
 //	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
 	public static final int kTiltPosSwitchBack 	= 60  + kTiltPosNeutral;
