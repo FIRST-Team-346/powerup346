@@ -132,17 +132,12 @@ public class ControlBoard {
 		}
 		
 		//updates tilter position mid-match slightly
-		if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleBack) && this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleHigh) && this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleLow)) {
-			this.sRobot.sTilter.increaseSlopConstantNu(10);
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff) && this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleLow)) {
+			this.sRobot.sTilter.increaseSlopConstantNu(-5);
 		}
-		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleBack) && this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleHigh) && this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleLow)) {
-			this.sRobot.sTilter.increaseSlopConstantNu(-10);
+		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff) && this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonTilterScaleHigh)) {
+			this.sRobot.sTilter.increaseSlopConstantNu(5);
 		}
-//		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
-//			if(this.sRobot.sTilter.getSetpointNu() == RobotMap.kTiltPosNeutral) {
-//				this.sRobot.sTilter.setSetpointNu(RobotMap.kTiltPosDrive);
-//			}
-//		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -187,10 +182,6 @@ public class ControlBoard {
 			else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleBack)) {
 				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuBack);
 				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuBack);
-			}
-			else if(this.mButtonBoard.getRawButton(RobotMap.kButton2)) {
-				this.sRobot.sShooter.setLeftSpeedSetpointNu(RobotMap.kShooterLeftSetpointNuLow - 1500);
-				this.sRobot.sShooter.setRightSpeedSetpointNu(RobotMap.kShooterRightSetpointNuLow - 1500);
 			}
 			else if(this.mButtonBoard.getRawButton(RobotMap.kButtonTilterSwitchBack)) {
 				this.sRobot.sShooter.disable();

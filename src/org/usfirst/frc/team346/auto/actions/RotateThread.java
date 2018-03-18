@@ -18,7 +18,7 @@ public class RotateThread implements Runnable {
 
 	private Drive sDrive;
 	private Gyro sGyro;
-	private Preferences pref;
+//	private Preferences pref;
 	
 	private PIDController anglePIDController;
 	private PIDSource anglePIDSource;
@@ -48,7 +48,7 @@ public class RotateThread implements Runnable {
 		this.rightEnabled = 1.;
 		
 		this.angleSetpoint = _angleDegrees;
-		this.velocitySetpointMag = Math.abs(_velocityPercent);						//TODO: velocity isn't used right now
+		this.velocitySetpointMag = Math.abs(_velocityPercent);
 
 		this.isRotatingClockwise = (this.angleSetpoint >= 0);
 		
@@ -63,7 +63,7 @@ public class RotateThread implements Runnable {
 		this.rightEnabled = (this.side == Hand.kRight) ? 1. : 0.65;
 		
 		this.angleSetpoint = _angleDegrees;
-		this.velocitySetpointMag = Math.abs(_velocityPercent);						//TODO: velocity isn't used right now
+		this.velocitySetpointMag = Math.abs(_velocityPercent);
 		
 		this.isRotatingClockwise = (this.angleSetpoint >= 0);
 		
@@ -76,16 +76,17 @@ public class RotateThread implements Runnable {
 		
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
-		this.pref = Preferences.getInstance();
+//		this.pref = Preferences.getInstance();
 		
 		this.timeOutSec = 3.;
 		this.updateFreq = 0.02;
-		this.thresholdAngleTimeOutSec = 0.125;
+		this.thresholdAngleTimeOutSec = 0.05;
 		this.thresholdVelTimeOutSec = 0.75;
-		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
+		this.thresholdVelocity = 0.01 * RobotMap.kDriveVelAverage;
 		this.thresholdAngle = 1.5;
 		
-		this.minVelocityPercent = 0.125;
+		this.minVelocityPercent = RobotMap.kRotateThreadVelMinPercent;
+//		this.minVelocityPercent = this.pref.getDouble("rtMin", 0);		//TODO
 		this.hasNeverEnteredAngleThreshold = true;
 	}
 	
@@ -279,7 +280,7 @@ public class RotateThread implements Runnable {
 		};
 		this.anglePIDController = new PIDController(RobotMap.kRotateP, RobotMap.kRotateI, RobotMap.kRotateD,
 													this.anglePIDSource, this.anglePIDOutput, this.updateFreq);
-		this.setAnglePID(this.pref.getDouble("rotateP", 0), this.pref.getDouble("rotateI", 0), this.pref.getDouble("rotateD", 0));	//TODO
+//		this.setAnglePID(this.pref.getDouble("rotateP", 0), this.pref.getDouble("rotateI", 0), this.pref.getDouble("rotateD", 0));	//TODO
 	}
 	
 	public void setAnglePID(double _P, double _I, double _D) {

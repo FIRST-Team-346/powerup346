@@ -27,38 +27,79 @@ public class ScalePBadScaleMaybeBadSwitch extends AutoPlan {
 		this.scaleLeft = _scaleLeft;
 		
 //		Lights.getInstance().setGreen();
-		this.badScaleMaybeBadSwitch();
+		if(this.startingOnLeft == 1) {
+			this.left();
+		}
+		else {
+			this.right();
+		}
 	}
 	
-	public void badScaleMaybeBadSwitch() {
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+	public void left() {
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
 		
-		super.driveUsingDF(25.5);
+		super.driveUsingDF(24);
 		
-//		this.sAction.setJustIntakeIn(-1);
-		super.rotateUsingRTAbsolute(-90 * this.startingOnLeft);
-//		this.sAction.setJustIntakeIn(0);
+		super.rotateUsingRT(-90 * this.startingOnLeft);
 		
-		super.driveUsingDF(-25);
+		super.driveUsingDF(-24);
 		
-//		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuLow, RobotMap.kShooterRightSetpointNuLow);
-		super.rotateUsingRTAbsolute(85 * this.startingOnLeft);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuLow-250, RobotMap.kShooterRightSetpointNuLow-250);
+		this.sAction.setJustIntakeIn(-0.2);
+		super.rotateUsingRT(75 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
 		
-		super.driveUsingDF(4);
-		this.waitTime(0.1);
-//		this.sAction.setOuttakePercentFront(1);
+		super.driveUsingDF(3);
+		this.sAction.setOuttakePercentFront(1);
+		this.waitTime(0.25);
+		this.sAction.setOuttakePercentFront(0);
+		this.sAction.setShooterPercentFront(0);
 		
 		super.driveUsingDF(-4);
-		super.rotateUsingRTAbsolute(-(85+55) * this.startingOnLeft);
+		super.rotateUsingRTAbsolute(-(75+55) * this.startingOnLeft);
 		
-//		this.sAction.setIntakeIn(1);
+		this.sAction.setIntakeIn(1);
 		super.driveUsingDF(4);
 		
 		if(this.scaleLeft == this.switchLeft) {
-//			this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
+			this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
 			super.waitTime(0.5);
-//			this.sAction.setOuttakePercentFront(1);
-//			this.sAction.setShooterPercentFront(0.35);
+			this.sAction.setOuttakePercentFront(1);
+			this.sAction.setShooterPercentFront(0.55);
+		}
+	}
+	
+	public void right() {
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
+		
+		super.driveUsingDF(25);
+		
+		super.rotateUsingRT(-90 * this.startingOnLeft);
+		
+		super.driveUsingDF(-24);
+		
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuLow-250, RobotMap.kShooterRightSetpointNuLow-250);
+		this.sAction.setJustIntakeIn(-0.2);
+		super.rotateUsingRT(75 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
+		
+		super.driveUsingDF(3.25);
+		this.sAction.setOuttakePercentFront(1);
+		this.waitTime(0.25);
+		this.sAction.setOuttakePercentFront(0);
+		this.sAction.setShooterPercentFront(0);
+		
+		super.driveUsingDF(-4);
+		super.rotateUsingRTAbsolute(-(75+55) * this.startingOnLeft);
+		
+		this.sAction.setIntakeIn(1);
+		super.driveUsingDF(4);
+		
+		if(this.scaleLeft == this.switchLeft) {
+			this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
+			super.waitTime(0.5);
+			this.sAction.setOuttakePercentFront(1);
+			this.sAction.setShooterPercentFront(0.55);
 		}
 	}
 	

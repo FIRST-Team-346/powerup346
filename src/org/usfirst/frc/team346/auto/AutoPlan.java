@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class AutoPlan {
 	
-	Preferences pref = Preferences.getInstance();
+//	Preferences pref = Preferences.getInstance();
 	double angleError = 0;
 	
 	public String getGoal() {
@@ -93,7 +93,7 @@ public class AutoPlan {
 		double mult = RobotMap.kRotateThreadVelPercent;
 //		double mult = this.pref.getDouble("rtMult", 0);
 		
-		RotateThread RT = new RotateThread(_side, _angleDegrees - this.angleError, mult);
+		RotateThread RT = new RotateThread(_side, _angleDegrees - this.angleError, mult*1.5);
 		new Thread(RT).start();
 		while (RT.isRotating()) {
 		}
@@ -131,7 +131,7 @@ public class AutoPlan {
 		double mult = RobotMap.kRotateThreadVelPercent;
 //		double mult = this.pref.getDouble("rtMult", 0);
 		
-		RotateThread RT = new RotateThread(_side, _angleDegrees - this.angleError, mult);
+		RotateThread RT = new RotateThread(_side, _angleDegrees - this.angleError, mult*1.5);
 		new Thread(RT).start();
 		while (RT.isRotating()) {
 		}

@@ -38,75 +38,70 @@ public class CenterSwitchVault extends AutoPlan {
 	
 	public void leftSwitch() {
 			//LEFT SWITCH
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
-		super.rotateUsingRTAbsolute(Hand.kLeft, -45);
+		super.rotateUsingRT(Hand.kLeft, -45);
 		
-//		this.sAction.setJustIntakeIn(-1);
+		this.sAction.setJustIntakeIn(-1);
 		super.driveUsingDF(-9);
-//		this.sAction.setJustIntakeIn(0);
+		this.sAction.setJustIntakeIn(0);
 		
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
-		super.rotateUsingRTAbsolute(45);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		super.rotateUsingRT(45);
 		
 		super.driveUsingDF(-7.0);
-//		this.sAction.shootToSwitchBack();
+		this.sAction.setOuttakePercentFront(-1);
+		super.waitTime(0.2);
+		this.sAction.setOuttakePercentFront(0);
 		
 		
 			//VAULT
 		super.driveUsingDF(7);
 		
-		super.rotateUsingRTAbsolute(-90);
+		super.rotateUsingRT(90);
 		
-		super.driveUsingDF(10);
+		super.driveUsingDF(-6);
 		
-		super.rotateUsingRTAbsolute(-90);
+		super.rotateUsingRT(90);
 		
 		this.sAction.setIntakeIn(1);
-		super.driveUsingDF(5);
+		super.driveUsingDF(3);
 		this.sAction.setIntakeIn(0);
-		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
-		super.driveUsingDF(-10);
-		this.sAction.setOuttakePercentFront(-1);
 	}
 	
 	public void rightSwitch() {
 			//RIGHT SWITCH
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
-		super.rotateUsingRTAbsolute(Hand.kRight, 45);
-		
-		super.driveUsingDF(-7.5);
-		
-//		this.sAction.setJustIntakeIn(-1);
-		
-		super.rotateUsingRTAbsolute(-45);
-		
-//		this.sAction.setJustIntakeIn(0);
-		
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		super.rotateUsingRT(Hand.kRight, 45);
 		
 		super.driveUsingDF(-7.5);
 		
-//		this.sAction.shootToSwitchBack();
+		this.sAction.setJustIntakeIn(-1);
+		
+		super.rotateUsingRT(-45);
+		
+		this.sAction.setJustIntakeIn(0);
+		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		
+		super.driveUsingDF(-7.5);
+		this.sAction.setOuttakePercentFront(-1);
+		super.waitTime(0.2);
+		this.sAction.setOuttakePercentFront(0);
 		
 		
 			//VAULT
 		super.driveUsingDF(7);
 		
-		super.rotateUsingRTAbsolute(90);
+		super.rotateUsingRT(-90);
 		
-		super.driveUsingDF(11);
+		super.driveUsingDF(-6);
 		
-		super.rotateUsingRTAbsolute(90);
+		super.rotateUsingRT(-90);
 		
 		this.sAction.setIntakeIn(1);
-		super.driveUsingDF(5);
+		super.driveUsingDF(3);
 		this.sAction.setIntakeIn(0);
-		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
-		super.driveUsingDF(-10);
-		this.sAction.setOuttakePercentFront(-1);
 	}
 }

@@ -73,7 +73,7 @@ public class RobotMap {
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
-	public static final double kDriveLeftVelMax = 2000.;
+	public static final double kDriveLeftVelMax = 1800.;
 
 	//leftvelP was 0.75 on left side scale front
 	public static final double kDriveVelLeftP = 0.70;
@@ -81,14 +81,14 @@ public class RobotMap {
 	public static final double kDriveVelLeftD = 0;
 	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
 		
-	public static final double kDriveRightVelMax = 1900.;
+	public static final double kDriveRightVelMax = 1800.;
 
 	public static final double kDriveVelRightP = 0.65;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
 	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;
 	
-	public static final double kDriveVelAverage = 1950.;
+	public static final double kDriveVelAverage = 1800.;
 	
 	public static final double kDrivePosLeftP = 0;
 	public static final double kDrivePosLeftI = 0;
@@ -106,15 +106,16 @@ public class RobotMap {
 	public static final double kDriveFollowD = 0;
 	public static final double kDriveFollowF = 0.5;
 	
-	public static final double kRotateP = 0.045;							//0.05 - 0.045
-	public static final double kRotateI = 0;								//0    - 0
-	public static final double kRotateD = 0.2;								//0.4  - 0.2
+	public static final double kRotateP = 0.045;							//0.045 - 0.045
+	public static final double kRotateI = 0;								//0     - 0
+	public static final double kRotateD = 0.4;								//0.4   - 0.2
 	
-	public static final double kRotateThreadVelPercent = 0.325;
+	public static final double kRotateThreadVelPercent = 0.325;				//0.2   - 0.325
+	public static final double kRotateThreadVelMinPercent = 0.05;			//0.05  - 0.125
 	
 	public static final double kDriveFollowAngleErrorScaler = 0.0225;		//0.0225
-	public static final double kDriveFollowStopFeetHigh = 4.5;				//4.5  - 
-	public static final double kDriveFollowStopFeetLow = 1.2;				//1.2  - 
+	public static final double kDriveFollowStopFeetHigh = 4.5;				//4.5   - 
+	public static final double kDriveFollowStopFeetLow = 1.2;				//1.2   - 
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
 	public static final double kDriveFollowAccelSetpoint = 1000.;
@@ -135,8 +136,8 @@ public class RobotMap {
 	public static final double kShooterRightD = 20.0;
 	public static final double kShooterRightF = 0.041;
 	
-	public static final int kShooterLeftSetpointNuLow = 11000;		//11650
-	public static final int kShooterRightSetpointNuLow = 11000;		//11500
+	public static final int kShooterLeftSetpointNuLow = 12000;		//11650
+	public static final int kShooterRightSetpointNuLow = 12000;		//11500
 	public static final int kShooterLeftSetpointNuHigh = 13000;		//14750
 	public static final int kShooterRightSetpointNuHigh = 13000;	//14600
 	public static final int kShooterLeftSetpointNuBack = 11700;		//14750
@@ -146,8 +147,8 @@ public class RobotMap {
 	
 //	TILTER SUBSYSTEM VALUES---------------------------------------------------------
 	
-	public static final int kTiltPosNeutral 	= 1315;
-	public static final int kTiltPosRange 		= 370;
+	public static final int kTiltPosNeutral 	= 287;
+	public static final int kTiltPosRange 		= 373;
 	
 //	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
 	public static final int kTiltPosSwitchBack 	= 60  + kTiltPosNeutral;

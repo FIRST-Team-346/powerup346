@@ -9,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class SwitchPBadSwitchMaybeBadScale extends AutoPlan {
+public class SwitchPBadSwitchTwice extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -31,34 +31,33 @@ public class SwitchPBadSwitchMaybeBadScale extends AutoPlan {
 	}
 	
 	public void badSwitchMaybeBadScale() {
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
-		super.driveUsingDF(25.5);
+		super.driveUsingDF(24);
 		
-		super.rotateUsingRTAbsolute(-90 * this.startingOnLeft);
+		super.rotateUsingRT(-90 * this.startingOnLeft);
 		
-		super.driveUsingDF(-21.5);
+		super.driveUsingDF(-21);
 		
-		super.rotateUsingRTAbsolute(-90 * this.startingOnLeft);
+		super.rotateUsingRT(-90 * this.startingOnLeft);
 		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
 		super.driveUsingDF(3);
-//		this.sAction.setOuttakePercentFront(0.5);
-//		this.sAction.setShooterPercentFront(0.35);
-		super.waitTime(0.2);
+		this.sAction.setOuttakePercentFront(1);
+		this.sAction.setShooterPercentFront(0.4);
+		super.waitTime(0.3);
 		
-//		this.sAction.setJustIntakeIn(-1);
+		this.sAction.setJustIntakeIn(-0.5);
 		super.driveUsingDF(-3);
 		
-//		this.sAction.setIntakeIn(1);
-		super.driveUsingDF(4);
+		this.sAction.setIntakeIn(1);
+		super.waitTime(0.2);
+		super.driveUsingDF(3.5);
 		
-		if(this.scaleLeft == this.switchLeft) {
-//			this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleBack);
-//			this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuBack, RobotMap.kShooterRightSetpointNuBack);
-			super.driveUsingDF(-5.5);
-			super.waitTime(0.1);
-//			this.sAction.setOuttakePercentFront(1);
-		}
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
+		super.waitTime(0.3);
+		this.sAction.setOuttakePercentFront(1);
+		this.sAction.setShooterPercentFront(0.4);
 	}
 	
 }

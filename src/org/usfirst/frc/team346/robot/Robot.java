@@ -98,7 +98,7 @@ public class Robot extends IterativeRobot {
 		
 		this.autoChooser = new SendableChooser<AutoBuilder>();
 		this.autoChooser.addDefault("CenterSwitchVault", new AutoBuilder( new CenterSwitchVault() ));
-		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchThenGoodScale(), new SwitchPBadSwitchMaybeBadScale(), new SwitchPGoodSwitchThenCross(), new SwitchPBadSwitchMaybeBadScale() ));
+		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchTwice() ));
 		this.autoChooser.addObject("SideScalePriority", new AutoBuilder( new ScalePGoodScaleTwice(), new ScalePGoodScaleTwice(), new ScalePBadScaleMaybeBadSwitch(), new ScalePBadScaleMaybeBadSwitch() ));
 		this.autoChooser.addObject("Baseline", new AutoBuilder( new CrossBaseline() ));
 		this.autoChooser.addObject("Nothing", new AutoBuilder( new Nothing() ));
@@ -119,6 +119,12 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 		this.publishData();
+		if(DriverStation.getInstance().getMatchTime() >= 0) {
+			this.sLights.setGreen();
+		}
+		else {
+			this.sLights.setRed();
+		}
 	}
 
 	public void teleopInit() {

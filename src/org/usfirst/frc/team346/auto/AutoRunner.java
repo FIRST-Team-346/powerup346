@@ -1,5 +1,7 @@
 package org.usfirst.frc.team346.auto;
 
+import org.usfirst.frc.team346.subsystems.Gyro;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoRunner {
@@ -26,6 +28,7 @@ public class AutoRunner {
 		System.out.println("Auto Runner| booting up");
 		this.receiveLayout();
 		try {
+			Gyro.getInstance().calibrate();
 			this.perform();
 		}
 		catch(AutoTerminatedException e) {

@@ -24,7 +24,6 @@ public class Test extends AutoPlan{
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
-		this.gyro.calibrate();
 //		super.driveUsingDF(this.pref.getDouble("dfDistance", 0));
 		
 		super.rotateUsingRT(this.pref.getDouble("rtAngle", 0));
