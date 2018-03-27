@@ -28,7 +28,7 @@ public class AutoRunner {
 		System.out.println("Auto Runner| booting up");
 		this.receiveLayout();
 		try {
-			Gyro.getInstance().calibrate();
+//			Gyro.getInstance().calibrate();
 			this.perform();
 		}
 		catch(AutoTerminatedException e) {

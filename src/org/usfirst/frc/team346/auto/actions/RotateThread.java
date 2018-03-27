@@ -161,8 +161,8 @@ public class RotateThread implements Runnable {
 	
 	private void publishValues() {
 		if(System.currentTimeMillis() - this.timePrevPublish > 500) {
-			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " angleC:" + this.angleCurr + " angleR:" + this.angleRemaining);
-			System.out.println("leftV:" + this.velocitySetLeft + " rightV:" + this.velocitySetRight + " output:" + this.outputPublish);
+//			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " angleC:" + this.angleCurr + " angleR:" + this.angleRemaining);
+//			System.out.println("leftV:" + this.velocitySetLeft + " rightV:" + this.velocitySetRight + " output:" + this.outputPublish);
 			
 			this.timePrevPublish = System.currentTimeMillis();
 		}

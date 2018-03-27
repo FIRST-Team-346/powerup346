@@ -37,23 +37,29 @@ public class SwitchPGoodSwitchThenCrossIntake extends AutoPlan {
 		this.sAction.setJustIntakeIn(0);
 		super.rotateUsingRT(90 * this.switchLeft);
 		
+		super.driveUsingDF(2);
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.55);
+		this.sAction.setShooterPercentFront(0.35);
 		super.waitTime(0.25);
 		this.sAction.setOuttakePercentFront(0);
 		this.sAction.setShooterPercentFront(0);
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
-		super.waitTime(0.25);
+
+		if(this.startingOnLeft == 1) {
+			super.rotateUsingRT(Hand.kRight, 90);
+		}
+		else {
+			super.rotateUsingRT(Hand.kLeft, -90);
+		}
 		
-		super.rotateUsingRT(-90 * this.startingOnLeft);
+		super.driveUsingDF(-8);
 		
-		super.driveUsingDF(8);
-		
-		super.rotateUsingRT(-90 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(-1);
+		super.rotateUsingRT(90 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
 		
 		super.driveUsingDF(-21);
 		
-		this.sAction.setJustIntakeIn(-0.5);
 		super.rotateUsingRT(-90 * this.startingOnLeft);
 		this.sAction.setIntakeIn(0.75);
 		super.waitTime(0.5);

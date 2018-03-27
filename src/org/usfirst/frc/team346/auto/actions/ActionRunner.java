@@ -17,7 +17,7 @@ public class ActionRunner {
 	private Intake mIntake;
 	private Loader mLoader;
 	private Outtake mOuttake;
-	private Preferences mPref = Preferences.getInstance();
+//	private Preferences mPref = Preferences.getInstance();
 	
 	public ActionRunner() {
 		this.mTilter = Tilter.getInstance();

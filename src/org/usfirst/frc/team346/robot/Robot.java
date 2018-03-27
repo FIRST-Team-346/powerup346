@@ -69,7 +69,6 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		this.sDrive = Drive.getInstance();
 		this.sGyro = Gyro.getInstance();
-		this.sGyro.calibrate();
 		
 		this.sIntake = Intake.getInstance();
 		this.sOuttake = Outtake.getInstance();
@@ -97,9 +96,15 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("AutoStartingOnLeft", this.autoStartingOnLeft);
 		
 		this.autoChooser = new SendableChooser<AutoBuilder>();
-		this.autoChooser.addDefault("CenterSwitchVault", new AutoBuilder( new CenterSwitchVault() ));
-		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchTwice() ));
-		this.autoChooser.addObject("SideScalePriority", new AutoBuilder( new ScalePGoodScaleTwice(), new ScalePGoodScaleTwice(), new ScalePBadScaleMaybeBadSwitch(), new ScalePBadScaleMaybeBadSwitch() ));
+		this.autoChooser.addDefault("CenterSwitch", new AutoBuilder( new CenterSwitch() ));
+		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice() ));
+		this.autoChooser.addObject("SideScalePriority", new AutoBuilder( new ScalePGoodScaleTwice(), new ScalePGoodScaleTwice(), new ScalePBadScale(), new ScalePBadScale() ));
+		this.autoChooser.addObject("SideSwitch+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchTwice() ));
+		this.autoChooser.addObject("SideScale+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new ScalePBadScale(), new ScalePBadScale() ));
+		this.autoChooser.addObject("DoublesExceptBB=BSc", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new ScalePBadScale() ));
+		this.autoChooser.addObject("SideSwitchNoFoul", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchNoFoul(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchNoFoul() ));
+		this.autoChooser.addObject("DoubleNoCross", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new CrossBaseline() ));
+		this.autoChooser.addObject("CloseSwitch,ElseScale", new AutoBuilder( new SwitchPGoodSwitchTwice(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new ScalePBadScale() ));
 		this.autoChooser.addObject("Baseline", new AutoBuilder( new CrossBaseline() ));
 		this.autoChooser.addObject("Nothing", new AutoBuilder( new Nothing() ));
 		this.autoChooser.addObject("Test", new AutoBuilder( new Test() ));
@@ -111,6 +116,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		System.out.println("Autonomous Init| begun");
 		this.zeroDevices();
+		this.sLights.setGreen();
 		
 		this.sAutoRunner.run((boolean) this.autoStartingOnLeft.getSelected(), (AutoBuilder) this.autoChooser.getSelected());
 		
@@ -119,12 +125,6 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 		this.publishData();
-		if(DriverStation.getInstance().getMatchTime() >= 0) {
-			this.sLights.setGreen();
-		}
-		else {
-			this.sLights.setRed();
-		}
 	}
 
 	public void teleopInit() {
@@ -169,7 +169,7 @@ public class Robot extends IterativeRobot {
 //				this.sOuttake.publishData();
 //				this.sLoader.publishData();
 				this.sTilter.publishData();
-//				this.sShooter.publishData();
+				this.sShooter.publishData();
 //				this.sClimber.publishData();
 			}
 		}

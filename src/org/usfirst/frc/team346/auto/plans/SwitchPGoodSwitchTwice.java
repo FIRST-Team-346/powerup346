@@ -37,31 +37,36 @@ public class SwitchPGoodSwitchTwice extends AutoPlan {
 		this.sAction.setJustIntakeIn(0);
 		super.rotateUsingRT(90 * this.startingOnLeft);
 		
+		super.driveUsingDF(3);
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.55);
-		super.waitTime(0.25);
+		this.sAction.setShooterPercentFront(0.35);
+		super.waitTime(0.2);
 		this.sAction.setOuttakePercentFront(0);
 		this.sAction.setShooterPercentFront(0);
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
-		super.waitTime(0.25);
 		
-		super.rotateUsingRT(90 * this.startingOnLeft);
+		if(this.startingOnLeft == 1) {
+			super.rotateUsingRT(Hand.kRight, 90);
+		}
+		else {
+			super.rotateUsingRT(Hand.kLeft, -90);
+		}
 		
-		this.sAction.setJustIntakeIn(-0.5);
+		this.sAction.setJustIntakeIn(-1);
 		super.driveUsingDF(-12);
 		this.sAction.setJustIntakeIn(0);
 		
-		super.rotateUsingRT(-30 * this.startingOnLeft);
+		super.rotateUsingRT(-37 * this.startingOnLeft);
 		
-		this.sAction.setIntakeIn(0.75);
-		super.driveUsingDF(6.5);
+		this.sAction.setIntakeIn(1);
+		super.driveUsingDF(7);
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosNeutral);
-		super.waitTime(0.25);
+		super.waitTime(0.2);
 		this.sAction.setIntakeIn(0);
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
 		super.waitTime(0.75);
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.55);
+		this.sAction.setShooterPercentFront(0.5);
 	}
 }

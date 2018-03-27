@@ -9,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class CenterSwitchVault extends AutoPlan {
+public class CenterSwitch extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -60,13 +60,13 @@ public class CenterSwitchVault extends AutoPlan {
 		
 		super.rotateUsingRT(90);
 		
-		super.driveUsingDF(-6);
-		
-		super.rotateUsingRT(90);
-		
-		this.sAction.setIntakeIn(1);
-		super.driveUsingDF(3);
-		this.sAction.setIntakeIn(0);
+//		super.driveUsingDF(-6);
+//		
+//		super.rotateUsingRT(90);
+//		
+//		this.sAction.setIntakeIn(1);
+//		super.driveUsingDF(3);
+//		this.sAction.setIntakeIn(0);
 	}
 	
 	public void rightSwitch() {
@@ -96,12 +96,12 @@ public class CenterSwitchVault extends AutoPlan {
 		
 		super.rotateUsingRT(-90);
 		
-		super.driveUsingDF(-6);
-		
-		super.rotateUsingRT(-90);
-		
-		this.sAction.setIntakeIn(1);
-		super.driveUsingDF(3);
-		this.sAction.setIntakeIn(0);
+//		super.driveUsingDF(-6);
+//		
+//		super.rotateUsingRT(-90);
+//		
+//		this.sAction.setIntakeIn(1);
+//		super.driveUsingDF(3);
+//		this.sAction.setIntakeIn(0);
 	}
 }

@@ -6,7 +6,7 @@ import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
 
 public class CrossBaseline extends AutoPlan {
-	ActionRunner action;
+	ActionRunner action = new ActionRunner();
 	
 	public String getGoal() {
 		return "cross baseline using drivefollow";

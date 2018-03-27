@@ -9,7 +9,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class SwitchPBadSwitchTwice extends AutoPlan {
+public class SwitchPBadSwitchNoFoul extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -27,37 +27,27 @@ public class SwitchPBadSwitchTwice extends AutoPlan {
 		this.scaleLeft = _scaleLeft;
 		
 //		Lights.getInstance().setGreen();
-		this.badSwitchMaybeBadScale();
+		this.badSwitchNoFoul();
 	}
 	
-	public void badSwitchMaybeBadScale() {
+	public void badSwitchNoFoul() {
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		
 		super.driveUsingDF(24);
 		
-		super.rotateUsingRT(-90 * this.startingOnLeft);
+		super.rotateUsingRT(90 * this.startingOnLeft);
 		
-		super.driveUsingDF(-21);
-		
-		super.rotateUsingRT(-90 * this.startingOnLeft);
-		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
-		super.driveUsingDF(2);
-		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.35);
-		super.waitTime(0.3);
+		super.driveUsingDF(25);
 		
 		this.sAction.setJustIntakeIn(-1);
-		super.driveUsingDF(-3);
+		super.rotateUsingRT(-45 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
 		
-		this.sAction.setIntakeIn(1);
-		super.waitTime(0.2);
-		super.driveUsingDF(3.5);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
+		super.driveUsingDF(-4);
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault);
 		super.waitTime(0.3);
-		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.35);
+		this.sAction.setOuttakePercentFront(-1);
 	}
 	
 }
