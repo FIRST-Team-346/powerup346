@@ -1,5 +1,10 @@
 package org.usfirst.frc.team346.robot;
 
+/*
+ * PLEASE PLEASE PLEASE use this class. It is so good to have a localized place
+ * for all important variables. 
+ */
+
 public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
