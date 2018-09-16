@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+ * This was our old method of rotating in auto. I pretty much rewrote it
+ * entirely and made it better with RotateThread, but sometimes we didn't trust
+ * RotateThread, so we would fall on the backup of Rotate.
+ */
 public class Rotate {
 
 	private double angleSetpoint, percentSpeed, timeOutTime, tolerance, updateFreq;

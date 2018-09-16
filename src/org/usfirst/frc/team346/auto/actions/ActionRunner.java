@@ -10,6 +10,12 @@ import org.usfirst.frc.team346.subsystems.Tilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 
+/*
+ * This is the class where we added a bunch of miscellaneous actions
+ * that were getting used between plans, but that weren't universal
+ * like the ones in AutoPlan. Stuff that had to set raw values to the
+ * subsystems was put in here with simpler methods for quick repetition.
+ */
 public class ActionRunner {
 	
 	private Tilter mTilter;

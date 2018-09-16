@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
+/*
+ * This was our old method of driving straight in auto. I pretty much rewrote it
+ * entirely and made it better with DriveFollow, but sometimes we didn't trust
+ * DriveFollow, so we would fall on the backup of DriveStraight.
+ */
 public class DriveStraight{
 
 	private double distance,angleSetpoint,percentSpeed,timeOutTime,tolerance;
