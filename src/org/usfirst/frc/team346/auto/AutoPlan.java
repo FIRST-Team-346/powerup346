@@ -12,6 +12,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
+/*
+ * This class is the superclass of all our auto plans (they all extend this).
+ * That means that they inherit all the methods here. Since there are things
+ * that all autos will be doing (driving, rotating, waiting), we make those
+ * methods here, then all autos can just do super.driveUsingDF(), etc.
+ * The *specific* methods here are not that useful to next season, but the
+ * concept of inheriting all the common methods here is useful.
+ */
 public class AutoPlan {
 	
 //	Preferences pref = Preferences.getInstance();
@@ -21,10 +29,20 @@ public class AutoPlan {
 		return "default goal";
 	}
 	
+	/*
+	 * When AutoRunner tries to run the auto plan, if that auto plan's run() method is
+	 * written wrong (usually taking the wrong parameters or you just forgot to make it),
+	 * then it will run this default plan and you know exactly what is wrong.
+	 */
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
 		System.out.println("default run; check that your run takes the layout parameters");
 	}
 	
+	/*
+	 * Just drive forward a certain distance. This year, I made the auto driving method
+	 * it's own thread, so that other stuff could run at the same time.
+	 * I don't really recommend that unless you read a lot on how to do threads...
+	 */
 	public void driveUsingDF(double _distanceFt) {
 		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
 			return;
@@ -66,6 +84,9 @@ public class AutoPlan {
 		rt.rotateSingleSide(_side, _angleDegrees, 0.5, _timeOutTime, 1.5);
 	}
 	
+	/*
+	 * Just rotate a certain number of degrees. I did the thread thing here, too.
+	 */
 	public void rotateUsingRT(double _angleDegrees) {
 		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
 			return;
@@ -98,6 +119,9 @@ public class AutoPlan {
 		System.out.println("RT| rotating complete, final angle:" + (_angleDegrees + this.angleError));
 	}
 	
+	/*
+	 * This one rotates only one side at a time, instead of pivoting in place.
+	 */
 	public void rotateUsingRT(Hand _side, double _angleDegrees) {
 		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
 			return;
@@ -115,6 +139,16 @@ public class AutoPlan {
 		System.out.println("RT| rotating complete, final angle:" + (_angleDegrees + this.angleError));
 	}
 	
+	/*
+	 * The other methods rotate based on where the robot currently is:
+	 * if the robot was at 89 degrees, but supposed to be at 90, then
+	 * we told it to rotate 90, it would aim for 89+90=179 instead of 180.
+	 * Therefore the other ones are relative rotations. These "absolute"
+	 * methods would require that you've kept track of where the robot is
+	 * "supposed to be", then use that to determine the next turn. It's typically
+	 * more complicated than it's worth, and it's hard to switch between relative and absolute,
+	 * so I would recommend just using relative drives and rotates as much as possible.
+	 */
 	public void rotateUsingRTAbsolute(double _angleDegrees) {
 		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
 			return;
