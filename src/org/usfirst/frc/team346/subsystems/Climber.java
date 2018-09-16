@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber implements Subsystem {
 
+	
+	
 	private TalonSRX mWinch;
 	private Servo mServo;
 	private final double mOnValue = 1.0;
@@ -33,6 +35,11 @@ public class Climber implements Subsystem {
 		this.mWinch.overrideSoftLimitsEnable(true);
 	}
 	
+	/*
+	 * So this is the only time i've ever used a servo but they're super easy. They're just a small
+	 * motor, this one can only rotate about 180 degree. You just set them 0 or 1 which sets it's position.
+	 * They're wired directly into the roborio through PWM. 
+	 */
 	private void initServo() {
 		this.mServo = new Servo(0);
 	}
@@ -45,7 +52,9 @@ public class Climber implements Subsystem {
 		this.mWinch.set(ControlMode.PercentOutput, 0);
 	}
 	
+	
 	public void raiseHook(boolean _raise) {
+		//If you guys dont know the ? operator look it up it's useful and simple
 		this.mServo.set(_raise ? 1 : 0);
 	}
 

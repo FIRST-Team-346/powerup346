@@ -42,11 +42,22 @@ public class Tilter implements Subsystem {
 		this.mTilter.setInverted(true);
 		this.mTilter.setSensorPhase(true);
 		
+		/*
+		 * We use limit switches to turn off the motor when they are triggered. We have a limit switch at both ends of
+		 * the tilter rotation so if our pids are a bit off it doesnt rip itself in half trying to move. This just ties
+		 * them into the talon. They have to be wired correctly into the breakout board and it handles the turn off of
+		 * talon automatically. You just have to instantiate them. 
+		 */
 		this.mTilter.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 		this.mTilter.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed, 0);
 
 		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		
+		/*
+		 * Motion magic is a alightly fancier version of pid that is built into the talon.
+		 * It is optimal for moving things like the tilter. There's lots of documentation on it
+		 * and its pretty easy to set up. 
+		 */
 		this.setMotionMagicAccelerationNu(RobotMap.kTilterDesiredAccelerationNu);
 		this.setMotionMagicVelocityNu(RobotMap.kTilterDesiredVelocityNu);
 	}
@@ -64,6 +75,7 @@ public class Tilter implements Subsystem {
 	
 	/**Sets the Tilter motor to a voltage percent.
 	 * @param _percent percent voltage**/
+	//We have this deprecated because it should never be used. We only used it for testing. 
 	@Deprecated
 	public void setPercent(double _percent) {
 		this.mTilter.set(ControlMode.PercentOutput, _percent);
