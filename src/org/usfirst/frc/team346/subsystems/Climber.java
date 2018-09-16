@@ -40,7 +40,11 @@ public class Climber implements Subsystem {
 	/*
 	 * So this is the only time i've ever used a servo but they're super easy. They're just a small
 	 * motor, this one can only rotate about 180 degree. You just set them 0 or 1 which sets it's position.
-	 * They're wired directly into the roborio through PWM. 
+	 * They're wired directly into the roborio through PWM.
+	 * 
+	 * In this scenario, we had to have two options: servo on left, and servo on right.
+	 *  since it could be moved on the robot. We had to account for this a bit and make
+	 *  it spin clockwise on the left but counterclockwise on the right, for example.
 	 */
 	private void initServo() {
 		if(this.mServoOnFrontLeft) {
@@ -60,8 +64,18 @@ public class Climber implements Subsystem {
 	}
 	
 	public void raiseHook(boolean _raise) {
-		//If you guys dont know the ? operator look it up it's useful and simple
 		if(_raise) {
+			/*
+			 * If you guys don't know the ? operator, look it up. It's useful and simple.
+			 * this.mServoOnFrontLeft ? 1 : 0 is the same as:
+			 * 
+			 * if(this.mServoOnFrontLeft) {
+			 *     this.mServo.set(1);
+			 * }
+			 * else {
+			 *     this.mServo.set(0);
+			 * }
+			 */
 			this.mServo.set(this.mServoOnFrontLeft ? 1 : 0);
 		}
 		else {

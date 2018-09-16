@@ -54,9 +54,9 @@ public class Tilter implements Subsystem {
 		this.setPID(RobotMap.kTilterP, RobotMap.kTilterI, RobotMap.kTilterD);
 		
 		/*
-		 * Motion magic is a alightly fancier version of pid that is built into the talon.
-		 * It is optimal for moving things like the tilter. There's lots of documentation on it
-		 * and its pretty easy to set up. 
+		 * Motion magic is a slightly fancier version of pid that is built into the talon.
+		 * It is optimal for moving things to a position, like the tilter. There's lots of
+		 * documentation on it and its pretty easy to set up.
 		 */
 		this.setMotionMagicAccelerationNu(RobotMap.kTilterDesiredAccelerationNu);
 		this.setMotionMagicVelocityNu(RobotMap.kTilterDesiredVelocityNu);

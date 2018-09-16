@@ -31,7 +31,11 @@ public class Drive implements Subsystem {
 	/*
 	 * So enums are a very useful way to optimize your method input. Try just googling
 	 * what they are and how to use them. Here each variable of the enum makes it so the 
-	 * drive() method controls the drive train in a different way. 
+	 * drive() method controls the drive train in a different way.
+	 * 
+	 * It's essentially like having an int variable "mode", and setting the drive train
+	 *  to "mode 1", "mode 2", etc., but instead of non-descriptive names like 1 and 2,
+	 *  you can use actual names like PERCENT and VELOCITY.
 	 */
 	public enum DriveMode {
 		PERCENT,
@@ -40,7 +44,13 @@ public class Drive implements Subsystem {
 		POSITION;
 	}
 	
-	//Look up singleton classes. That's what this getInstance() things is. 
+	/* This getInstance() things is a singleton.
+	 * We use singletons for the subsystems to prevent something from accidentally
+	 *  creating two of the same subsystem. We don't want the "auto drivetrain" and the
+	 *  "teleop drivetrain" to be two systems that could potentially interfere with
+	 *  each other. Instead, singletons make it impossible to create two of the same system,
+	 *  and any time you need to use the system, you request the already existing instance.
+	 */
 	private static Drive sDriveInstance = new Drive();
 	public static Drive getInstance() {
 		return sDriveInstance;
@@ -52,7 +62,11 @@ public class Drive implements Subsystem {
 	 * We just have the constructor run all the inits.
 	 */
 
-	//Every object will have a constructor. This is not a method. 
+	/*Every object will have a constructor. This is not a method.
+	 * It is protected because it is a singleton. The actual Drive object is created
+	 *  up there at line 54. That one Drive object is requested elsewhere by the
+	 *  public getInstance() method.
+	 */
 	protected Drive() {
 		this.initTalons();
 		this.initEncoders();
@@ -150,7 +164,7 @@ public class Drive implements Subsystem {
 	/*
 	 * You may notice we have seperate PIDs. Position mode and speed mode need different pids to get
 	 * good results but you can only have one set of values stored. Make sure to set the pids to the
-	 * desired drive method before running that drive methods
+	 * desired drive method before running that drive methods.
 	 */
 	public void setSpeedPIDs() {
 		this.mDriveLeftMaster.config_kP(PID_VEL, RobotMap.kDriveVelLeftP, 0);
@@ -205,12 +219,15 @@ public class Drive implements Subsystem {
 	}
 	
 	/*
-	 * So bickeal requested an alternate drive method like halfway through the build season so
+	 * So Bichael requested an alternate drive method like halfway through the build season so
 	 * the code for it is slightly a mess. Because it does not fit the standard left right input
-	 * that all the other drive methods do we put it in a separate method. Ask micheal about his 
+	 * that all the other drive methods do we put it in a separate method. Ask Bichael about his 
 	 * special drive method. This is how it works
 	 */
 	public void driveThrottleTurn(double _throttle, double _turn) {
+		//Math.abs([joystick input]) <= 0.1 is a very important deadzone trick to use if you
+		// find that the robot is drifting when the joysticks are neutral. If it is within
+		// [-0.1, 0.1] then the value is 0, otherwise it is the normal value.
 		this.mTurn = (Math.abs(_turn) <= 0.1)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
 		_throttle = (Math.abs(_throttle) <= 0.12)? 0 : _throttle;
 		

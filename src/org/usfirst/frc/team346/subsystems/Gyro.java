@@ -42,7 +42,7 @@ public class Gyro implements Subsystem {
 		this.mGyroscope.calibrate();
 	}
 	
-	/**Prints gyroscope angle periodically, 0.5s to avoid greater drift.**/
+	/**Prints gyroscope angle periodically, 0.25s to avoid greater drift.**/
 	public void publishData() {
 		if(System.currentTimeMillis() - this.mLastGyroTime >= 250) {
 			SmartDashboard.putNumber("Gyroscope Angle", this.getAngle());
