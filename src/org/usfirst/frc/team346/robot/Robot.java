@@ -59,6 +59,14 @@ public class Robot extends IterativeRobot {
 	public Climber sClimber;
 	public Lights sLights;
 	
+	/*
+	 * SendableChoosers are option select boxes on the SmartDashboard that allow
+	 *  you to change certain variables without having to resend code. These are
+	 *  very useful for changing autos in an instant when your teammates inevitably
+	 *  lie to you about what auto they're running and don't correct themselves until
+	 *  a minute before the match. JUST MAKE SURE TO TEST THE SENDABLECHOOSER at
+	 *  school and on the practice field at competitions.
+	 */
 	public SendableChooser<AutoBuilder> autoChooser;
 	public SendableChooser<Boolean> autoStartingOnLeft;
 	
@@ -113,19 +121,20 @@ public class Robot extends IterativeRobot {
 		this.sAutoRunner = new AutoRunner();
 		
 		/*
-		 * These add a sendable chooser to the smartdashboard.
-		 * This allows you to choose things from the smartdashboard
-		 * in this case it is used for autos.
-		 * This is a bit messy because of the variety of autos this year
-		 * and the need to switch them out depending on our strategy.
+		 * The steps of a SendableChooser are instantiating it (up there ^),
+		 *  initializing it (here v), adding a default option, adding
+		 *  all your other options. Then you need to use SmartDashboard.putData
+		 *  to actually make it show up on SmartDashboard.
 		 */
 		this.autoStartingOnLeft = new SendableChooser<Boolean>();
 		this.autoStartingOnLeft.addDefault("Left", true);
 		this.autoStartingOnLeft.addObject("Right", false);
 		SmartDashboard.putData("AutoStartingOnLeft", this.autoStartingOnLeft);
 		
+		//This is a method I made to clean up the autos *a little bit*.
 		this.initAutoCustomBuilder();
 		
+		//Tons of options for what autos to run. These are just some quick presets.
 		this.autoChooser = new SendableChooser<AutoBuilder>();
 		this.autoChooser.addDefault("2-Scale/Conduit", new AutoBuilder( new GoodScaleTwice(), new GoodScaleTwice(), new CrossConduit(), new CrossConduit() ));
 		this.autoChooser.addObject("CenterSwitch", new AutoBuilder( new CenterSwitch() ));
@@ -155,6 +164,11 @@ public class Robot extends IterativeRobot {
 		this.sGyro.calibrate();
 	}
 	
+	/*
+	 * This method is used for a custom auto builder. If we don't have a preset
+	 *  that has what you want, you can select the "Custom" auto to run, then
+	 *  select individual plans for the four field layouts.
+	 */
 	public void initAutoCustomBuilder() {
 		this.autoBBChooser = new SendableChooser<AutoPlan>();
 		this.autoBBChooser.addDefault("BadScale", new BadScale());
@@ -212,10 +226,7 @@ public class Robot extends IterativeRobot {
 	
 	//autonomousPeriodic is run every 7ms during auto
 	public void autonomousPeriodic() {
-		/*
-		 * This will just print out what every susbsystems data are for tracking
-		 * such as gyro angle.
-		 */
+		//This will just print out what every susbsystems data are for tracking such as gyro angle.
 		this.publishData();
 	}
 
@@ -229,10 +240,9 @@ public class Robot extends IterativeRobot {
 			 * We manually change the cameraAdded variable depending on if we
 			 * have a camera or not. If we don't it will try to start a nonexistent
 			 * camera and spew out errors.
-			 * It also makes sure it doesn't tro to initialize the camera multiple
-			 * times.
-			 * The line of code automatically finds any USB camera plugged in and
-			 * puts its output on the smartDashboard.
+			 * It also makes sure it doesn't try to initialize the camera multiple
+			 * times. The line of code automatically finds any USB camera plugged in
+			 * and puts its output on the smartDashboard.
 			 */
 			CameraServer.getInstance().startAutomaticCapture();
 			this.mCameraAdded = true;
@@ -291,7 +301,6 @@ public class Robot extends IterativeRobot {
 	
 	//this is ran when you disable the robot
 	public void disabledInit() {
-		
 		/*
 		 * When the robot is disabled you want it to turn things off.
 		 * So these just turn everything off.

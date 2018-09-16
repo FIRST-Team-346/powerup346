@@ -40,7 +40,8 @@ public class ControlBoard {
 	/*
 	 * This is the constructor for the object.
 	 * it takes in the robot as a parameter so it can do things to it.
-	 * 
+	 * Can't use a getInstance() here because it uses the Robot class and
+	 * the Robot class uses it, so it would cause some recursive getInstance().
 	 */
 	public ControlBoard(Robot _robot) {
 		this.sRobot = _robot;
@@ -48,7 +49,6 @@ public class ControlBoard {
 		this.mButtonBoard = new Joystick(RobotMap.kButtonBoardPort);
 		
 //		this.mPref = Preferences.getInstance();
-		//Can't use a getInstance here because it uses the Robot class and the Robot class uses it
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ public class ControlBoard {
 			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 		}
 		
-		//This will change which drive method is being use
+		//This will change which drive method is being used.
 		if(this.mController.getRawButtonPressed(this.CIRCLE)) {
 			this.isDrivingXboxThrottleTurn = !this.isDrivingXboxThrottleTurn;
 		}
@@ -92,8 +92,13 @@ public class ControlBoard {
 	 * All of the rest of these are fairly explanatory.
 	 * They do a different thing based on the button being pressed.
 	 * This is the entirety of teleop control. It's pretty simple.
+	 * 
+	 * This is all the fun logic of the code. Make sure that when you have
+	 *  a long list of if-else statements, put the most important ones at
+	 *  the top. And if two buttons can be pressed at the same time on
+	 *  accident (on and off together), give the more important one
+	 *  precedence (usually off for safety).
 	 */
-	
 	
 	public void checkIntake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {

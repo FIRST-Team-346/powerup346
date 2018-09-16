@@ -150,7 +150,7 @@ public class RobotMap {
 	public static final int kShooterLeftSetpointNuBack = 12000;			//
 	public static final int kShooterRightSetpointNuBack = 12000;		//
 	
-	/*
+	/*Scale position and number of cubes up there, then what setting to use when shooting.
 	 * 					low1:  low		low2:  mid
 	 * mid0:  mid		mid1:  mid		mid2:  high
 	 * high0: high		high1: high
