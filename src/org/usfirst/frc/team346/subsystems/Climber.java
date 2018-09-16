@@ -7,15 +7,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber implements Subsystem {
 
-	
-	
 	private TalonSRX mWinch;
 	private Servo mServo;
 	private final double mOnValue = 1.0;
+	private final boolean mServoOnFrontLeft = true;
+	private final int mLeftServoPort = 0;
+	private final int mRightServoPort = 1;
 	
 	private static Climber sClimberInstance = new Climber();
 	public static Climber getInstance() {
@@ -41,7 +43,12 @@ public class Climber implements Subsystem {
 	 * They're wired directly into the roborio through PWM. 
 	 */
 	private void initServo() {
-		this.mServo = new Servo(0);
+		if(this.mServoOnFrontLeft) {
+			this.mServo = new Servo(this.mLeftServoPort);
+		}
+		else {
+			this.mServo = new Servo(this.mRightServoPort);
+		}
 	}
 	
 	public void setOn() {
@@ -52,10 +59,14 @@ public class Climber implements Subsystem {
 		this.mWinch.set(ControlMode.PercentOutput, 0);
 	}
 	
-	
 	public void raiseHook(boolean _raise) {
 		//If you guys dont know the ? operator look it up it's useful and simple
-		this.mServo.set(_raise ? 1 : 0);
+		if(_raise) {
+			this.mServo.set(this.mServoOnFrontLeft ? 1 : 0);
+		}
+		else {
+			this.mServo.set(this.mServoOnFrontLeft ? 0 : 1);
+		}
 	}
 
 	public void disable() {

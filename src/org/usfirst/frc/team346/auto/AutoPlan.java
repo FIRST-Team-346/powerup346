@@ -39,7 +39,7 @@ public class AutoPlan {
 		this.angleError = Gyro.getInstance().getAngle();
 		Gyro.getInstance().zeroGyro();
 		
-		System.out.println("DF| driving complete, final distance:" + Drive.getInstance().getAveragedPosition()/1024.);
+		System.out.println("DF| driving complete, final distance:" + Drive.getInstance().getAveragedPosition()/1024.*1.037);
 	}
 	
 	@Deprecated
@@ -73,10 +73,25 @@ public class AutoPlan {
 		
 		Gyro.getInstance().zeroGyro();
 		
-		double mult = RobotMap.kRotateThreadVelPercent;
-//		double mult = this.pref.getDouble("rtMult", 0);
+		double percent = RobotMap.kRotateThreadVelPercent;
+//		double percent = this.pref.getDouble("rtMult", 0);
 		
-		RotateThread RT = new RotateThread(_angleDegrees, mult);
+		RotateThread RT = new RotateThread(_angleDegrees, percent);
+		new Thread(RT).start();
+		while (RT.isRotating()) {
+		}
+		System.out.println("RT| rotating complete, final angle:" + (_angleDegrees + this.angleError));
+	}
+	
+	@Deprecated
+	public void rotateUsingRT(double _angleDegrees, double _percentVoltage) {
+		if(!DriverStation.getInstance().isAutonomous() || DriverStation.getInstance().isDisabled()) {
+			return;
+		}
+		
+		Gyro.getInstance().zeroGyro();
+		
+		RotateThread RT = new RotateThread(_angleDegrees, _percentVoltage);
 		new Thread(RT).start();
 		while (RT.isRotating()) {
 		}

@@ -10,7 +10,7 @@ public interface Subsystem {
 	// Every subsystem needs a method to turn of all output. This method should do that/
 	public void disable();
 	
-	//Every subsystem can be in various states. This method should put those on the SmartDashvoard.
+	//Every subsystem can be in various states. This method should put those on the SmartDashboard.
 	public void publishData();
 
 }

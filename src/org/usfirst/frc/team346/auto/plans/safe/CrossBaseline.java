@@ -9,13 +9,13 @@ public class CrossBaseline extends AutoPlan {
 	ActionRunner action = new ActionRunner();
 	
 	public String getGoal() {
-		return "cross baseline using drivefollow";
+		return "cross baseline";
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
-		this.action.setJustIntakeIn(-1);
+		this.action.startOpenIntake();
 		super.driveUsingDF(18);
-		this.action.setJustIntakeIn(0);
+		this.action.stopOpenIntake();
 	}
 	
 //	private void crossOnVoltage() {

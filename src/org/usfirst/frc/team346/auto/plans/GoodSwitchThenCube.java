@@ -2,23 +2,20 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
-import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
-import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class SwitchPGoodSwitchTwice extends AutoPlan {
+public class GoodSwitchThenCube extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
-	Rotate sRotator = new Rotate();
 	
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
 	public String getGoal() {
-		return "good switch, then good scale, " + this.startingOnLeft;
+		return "good switch then cube" + this.startingOnLeft;
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
@@ -26,24 +23,22 @@ public class SwitchPGoodSwitchTwice extends AutoPlan {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
-//		Lights.getInstance().setGreen();
-		this.goodSwitchTwice();
+		this.start();
 	}
 	
-	public void goodSwitchTwice() {
+	public void start() {
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
 		super.driveUsingDF(16.5);
 		
-		this.sAction.setJustIntakeIn(0);
 		super.rotateUsingRT(90 * this.startingOnLeft);
 		
-		super.driveUsingDF(3);
+		super.driveUsingDF(4);
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.35);
-		super.waitTime(0.2);
+		this.sAction.setShooterPercentFront(0.32);
+		super.waitTime(0.3);
 		this.sAction.setOuttakePercentFront(0);
 		this.sAction.setShooterPercentFront(0);
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
 		
 		if(this.startingOnLeft == 1) {
 			super.rotateUsingRT(Hand.kRight, 90);
@@ -52,21 +47,15 @@ public class SwitchPGoodSwitchTwice extends AutoPlan {
 			super.rotateUsingRT(Hand.kLeft, -90);
 		}
 		
-		this.sAction.setJustIntakeIn(-1);
+		this.sAction.startOpenIntake();
 		super.driveUsingDF(-12);
-		this.sAction.setJustIntakeIn(0);
+		this.sAction.stopOpenIntake();
 		
 		super.rotateUsingRT(-37 * this.startingOnLeft);
 		
-		this.sAction.setIntakeIn(1);
+		this.sAction.startIntakeCube();
 		super.driveUsingDF(7);
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosNeutral);
 		super.waitTime(0.2);
-		this.sAction.setIntakeIn(0);
-		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.waitTime(0.75);
-		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.5);
+		super.driveUsingDF(-1);
 	}
 }

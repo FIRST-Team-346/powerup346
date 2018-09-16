@@ -81,7 +81,7 @@ public class RotateThread implements Runnable {
 		this.timeOutSec = 3.;
 		this.updateFreq = 0.02;
 		this.thresholdAngleTimeOutSec = 0.05;
-		this.thresholdVelTimeOutSec = 0.75;
+		this.thresholdVelTimeOutSec = 0.5;
 		this.thresholdVelocity = 0.01 * RobotMap.kDriveVelAverage;
 		this.thresholdAngle = 1.5;
 		

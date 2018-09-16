@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive implements Subsystem{
+public class Drive implements Subsystem {
 	
 	/*
 	 * You need to initialize things at the beginning of every class because
@@ -110,6 +110,7 @@ public class Drive implements Subsystem{
 		this.mDriveRightSlave2.overrideSoftLimitsEnable(true);
 		
 		//Here's a challenge look up the TalonSRX API and find out what these methods do
+		//(probably nothing, just making sure it stays the same so we don't have any accidents)
 		this.mDriveLeftMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveRightMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveLeftMaster.configOpenloopRamp(this.mSecondsFromNeutralToFull, 0);
@@ -210,8 +211,8 @@ public class Drive implements Subsystem{
 	 * special drive method. This is how it works
 	 */
 	public void driveThrottleTurn(double _throttle, double _turn) {
-		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
-		_throttle = (Math.abs(_throttle) <= 0.1)? 0 : _throttle;
+		this.mTurn = (Math.abs(_turn) <= 0.1)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
+		_throttle = (Math.abs(_throttle) <= 0.12)? 0 : _throttle;
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, -_throttle + this.mTurn);

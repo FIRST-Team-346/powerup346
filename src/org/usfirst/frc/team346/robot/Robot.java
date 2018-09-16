@@ -7,11 +7,10 @@ package org.usfirst.frc.team346.robot;// this is just the location of this class
  *such as the Drivetrain or Climber
  */
 import org.usfirst.frc.team346.auto.AutoBuilder;
+import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.AutoRunner;
 import org.usfirst.frc.team346.auto.plans.*;
-import org.usfirst.frc.team346.auto.plans.safe.CrossBaseline;
-import org.usfirst.frc.team346.auto.plans.safe.Nothing;
-import org.usfirst.frc.team346.auto.plans.safe.Test;
+import org.usfirst.frc.team346.auto.plans.safe.*;
 import org.usfirst.frc.team346.subsystems.Climber;
 import org.usfirst.frc.team346.subsystems.Drive;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
@@ -62,6 +61,11 @@ public class Robot extends IterativeRobot {
 	
 	public SendableChooser<AutoBuilder> autoChooser;
 	public SendableChooser<Boolean> autoStartingOnLeft;
+	
+	public SendableChooser<AutoPlan> autoBBChooser;
+	public SendableChooser<AutoPlan> autoBGChooser;
+	public SendableChooser<AutoPlan> autoGBChooser;
+	public SendableChooser<AutoPlan> autoGGChooser;
 	
 	@SuppressWarnings("unused")
 	private Compressor sCompressor;
@@ -120,20 +124,25 @@ public class Robot extends IterativeRobot {
 		this.autoStartingOnLeft.addObject("Right", false);
 		SmartDashboard.putData("AutoStartingOnLeft", this.autoStartingOnLeft);
 		
+		this.initAutoCustomBuilder();
+		
 		this.autoChooser = new SendableChooser<AutoBuilder>();
-		this.autoChooser.addDefault("CenterSwitch", new AutoBuilder( new CenterSwitch() ));
-		this.autoChooser.addObject("SideSwitchPriority", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchTwice() ));
-		this.autoChooser.addObject("SideScalePriority", new AutoBuilder( new ScalePGoodScaleTwice(), new ScalePGoodScaleTwice(), new ScalePBadScale(), new ScalePBadScale() ));
-		this.autoChooser.addObject("SideSwitch+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new SwitchPBadSwitchTwice(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchTwice() ));
-		this.autoChooser.addObject("SideScale+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new ScalePBadScale(), new ScalePBadScale() ));
-		this.autoChooser.addObject("DoublesExceptBB=BSc", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new ScalePBadScale() ));
-		this.autoChooser.addObject("SideSwitchNoFoul", new AutoBuilder( new SwitchPGoodSwitchTwice(), new SwitchPBadSwitchNoFoul(), new SwitchPGoodSwitchThenCrossIntake(), new SwitchPBadSwitchNoFoul() ));
-		this.autoChooser.addObject("DoubleNoCross", new AutoBuilder( new GoodScaleGoodSwitch(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new CrossBaseline() ));
-		this.autoChooser.addObject("CloseSwitch,ElseScale", new AutoBuilder( new SwitchPGoodSwitchTwice(), new ScalePGoodScaleTwice(), new SwitchPGoodSwitchTwice(), new ScalePBadScale() ));
+		this.autoChooser.addDefault("2-Scale/Conduit", new AutoBuilder( new GoodScaleTwice(), new GoodScaleTwice(), new CrossConduit(), new CrossConduit() ));
+		this.autoChooser.addObject("CenterSwitch", new AutoBuilder( new CenterSwitch() ));
+		this.autoChooser.addObject("CenterSwitchFaster", new AutoBuilder( new CenterSwitchFaster()));
+		this.autoChooser.addObject("CenterSwitchSingle", new AutoBuilder( new CenterSwitchSingleSide()));
+		this.autoChooser.addObject("AllScale", new AutoBuilder( new GoodScaleTwice(), new GoodScaleTwice(), new BadScale(), new BadScale() ));
+		this.autoChooser.addObject("AllScale+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new GoodScaleTwice(), new BadScale(), new BadScale() ));
+		this.autoChooser.addObject("GoodDoubles", new AutoBuilder( new GoodScaleTwice(), new GoodScaleTwice(), new GoodSwitchTwice(), new BadScale() ));
+		this.autoChooser.addObject("GoodDoubles+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new GoodScaleTwice(), new GoodSwitchTwice(), new BadScale() ));
+		this.autoChooser.addObject("GoodDoublesNoCross", new AutoBuilder( new GoodScaleTwice(), new GoodScaleTwice(), new GoodSwitchTwice(), new CrossBaseline() ));
+		this.autoChooser.addObject("GoodDoublesNoCross+GGScSw", new AutoBuilder( new GoodScaleGoodSwitch(), new GoodScaleTwice(), new GoodSwitchTwice(), new CrossBaseline() ));
+		this.autoChooser.addObject("ScaleBackAway/Conduit", new AutoBuilder( new GoodScaleBackAway(), new GoodScaleBackAway(), new CrossConduit(), new CrossConduit() ));
 		this.autoChooser.addObject("Baseline", new AutoBuilder( new CrossBaseline() ));
-		this.autoChooser.addObject("Nothing", new AutoBuilder( new Nothing() ));
-		this.autoChooser.addObject("Test", new AutoBuilder( new Test() ));
+		this.autoChooser.addObject("Custom", new AutoBuilder(this.autoGGChooser.getSelected(), this.autoBGChooser.getSelected(), this.autoGBChooser.getSelected(), this.autoBBChooser.getSelected()));
+		
 		SmartDashboard.putData("AutoChooser", this.autoChooser);
+		SmartDashboard.putString("AutoSel", this.autoChooser.getSelected().getGoals());
 		
 		/*
 		 * This is very important.
@@ -145,6 +154,38 @@ public class Robot extends IterativeRobot {
 		 */
 		this.sGyro.calibrate();
 	}
+	
+	public void initAutoCustomBuilder() {
+		this.autoBBChooser = new SendableChooser<AutoPlan>();
+		this.autoBBChooser.addDefault("BadScale", new BadScale());
+		this.autoBBChooser.addObject("CrossConduit", new CrossConduit());
+		this.autoBBChooser.addObject("CrossBaseline", new CrossBaseline());
+		SmartDashboard.putData("BadSwBadSc", this.autoBBChooser);
+		
+		this.autoBGChooser = new SendableChooser<AutoPlan>();
+		this.autoBGChooser.addDefault("GoodScaleTwice", new GoodScaleTwice());
+		this.autoBGChooser.addObject("GoodScaleNull", new GoodScaleNull());
+		this.autoBGChooser.addObject("GoodScaleBackAway", new GoodScaleBackAway());
+		this.autoBGChooser.addObject("CrossBaseline", new CrossBaseline());
+		SmartDashboard.putData("BadSwGoodSc", this.autoBGChooser);
+		
+		this.autoGBChooser = new SendableChooser<AutoPlan>();
+		this.autoGBChooser.addDefault("BadScale", new BadScale());
+		this.autoGBChooser.addObject("GoodSwitchTwice", new GoodSwitchTwice());
+		this.autoGBChooser.addObject("GoodSwitchOnce", new GoodSwitchOnce());
+		this.autoGBChooser.addObject("GoodSwitchThenCube", new GoodSwitchThenCube());
+		SmartDashboard.putData("GoodSwBadSc", this.autoGBChooser);
+		
+		this.autoGGChooser = new SendableChooser<AutoPlan>();
+		this.autoGGChooser.addDefault("GoodScaleTwice", new GoodScaleTwice());
+		this.autoGGChooser.addObject("GoodScaleGoodSwitch", new GoodScaleGoodSwitch());
+		this.autoGGChooser.addObject("GoodScaleNull", new GoodScaleNull());
+		this.autoGGChooser.addObject("GoodScaleBackAway", new GoodScaleBackAway());
+		this.autoGGChooser.addObject("GoodSwitchTwice", new GoodSwitchTwice());
+		this.autoGGChooser.addObject("GoodSwitchOnce", new GoodSwitchOnce());
+		SmartDashboard.putData("GoodSwGoodSc", this.autoGGChooser);
+	}
+	
 	//autonomousInit is automatically run when auto begins
 	public void autonomousInit() {
 		/*
@@ -154,6 +195,7 @@ public class Robot extends IterativeRobot {
 		 * or at a 90 degree angle when auto starts. That would be bad. 
 		 */
 		System.out.println("Autonomous Init| begun");
+		SmartDashboard.putString("AutoSel", this.autoChooser.getSelected().getGoals());
 		this.zeroDevices();
 		this.sLights.setGreen();
 		
@@ -242,7 +284,7 @@ public class Robot extends IterativeRobot {
 //				this.sLoader.publishData();
 				this.sTilter.publishData();
 				this.sShooter.publishData();
-//				this.sClimber.publishData();
+				this.sClimber.publishData();
 			}
 		}
 	}

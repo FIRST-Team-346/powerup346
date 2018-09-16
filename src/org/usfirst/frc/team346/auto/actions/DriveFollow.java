@@ -17,7 +17,7 @@ public class DriveFollow implements Runnable {
 
 	private Drive sDrive;
 	private Gyro sGyro;
-//	private Preferences pref;
+//	private Preferences pref;		//TODO
 	
 	private double timeZero, timePrev, timeCurr, timeDelta, timePrevPublish;
 	private double headingCurr;
@@ -52,7 +52,7 @@ public class DriveFollow implements Runnable {
 		this.thresholdTimeOutSec = 0.05;
 		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
 		
-		this.courseDistanceSetpoint = _distanceFt * 1024.;
+		this.courseDistanceSetpoint = _distanceFt * 1024. / 1.037;
 //		this.velocitySetpointMag = Math.abs(_velocityPercent);						//TODO: velocity isn't used right now
 		if(Math.abs(_distanceFt) >= 5.5) {
 			this.velocitySetpointMag = 0.6;
@@ -69,7 +69,7 @@ public class DriveFollow implements Runnable {
 	public void run() {
 		this.timeZero = System.currentTimeMillis()/1000.;
 		this.checkDisabled();
-		System.out.println("DriveF| drive " + this.courseDistanceSetpoint/1024.);
+		System.out.println("DriveF| drive " + this.courseDistanceSetpoint/1024.*1.037);
 		this.init();
 		
 		while(this.isDriving()) {
@@ -237,12 +237,8 @@ public class DriveFollow implements Runnable {
 			lStopDistance = RobotMap.kDriveFollowStopFeetHigh;
 //			lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		}
-		else if(Math.abs(_width) > 1.5) {
+		else if(Math.abs(_width) >= 1.5) {
 			lStopDistance = RobotMap.kDriveFollowStopFeetLow;
-//			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
-		}
-		else if(Math.abs(_width) == 1.5) {
-			lStopDistance = RobotMap.kDriveFollowStopFeetLow - 0.1;
 //			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else {

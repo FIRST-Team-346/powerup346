@@ -34,4 +34,14 @@ public class AutoBuilder {
 		return this.bb;
 	}
 	
+	public String getGoals() {
+		String ret = "";
+		ret += "GG| " + this.gg.getGoal() + "  ";
+		ret += "BG| " + this.bg.getGoal() + "  ";
+		ret += "GB| " + this.gb.getGoal() + "  ";
+		ret += "BB| " + this.bb.getGoal();
+		
+		return ret;
+	}
+	
 }
