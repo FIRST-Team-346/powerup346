@@ -11,7 +11,7 @@ import org.usfirst.frc.team346.subsystems.Lights;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class GoodScaleGoodSwitch extends AutoPlan {
+public class ScalePGoodScaleTwice extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -60,10 +60,12 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 		this.sAction.setIntakeIn(0);
 
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.waitTime(0.75);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuAutoMid, RobotMap.kShooterRightSetpointNuAutoMid);
+		super.driveUsingDF(-6.5);
+		super.rotateUsingRT(-(90-50+50) * this.startingOnLeft);
+		
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.4);
 	}
 	
 	public void right() {
@@ -89,10 +91,12 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 		this.sAction.setIntakeIn(0);
 
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.waitTime(0.75);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuAutoMid, RobotMap.kShooterRightSetpointNuAutoMid);
+		super.driveUsingDF(-6.5);
+		super.rotateUsingRT(-(90-50+50) * this.startingOnLeft);
+		
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.4);
 	}
 	
 }

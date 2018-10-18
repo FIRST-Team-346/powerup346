@@ -2,20 +2,23 @@ package org.usfirst.frc.team346.auto.plans;
 
 import org.usfirst.frc.team346.auto.AutoPlan;
 import org.usfirst.frc.team346.auto.actions.ActionRunner;
+import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class GoodSwitchTwice extends AutoPlan {
+public class SwitchPGoodSwitchThenCrossIntake extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
+	Rotate sRotator = new Rotate();
 	
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
 	public String getGoal() {
-		return "good switch twice" + this.startingOnLeft;
+		return "good switch, then cross conduit, " + this.startingOnLeft;
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
@@ -23,23 +26,25 @@ public class GoodSwitchTwice extends AutoPlan {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
-		this.start();
+//		Lights.getInstance().setGreen();
+		this.goodSwitchThenCross();
 	}
 	
-	public void start() {
+	public void goodSwitchThenCross() {
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
 		super.driveUsingDF(16.5);
 		
-		super.rotateUsingRT(90 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
+		super.rotateUsingRT(90 * this.switchLeft);
 		
-		super.driveUsingDF(4);
+		super.driveUsingDF(2);
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.32);
-		super.waitTime(0.3);
+		this.sAction.setShooterPercentFront(0.35);
+		super.waitTime(0.25);
 		this.sAction.setOuttakePercentFront(0);
 		this.sAction.setShooterPercentFront(0);
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
-		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
+
 		if(this.startingOnLeft == 1) {
 			super.rotateUsingRT(Hand.kRight, 90);
 		}
@@ -47,20 +52,17 @@ public class GoodSwitchTwice extends AutoPlan {
 			super.rotateUsingRT(Hand.kLeft, -90);
 		}
 		
-		this.sAction.startOpenIntake();
-		super.driveUsingDF(-12);
-		this.sAction.stopOpenIntake();
+		super.driveUsingDF(-8);
 		
-		super.rotateUsingRT(-37 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(-1);
+		super.rotateUsingRT(90 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
 		
-		this.sAction.startIntakeCube();
-		super.driveUsingDF(7);
-		super.waitTime(0.2);
-		this.sAction.stopIntakeCube();
+		super.driveUsingDF(-21);
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.waitTime(0.75);
-		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.34);
+		super.rotateUsingRT(-90 * this.startingOnLeft);
+		this.sAction.setIntakeIn(0.75);
+		super.waitTime(0.5);
+		super.driveUsingDF(4);
 	}
 }

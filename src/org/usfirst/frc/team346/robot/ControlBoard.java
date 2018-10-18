@@ -1,9 +1,4 @@
 package org.usfirst.frc.team346.robot;
-/*
- * This class is what checks the button board, controller, or any other
- * weird input device you choose to use.
- * It will check if a button is pressed then do a thing
- */
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
@@ -17,16 +12,16 @@ public class ControlBoard {
 	private Joystick mController;
 	private Joystick mButtonBoard;
 	
-	private final boolean IS_DRONE_CONTROLLER = true;
+	private final boolean IS_DRONE_CONTROLLER = false;
 	private boolean isDrivingXboxThrottleTurn = true;
 	
 //	@SuppressWarnings("unused")
 //	private Preferences mPref;
 	    
 	@SuppressWarnings("unused")
-	private final int LEFT_STICK_X = 0,			LEFT_STICK_Y = 1,
-					  RIGHT_STICK_X = 2,		RIGHT_STICK_Y = 5,
-					  LEFT_TRIGGER_AXIS = 3,	RIGHT_TRIGGER_AXIS = 4,
+	private final int LEFT_STICK_X = 3,			LEFT_STICK_Y = 4,
+					  RIGHT_STICK_X = 1,		RIGHT_STICK_Y = 0,
+					  LEFT_TRIGGER_AXIS = 2,	RIGHT_TRIGGER_AXIS = 2,
 					  
 					  SQUARE = 1, 				X = 2,
 					  CIRCLE = 3,				TRIANGLE = 4,
@@ -37,12 +32,7 @@ public class ControlBoard {
 					  
 					  DRONE_RIGHT_STICK_Y = 0, DRONE_LEFT_STICK_X = 3;
 					  
-	/*
-	 * This is the constructor for the object.
-	 * it takes in the robot as a parameter so it can do things to it.
-	 * Can't use a getInstance() here because it uses the Robot class and
-	 * the Robot class uses it, so it would cause some recursive getInstance().
-	 */
+	
 	public ControlBoard(Robot _robot) {
 		this.sRobot = _robot;
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
@@ -52,11 +42,6 @@ public class ControlBoard {
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	/*
-	 * Different controllers have different button numbers and different axis variations
-	 * so we have to have different methods based on which one we're using. 
-	 */
 	
 	public void drive() {
 		if(this.IS_DRONE_CONTROLLER) {
@@ -68,15 +53,13 @@ public class ControlBoard {
 	}
     
 	private void driveXboxController() {
-		//takes axis input and drives the robot
 		if(this.isDrivingXboxThrottleTurn) {
-			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
+			this.sRobot.sDrive.driveThrottleTurn(this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
 		else {
 			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 		}
 		
-		//This will change which drive method is being used.
 		if(this.mController.getRawButtonPressed(this.CIRCLE)) {
 			this.isDrivingXboxThrottleTurn = !this.isDrivingXboxThrottleTurn;
 		}
@@ -87,18 +70,6 @@ public class ControlBoard {
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	/*
-	 * All of the rest of these are fairly explanatory.
-	 * They do a different thing based on the button being pressed.
-	 * This is the entirety of teleop control. It's pretty simple.
-	 * 
-	 * This is all the fun logic of the code. Make sure that when you have
-	 *  a long list of if-else statements, put the most important ones at
-	 *  the top. And if two buttons can be pressed at the same time on
-	 *  accident (on and off together), give the more important one
-	 *  precedence (usually off for safety).
-	 */
 	
 	public void checkIntake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {
@@ -126,7 +97,7 @@ public class ControlBoard {
 	
 	public void checkOuttake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sOuttake.setSpeedFront(-0.07);
+			this.sRobot.sOuttake.setSpeedFront(-0.08);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sOuttake.setSpeedFront(-1.0);
@@ -182,7 +153,7 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkShooter() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff)) {
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff)) { 
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterOn)) {
@@ -201,13 +172,13 @@ public class ControlBoard {
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sShooter.setPercentFront(-0.6);
+			this.sRobot.sShooter.setPercentFront(-0.6);//6
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sShooter.setPercentFront(-0.25);
 		}
 		else if(!this.sRobot.sShooter.isInVelocityModeAndOn() && this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeFront)) {
-			this.sRobot.sShooter.setPercentFront(0.5);
+			this.sRobot.sShooter.setPercentFront(0.55);//5
 		}
 		else if(this.sRobot.sShooter.isInVelocityModeAndOn()) {
 			if(this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleLow)) {

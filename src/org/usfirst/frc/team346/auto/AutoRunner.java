@@ -4,11 +4,6 @@ import org.usfirst.frc.team346.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-/*
- * AutoRunner is used to go through the logic of receiving the command to start auto,
- * receiving the data from the DriverStation on the scale/switch pattern,
- * choosing which auto to run based on that data, and confirming that auto has ended.
- */
 public class AutoRunner {
 	
 	private boolean mRunning = false;
@@ -25,11 +20,6 @@ public class AutoRunner {
 		this.sDriverStation = DriverStation.getInstance();
 	}
 	
-	/*
-	 * Attempts to run auto through perform(). If it receives an error (details below),
-	 *  then auto will be terminated. Either way, afterward, complete() is run to
-	 *  clean up and confirm that auto has ended.
-	 */
 	public void run(boolean _startingOnLeft, AutoBuilder _buildPlan) {
 		this.mAutoBuildPlan = _buildPlan;
 		this.mBotStartingOnLeft = (_startingOnLeft)? 1. : -1.;
@@ -72,17 +62,12 @@ public class AutoRunner {
 	
 	private void perform() throws AutoTerminatedException {
 		if(!isAuto()) {
-			/*
-			 * If, for some god-forsaken reason, perform() gets run during teleop, this
-			 * custom exception gets thrown that terminates auto before running anything.
-			 */
 			throw new AutoTerminatedException();
 		}
 		if(this.mLayout == "000") {
 			this.receiveLayout();
 		}
 		
-		//Go through the logic of choosing which field layout we have and getting the plan.
 		if(this.mIsGoodSwitch && this.mIsGoodScale) {
 			System.out.println("GoodGood");
 			this.mAutoPlan = this.mAutoBuildPlan.getGG();
@@ -103,11 +88,9 @@ public class AutoRunner {
 		System.out.println("Auto Runner| goal: " + this.mAutoPlan.getGoal());
 		System.out.println("Auto Runner| field layout: " + this.getLayout());
 
-		//Finally run the specific plan that was chosen.
 		this.mAutoPlan.run(this.mBotStartingOnLeft, this.mSwitchOnLeft, this.mScaleOnLeft);
 	}
 	
-	//Clean up and confirm auto is complete.
 	private void complete() {
 		System.out.println("Auto Runner| complete");
 		this.mRunning = false;
@@ -118,7 +101,6 @@ public class AutoRunner {
 		this.complete();
 	}
 	
-	//Checks from the DriverStation if we are in auto. But don't really trust it, because FIRST is bad.
 	public boolean isAuto() {
 		if(this.sDriverStation.isDisabled() || !this.sDriverStation.isAutonomous()) {
 			System.out.println("Auto Runner| not autonomous mode");
@@ -131,11 +113,6 @@ public class AutoRunner {
 		return mRunning;
 	}
 	
-	/*
-	 * The way we make the bot wait in auto plans. Don't use Thread.sleep() because that halts
-	 * ALL execution, including any checks such as auto ending. That means that the bot could
-	 * get stuck still waiting on an auto step even though it is now teleop.
-	 */
 	public void waitTime(double _seconds) {
 		long lInitialTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - lInitialTime < Math.abs(_seconds) * 1000) {

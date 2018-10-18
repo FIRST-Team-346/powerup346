@@ -5,8 +5,11 @@ import org.usfirst.frc.team346.auto.actions.ActionRunner;
 import org.usfirst.frc.team346.auto.actions.Rotate;
 import org.usfirst.frc.team346.robot.RobotMap;
 import org.usfirst.frc.team346.subsystems.Gyro;
+import org.usfirst.frc.team346.subsystems.Lights;
 
-public class GoodSwitchOnce extends AutoPlan {
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+
+public class SwitchPBadSwitchNoFoul extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
@@ -15,7 +18,7 @@ public class GoodSwitchOnce extends AutoPlan {
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
 	public String getGoal() {
-		return "good switch once" + this.startingOnLeft;
+		return "cross conduit to take control of bad switch: " + this.startingOnLeft;
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
@@ -23,25 +26,28 @@ public class GoodSwitchOnce extends AutoPlan {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
-		this.start();
+//		Lights.getInstance().setGreen();
+		this.badSwitchNoFoul();
 	}
 	
-	public void start() {
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.driveUsingDF(16.5);
+	public void badSwitchNoFoul() {
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		
+		super.driveUsingDF(24);
 		
 		super.rotateUsingRT(90 * this.startingOnLeft);
 		
-		super.driveUsingDF(4);
-		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.32);
-		super.waitTime(1);
-		this.sAction.setOuttakePercentFront(0);
-		this.sAction.setShooterPercentFront(0);
+		super.driveUsingDF(25);
 		
+		this.sAction.setJustIntakeIn(-1);
+		super.rotateUsingRT(-45 * this.startingOnLeft);
+		this.sAction.setJustIntakeIn(0);
+		
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		super.driveUsingDF(-4);
-		this.sAction.startOpenIntake();
-		super.rotateUsingRT(-90 * this.startingOnLeft);
-		this.sAction.stopOpenIntake();
+		
+		super.waitTime(0.3);
+		this.sAction.setOuttakePercentFront(-1);
 	}
+	
 }

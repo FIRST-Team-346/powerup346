@@ -17,7 +17,7 @@ public class DriveFollow implements Runnable {
 
 	private Drive sDrive;
 	private Gyro sGyro;
-//	private Preferences pref;		//TODO
+//	private Preferences pref;
 	
 	private double timeZero, timePrev, timeCurr, timeDelta, timePrevPublish;
 	private double headingCurr;
@@ -52,7 +52,7 @@ public class DriveFollow implements Runnable {
 		this.thresholdTimeOutSec = 0.05;
 		this.thresholdVelocity = 0.05 * RobotMap.kDriveVelAverage;
 		
-		this.courseDistanceSetpoint = _distanceFt * 1024. / 1.037;
+		this.courseDistanceSetpoint = _distanceFt * 1024.;
 //		this.velocitySetpointMag = Math.abs(_velocityPercent);						//TODO: velocity isn't used right now
 		if(Math.abs(_distanceFt) >= 5.5) {
 			this.velocitySetpointMag = 0.6;
@@ -66,12 +66,10 @@ public class DriveFollow implements Runnable {
 		this.isActive = true;
 	}
 	
-	/**This begins the driving thread. While the bot should still be driving, it checks
-	   if it should become disabled. Otherwise, it updates the driving cycle.**/
 	public void run() {
 		this.timeZero = System.currentTimeMillis()/1000.;
 		this.checkDisabled();
-		System.out.println("DriveF| drive " + this.courseDistanceSetpoint/1024.*1.037);
+		System.out.println("DriveF| drive " + this.courseDistanceSetpoint/1024.);
 		this.init();
 		
 		while(this.isDriving()) {
@@ -114,8 +112,7 @@ public class DriveFollow implements Runnable {
 		this.updatePrevValues();
 	}
 	
-	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.
-	   Shoutouts to calculus! These are the smallest unit of difference in distance/angle we can get.**/
+	/**To be run at the beginning of each cycle for use in determining deltas since the previous cycle.**/
 	private void updateValues() {
 		this.timeCurr = System.currentTimeMillis()/1000.;
 		this.timeDelta = this.timeCurr - this.timePrev;
@@ -144,7 +141,6 @@ public class DriveFollow implements Runnable {
 		this.velocityPrev = this.velocityCurr;
 	}
 	
-	/**These are really useful printouts, but auto runs faster without them, so we only use them while testing.**/
 	private void publishValues() {
 		if(System.currentTimeMillis() - this.timePrevPublish > 250) {
 //			System.out.println("currT:" + (this.timeCurr - this.timeZero) + " currH:" + this.headingCurr + " currD:" + (this.distanceCurr/1024.) + " currV:" + this.velocityCurr);
@@ -157,12 +153,11 @@ public class DriveFollow implements Runnable {
 	
 	private void setDriveVelocity(double _courseOutput) {
 		this.checkDisabled();
-			//Sets the velocity based on some percent speed we want it to operate at.
+		
 		this.velocitySetLeft = _courseOutput * this.velocitySetpointMag;
 		this.velocitySetRight = _courseOutput * this.velocitySetpointMag;
 		this.outputPublish = _courseOutput;
 		
-			//Decides whether the right or left side needs to be the one over-correcting.
 		double lSign, rSign;
 		if(this.isDrivingForward) {
 			lSign = (this.headingCurr >= 0) ? -1. : 1.;
@@ -174,21 +169,18 @@ public class DriveFollow implements Runnable {
 		}
 		
 		double multiplier = RobotMap.kDriveFollowAngleErrorScaler;
-//		double multiplier = this.pref.getDouble("dfMult", 0);						//TODO (I use todos because they show up in Eclipse and I can find stuff quickly to change when testing.)
+//		double multiplier = this.pref.getDouble("dfMult", 0);						//TODO
 		
-			//Sets the velocity values to percent * sigmoid output * (1 + correction fraction)
 		this.velocitySetLeft = this.velocitySetpointMag * _courseOutput
 				* (1 + (lSign * multiplier * Math.abs(this.headingCurr)) );
 		this.velocitySetRight = this.velocitySetpointMag * _courseOutput
 				* (1 + (rSign * multiplier * Math.abs(this.headingCurr)) );
 		
-			//If the stopping countdown has begun, make the velocity zero.
 		if(this.inThresholdCountdownBegun) {
 			this.velocitySetLeft = 0.;
 			this.velocitySetRight = 0.;
 		}
 		
-			//Drive based on the setpoint velocities.
 		this.sDrive.drive(DriveMode.PERCENT_VELOCITY, this.velocitySetLeft, this.velocitySetRight);
 	}
 	
@@ -198,20 +190,16 @@ public class DriveFollow implements Runnable {
 				return;
 		}
 		
-			//If current velocity is within some threshold:
 		if(Math.abs(this.velocityCurr) < Math.abs(this.thresholdVelocity)) {
-				//If the countdown has not begun, begin it.
 			if(!this.inThresholdCountdownBegun) {
 				this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 				this.inThresholdCountdownBegun = true;
 			}
-				//If the time since entering the countdown is greater than some threshold: stop driving.
 			if(System.currentTimeMillis()/1000. - this.timeEnteredThreshold > this.thresholdTimeOutSec) {
 				System.out.println("Drive Follow| complete via velocity threshold");
 				this.stop();
 			}
 		}
-			//But, if current velocity is outside the threshold: turn off the countdown.
 		else if(System.currentTimeMillis()/1000. - this.timeEnteredThreshold > this.thresholdTimeOutSec) {
 			this.timeEnteredThreshold = System.currentTimeMillis()/1000.;
 			this.inThresholdCountdownBegun = false;
@@ -235,7 +223,6 @@ public class DriveFollow implements Runnable {
 		return this.isActive;
 	}
 	
-	/**This is a sigmoid function to speed up and slow down at a faster and more uniform rate than PIDs.**/
 	private double reverseModSigmoid(double _width, double _x) {
 		double lWidthScaler;
 		if(Math.abs(_width) >= 5.5) {
@@ -250,8 +237,12 @@ public class DriveFollow implements Runnable {
 			lStopDistance = RobotMap.kDriveFollowStopFeetHigh;
 //			lStopDistance = this.pref.getDouble("dfStopDistance", 0);				//TODO
 		}
-		else if(Math.abs(_width) >= 1.5) {
+		else if(Math.abs(_width) > 1.5) {
 			lStopDistance = RobotMap.kDriveFollowStopFeetLow;
+//			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
+		}
+		else if(Math.abs(_width) == 1.5) {
+			lStopDistance = RobotMap.kDriveFollowStopFeetLow - 0.1;
 //			lStopDistance = this.pref.getDouble("dfStopDistanceSmall", 0);
 		}
 		else {
@@ -259,7 +250,6 @@ public class DriveFollow implements Runnable {
 		}
 		
 		double lTranslator = -Math.abs(_width) + lStopDistance;
-			//If you want to see the sigmoid function, plot this: 1/(1+e^(width*(x+translator)))
 		return 1. /(1. + Math.pow(Math.E, lWidthScaler * (_x + lTranslator) ));
 	}
 
