@@ -67,25 +67,32 @@ public class CenterSwitch extends AutoPlan {
 	public void rightSwitch() {
 			//RIGHT SWITCH
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		super.waitTime(0.2);
 =======
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
 >>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
+=======
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+>>>>>>> parent of 8265c25... For center switch right side
 		
-		super.rotateUsingRT(Hand.kRight, 45.0);
-		super.waitTime(0.2);
+		super.rotateUsingRT(Hand.kRight, 45);
 		
 		super.driveUsingDF(-7.5);
-		super.waitTime(0.2);
 		
 <<<<<<< HEAD
 		this.sAction.setJustIntakeIn(-1);
+<<<<<<< HEAD
 
 		super.rotateUsingRT(-45.0);
 =======
 		this.sAction.startOpenIntake();
+=======
+		
+		super.rotateUsingRT(-45);
+>>>>>>> parent of 8265c25... For center switch right side
 		
 		super.rotateUsingRT(-45);
 >>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
@@ -93,23 +100,26 @@ public class CenterSwitch extends AutoPlan {
 		this.sAction.stopOpenIntake();
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
-		super.waitTime(0.2);
 		
 		super.driveUsingDF(-7.5);
-		
 		this.sAction.setOuttakePercentFront(-1);
 		super.waitTime(0.8);
 		this.sAction.setOuttakePercentFront(0);
 		
 		
-		
 			//VAULT
+<<<<<<< HEAD
 <<<<<<< HEAD
 		//super.driveUsingDF(7);
 		
 		//super.rotateUsingRT(-90);
 =======
 		super.driveUsingDF(5);
+=======
+		super.driveUsingDF(7);
+		
+		super.rotateUsingRT(-90);
+>>>>>>> parent of 8265c25... For center switch right side
 		
 		super.rotateUsingRT(90);
 >>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba

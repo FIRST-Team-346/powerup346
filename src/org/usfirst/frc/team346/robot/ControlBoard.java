@@ -17,16 +17,16 @@ public class ControlBoard {
 	private Joystick mController;
 	private Joystick mButtonBoard;
 	
-	private final boolean IS_DRONE_CONTROLLER = false;
+	private final boolean IS_DRONE_CONTROLLER = true;
 	private boolean isDrivingXboxThrottleTurn = true;
 	
 //	@SuppressWarnings("unused")
 //	private Preferences mPref;
 	    
 	@SuppressWarnings("unused")
-	private final int LEFT_STICK_X = 3,			LEFT_STICK_Y = 4,
-					  RIGHT_STICK_X = 1,		RIGHT_STICK_Y = 0,
-					  LEFT_TRIGGER_AXIS = 2,	RIGHT_TRIGGER_AXIS = 2,
+	private final int LEFT_STICK_X = 0,			LEFT_STICK_Y = 1,
+					  RIGHT_STICK_X = 2,		RIGHT_STICK_Y = 5,
+					  LEFT_TRIGGER_AXIS = 3,	RIGHT_TRIGGER_AXIS = 4,
 					  
 					  SQUARE = 1, 				X = 2,
 					  CIRCLE = 3,				TRIANGLE = 4,
@@ -70,7 +70,7 @@ public class ControlBoard {
 	private void driveXboxController() {
 		//takes axis input and drives the robot
 		if(this.isDrivingXboxThrottleTurn) {
-			this.sRobot.sDrive.driveThrottleTurn(this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
+			this.sRobot.sDrive.driveThrottleTurn(-this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
 		else {
 			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
@@ -126,7 +126,7 @@ public class ControlBoard {
 	
 	public void checkOuttake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sOuttake.setSpeedFront(-0.08);
+			this.sRobot.sOuttake.setSpeedFront(-0.07);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sOuttake.setSpeedFront(-1.0);
@@ -182,7 +182,7 @@ public class ControlBoard {
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void checkShooter() {
-		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff)) { 
+		if(this.mButtonBoard.getRawButton(RobotMap.kButtonShooterTilterOff)) {
 			this.sRobot.sShooter.disable();
 		}
 		else if(this.mButtonBoard.getRawButtonPressed(RobotMap.kButtonShooterOn)) {
@@ -201,13 +201,13 @@ public class ControlBoard {
 			this.sRobot.sShooter.holdSpeedSetpoint();
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeIn)) {
-			this.sRobot.sShooter.setPercentFront(-0.6);//6
+			this.sRobot.sShooter.setPercentFront(-0.6);
 		}
 		else if(this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeBack)) {
 			this.sRobot.sShooter.setPercentFront(-0.25);
 		}
 		else if(!this.sRobot.sShooter.isInVelocityModeAndOn() && this.mButtonBoard.getRawButton(RobotMap.kButtonOuttakeFront)) {
-			this.sRobot.sShooter.setPercentFront(0.55);//5
+			this.sRobot.sShooter.setPercentFront(0.5);
 		}
 		else if(this.sRobot.sShooter.isInVelocityModeAndOn()) {
 			if(this.mButtonBoard.getRawButton(RobotMap.kButtonTilterScaleLow)) {

@@ -93,7 +93,6 @@ public class RotateThread implements Runnable {
 		this.minVelocityPercent = RobotMap.kRotateThreadVelMinPercent;
 //		this.minVelocityPercent = this.pref.getDouble("rtMin", 0);		//TODO
 		this.hasNeverEnteredAngleThreshold = true;
-//		this.sGyro.zeroGyro();
 	}
 	
 	public void run() {
