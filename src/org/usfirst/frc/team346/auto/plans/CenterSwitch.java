@@ -68,12 +68,16 @@ public class CenterSwitch extends AutoPlan {
 			//RIGHT SWITCH
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		super.waitTime(0.2);
 =======
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
 >>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
+=======
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+>>>>>>> parent of 8265c25... For center switch right side
 =======
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 >>>>>>> parent of 8265c25... For center switch right side
@@ -85,10 +89,15 @@ public class CenterSwitch extends AutoPlan {
 <<<<<<< HEAD
 		this.sAction.setJustIntakeIn(-1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 		super.rotateUsingRT(-45.0);
 =======
 		this.sAction.startOpenIntake();
+=======
+		
+		super.rotateUsingRT(-45);
+>>>>>>> parent of 8265c25... For center switch right side
 =======
 		
 		super.rotateUsingRT(-45);
@@ -110,11 +119,17 @@ public class CenterSwitch extends AutoPlan {
 			//VAULT
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		//super.driveUsingDF(7);
 		
 		//super.rotateUsingRT(-90);
 =======
 		super.driveUsingDF(5);
+=======
+		super.driveUsingDF(7);
+		
+		super.rotateUsingRT(-90);
+>>>>>>> parent of 8265c25... For center switch right side
 =======
 		super.driveUsingDF(7);
 		
