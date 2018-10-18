@@ -24,8 +24,8 @@ public class RobotMap {
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 9;				//09-
-	public static final int kShooterRightPort = 15;				//15-
+	public static final int kShooterLeftPort = 15;				//09-
+	public static final int kShooterRightPort = 18;				//15-
 	
 	public static final int kClimberPort = 30;					//30
 	
@@ -79,14 +79,14 @@ public class RobotMap {
 	public static final double kDriveVelLeftP = 0.70;
 	public static final double kDriveVelLeftI = 0;
 	public static final double kDriveVelLeftD = 0;
-	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;
+	public static final double kDriveVelLeftF = 1023. / kDriveLeftVelMax;//1023
 		
 	public static final double kDriveRightVelMax = 1800.;
 
 	public static final double kDriveVelRightP = 0.65;
 	public static final double kDriveVelRightI = 0;
 	public static final double kDriveVelRightD = 0;
-	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;
+	public static final double kDriveVelRightF = 1023. / kDriveRightVelMax;//1023
 	
 	public static final double kDriveVelAverage = 1800.;
 	
@@ -138,10 +138,10 @@ public class RobotMap {
 	
 	public static final int kShooterLeftSetpointNuLow = 11300;		//11650
 	public static final int kShooterRightSetpointNuLow = 11300;		//11500
-	public static final int kShooterLeftSetpointNuHigh = 12900;		//14750
-	public static final int kShooterRightSetpointNuHigh = 12900;	//14600
-	public static final int kShooterLeftSetpointNuBack = 11700;		//14750
-	public static final int kShooterRightSetpointNuBack = 11700;	//14600
+	public static final int kShooterLeftSetpointNuHigh = 14750;		//14750-13000
+	public static final int kShooterRightSetpointNuHigh = 14600;	//14600-13000
+	public static final int kShooterLeftSetpointNuBack = 10000;		//14750
+	public static final int kShooterRightSetpointNuBack = 10000;	//14600
 	public static final int kShooterLeftSetpointNuAutoMid = 12000;
 	public static final int kShooterRightSetpointNuAutoMid = 12000;
 	
