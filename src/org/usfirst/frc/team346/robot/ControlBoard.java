@@ -1,4 +1,9 @@
 package org.usfirst.frc.team346.robot;
+/*
+ * This class is what checks the button board, controller, or any other
+ * weird input device you choose to use.
+ * It will check if a button is pressed then do a thing
+ */
 
 import org.usfirst.frc.team346.robot.Robot;
 import org.usfirst.frc.team346.subsystems.Drive.DriveMode;
@@ -32,7 +37,12 @@ public class ControlBoard {
 					  
 					  DRONE_RIGHT_STICK_Y = 0, DRONE_LEFT_STICK_X = 3;
 					  
-	
+	/*
+	 * This is the constructor for the object.
+	 * it takes in the robot as a parameter so it can do things to it.
+	 * Can't use a getInstance() here because it uses the Robot class and
+	 * the Robot class uses it, so it would cause some recursive getInstance().
+	 */
 	public ControlBoard(Robot _robot) {
 		this.sRobot = _robot;
 		this.mController = new Joystick(RobotMap.kXboxControllerPort);
@@ -42,6 +52,11 @@ public class ControlBoard {
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	/*
+	 * Different controllers have different button numbers and different axis variations
+	 * so we have to have different methods based on which one we're using. 
+	 */
 	
 	public void drive() {
 		if(this.IS_DRONE_CONTROLLER) {
@@ -53,6 +68,7 @@ public class ControlBoard {
 	}
     
 	private void driveXboxController() {
+		//takes axis input and drives the robot
 		if(this.isDrivingXboxThrottleTurn) {
 			this.sRobot.sDrive.driveThrottleTurn(this.mController.getRawAxis(RIGHT_STICK_Y), this.mController.getRawAxis(LEFT_STICK_X));
 		}
@@ -60,6 +76,7 @@ public class ControlBoard {
 			this.sRobot.sDrive.drive(DriveMode.PERCENT, -this.mController.getRawAxis(LEFT_STICK_Y), -this.mController.getRawAxis(RIGHT_STICK_Y));
 		}
 		
+		//This will change which drive method is being used.
 		if(this.mController.getRawButtonPressed(this.CIRCLE)) {
 			this.isDrivingXboxThrottleTurn = !this.isDrivingXboxThrottleTurn;
 		}
@@ -70,6 +87,18 @@ public class ControlBoard {
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	/*
+	 * All of the rest of these are fairly explanatory.
+	 * They do a different thing based on the button being pressed.
+	 * This is the entirety of teleop control. It's pretty simple.
+	 * 
+	 * This is all the fun logic of the code. Make sure that when you have
+	 *  a long list of if-else statements, put the most important ones at
+	 *  the top. And if two buttons can be pressed at the same time on
+	 *  accident (on and off together), give the more important one
+	 *  precedence (usually off for safety).
+	 */
 	
 	public void checkIntake() {
 		if(this.mButtonBoard.getRawButton(RobotMap.kButtonIntakeOut)) {

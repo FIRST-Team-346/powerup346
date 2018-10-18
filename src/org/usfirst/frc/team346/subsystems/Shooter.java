@@ -93,6 +93,11 @@ public class Shooter implements Subsystem {
 		this.mRightShooter.setNeutralMode(NeutralMode.Coast);
 	}
 	
+	/*
+	 * This year, we wanted the shooters to be in setpoint mode for shooting to the scale,
+	 *  so they would be accurate, but in velocity mode for spitting out to the switch,
+	 *  to be quick and reliable. That's why we have all these "velocity mode" checks.
+	 */
 	public void holdSpeedSetpoint() {
 		if(this.isInVelocityModeAndOn()) {
 			this.mLeftShooter.set(ControlMode.Velocity, this.mLeftSetpointNu);
@@ -100,6 +105,12 @@ public class Shooter implements Subsystem {
 		}
 	}
 	
+	/*
+	 * This checks if the shooter speed is within a certain amount from where we want it to be,
+	 *  and if both left and right are within that range, then it is considered "at speed".
+	 *  This can potentially be useful, but if the range is too small, then the natural variations
+	 *  will make them rarely be at speed. So don't rely too heavily on this to be accurate.
+	 */
 	public boolean isAtSpeed() {
 		boolean lLeftAtSpeed = false, lRightAtSpeed = false;
 		if(Math.abs(this.mLeftShooter.getSelectedSensorVelocity(0) - this.mLeftSetpointNu) < 200) {

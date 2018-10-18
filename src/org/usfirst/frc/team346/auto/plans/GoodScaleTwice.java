@@ -11,16 +11,15 @@ import org.usfirst.frc.team346.subsystems.Lights;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class GoodScaleGoodSwitch extends AutoPlan {
+public class GoodScaleTwice extends AutoPlan {
 
 	Gyro sGyro = Gyro.getInstance();
 	ActionRunner sAction = new ActionRunner();
-	Rotate sRotator = new Rotate();
 	
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
 	public String getGoal() {
-		return "good scale, good switch" + this.startingOnLeft;
+		return "good scale twice" + this.startingOnLeft;
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
@@ -28,13 +27,6 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 		this.switchLeft = _switchLeft;
 		this.scaleLeft = _scaleLeft;
 		
-//		Lights.getInstance().setGreen();
-//		if(this.startingOnLeft == 1) {
-//			this.left();
-//		}
-//		else {
-//			this.right();
-//		}
 		this.left();
 	}
 	
@@ -46,7 +38,6 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuAutoMidHigh-200, RobotMap.kShooterRightSetpointNuAutoMidHigh-200);
 		super.rotateUsingRT(45 * this.startingOnLeft);
 		
-		super.waitTime(0.2);
 		this.sAction.setOuttakePercentFront(1);
 		super.waitTime(0.5);
 		this.sAction.setShooter(0, 0);
@@ -59,14 +50,16 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 		this.sAction.stopOpenIntake();
 		this.sAction.startIntakeCube();
 		super.driveUsingDF(7);
-		super.waitTime(0.2);
-		this.sAction.stopIntakeCube();
+//		super.waitTime(0.1);
 
+		super.driveUsingDF(-7.5);
+		this.sAction.stopIntakeCube();
 		
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-		super.waitTime(0.75);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleHigh);
+		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuAutoMidHigh-100, RobotMap.kShooterRightSetpointNuAutoMidHigh-100);
+		super.rotateUsingRT(-(90-52 +45) * this.startingOnLeft);
+		
 		this.sAction.setOuttakePercentFront(1);
-		this.sAction.setShooterPercentFront(0.4);
 	}
 	
 //	public void right() {
@@ -93,10 +86,12 @@ public class GoodScaleGoodSwitch extends AutoPlan {
 //		this.sAction.stopIntakeCube();
 //
 //		
-//		this.sAction.setTilterPosNu(RobotMap.kTiltPosVault+20);
-//		super.waitTime(0.75);
+//		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+//		this.sAction.setShooter(RobotMap.kShooterLeftSetpointNuAutoMid, RobotMap.kShooterRightSetpointNuAutoMid);
+//		super.driveUsingDF(-6.5);
+//		super.rotateUsingRT(-(90-50+50) * this.startingOnLeft);
+//		
 //		this.sAction.setOuttakePercentFront(1);
-//		this.sAction.setShooterPercentFront(0.4);
 //	}
 	
 }

@@ -1,5 +1,10 @@
 package org.usfirst.frc.team346.robot;
 
+/*
+ * PLEASE PLEASE PLEASE use this class. It is so good to have a localized place
+ * for all important variables. 
+ */
+
 public class RobotMap {
 	
 //	BOT-WIDE UPDATES----------------------------------------------------------------
@@ -46,7 +51,7 @@ public class RobotMap {
 	public static final int kXboxControllerPort = 0;
 	public static final int kButtonBoardPort = 1;
 	public static final int KDroneControllerPort = 2;
-	public static final double kThrottleTurnRotationStrength = 0.8;
+	public static final double kThrottleTurnRotationStrength = 0.85;
 	
 	public static final int kButtonIntakeIn = 12;
 	public static final int kButtonIntakeOut = 3;
@@ -54,12 +59,12 @@ public class RobotMap {
 	public static final int kButtonOuttakeFront = 10;
 	public static final int kButtonOuttakeBack = 15;
 	
-	public static final int kButtonTilterScaleLow = 5;
+	public static final int kButtonTilterScaleMid = 5;
 	public static final int kButtonTilterScaleHigh = 6;
-	public static final int kButtonTilterScaleBack = 7;
+	public static final int kButtonTilterScaleBack = 16;
 	public static final int kButtonTilterVault = 14;
 	public static final int kButtonTilterSwitchBack = 13;
-	public static final int kButtonTiltDownFlipCube = 16;
+	public static final int kButtonTilterScaleLow = 7;
 	
 	public static final int kButtonShooterOn = 11;
 	public static final int kButtonShooterTilterOff = 4;
@@ -68,8 +73,8 @@ public class RobotMap {
 	
 	public static final int kButtonClimbRaiseHook = 1;
 	
-	public static final int kButtonLights = 9;
-	public static final int kButton2 = 2;
+	public static final int kButtonLights = 2;
+	public static final int kButtonTilterShift = 9;
 	
 //	DRIVE PID/SUBSYSTEM VALUES------------------------------------------------------
 	
@@ -114,7 +119,7 @@ public class RobotMap {
 	public static final double kRotateThreadVelMinPercent = 0.05;			//0.05  - 0.125
 	
 	public static final double kDriveFollowAngleErrorScaler = 0.0225;		//0.0225
-	public static final double kDriveFollowStopFeetHigh = 4.5;				//4.5   - 
+	public static final double kDriveFollowStopFeetHigh = 4.15;				//4.5   - 
 	public static final double kDriveFollowStopFeetLow = 1.2;				//1.2   - 
 	
 	public static final double kDriveFollowVelSetpoint = 0.7 * RobotMap.kDriveVelAverage;
@@ -136,6 +141,7 @@ public class RobotMap {
 	public static final double kShooterRightD = 20.0;
 	public static final double kShooterRightF = 0.041;
 	
+<<<<<<< HEAD
 	public static final int kShooterLeftSetpointNuLow = 11300;		//11650
 	public static final int kShooterRightSetpointNuLow = 11300;		//11500
 	public static final int kShooterLeftSetpointNuHigh = 14750;		//14750-13000
@@ -144,6 +150,25 @@ public class RobotMap {
 	public static final int kShooterRightSetpointNuBack = 10000;	//14600
 	public static final int kShooterLeftSetpointNuAutoMid = 12000;
 	public static final int kShooterRightSetpointNuAutoMid = 12000;
+=======
+	public static final int kShooterLeftSetpointNuLow = 10700;			//
+	public static final int kShooterRightSetpointNuLow = 10700;			//
+	public static final int kShooterLeftSetpointNuMid = 11200;			//
+	public static final int kShooterRightSetpointNuMid = 11200;			//
+	public static final int kShooterLeftSetpointNuHigh = 12500;			//
+	public static final int kShooterRightSetpointNuHigh = 12500;		//
+	public static final int kShooterLeftSetpointNuBack = 12000;			//
+	public static final int kShooterRightSetpointNuBack = 12000;		//
+	
+	/*Scale position and number of cubes up there, then what setting to use when shooting.
+	 * 					low1:  low		low2:  mid
+	 * mid0:  mid		mid1:  mid		mid2:  high
+	 * high0: high		high1: high
+	 */
+	
+	public static final int kShooterLeftSetpointNuAutoMidHigh = 12000;
+	public static final int kShooterRightSetpointNuAutoMidHigh = 12000;
+>>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
@@ -152,12 +177,13 @@ public class RobotMap {
 	public static final int kTiltPosNeutral 	= 290;
 	public static final int kTiltPosRange 		= 373;
 	
-//	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
-	public static final int kTiltPosSwitchBack 	= 60  + kTiltPosNeutral;
-	public static final int kTiltPosVault 		= 140 + kTiltPosNeutral;//150
-	public static final int kTiltPosScaleLow 	= 240 + kTiltPosNeutral;
-	public static final int kTiltPosScaleHigh 	= 250 + kTiltPosNeutral;//255
-	public static final int kTiltPosScaleBack 	= 330 + kTiltPosNeutral;
+//	public static final int kTiltPosDrive			= 27  + kTiltPosNeutral;	//Not used currently
+	public static final int kTiltPosSwitchBack 		= 60  + kTiltPosNeutral;
+	public static final int kTiltPosVault 			= 140 + kTiltPosNeutral;//150
+	public static final int kTiltPosScaleLow 		= 220 + kTiltPosNeutral;
+	public static final int kTiltPosScaleMid 		= 240 + kTiltPosNeutral;
+	public static final int kTiltPosScaleHigh 		= 250 + kTiltPosNeutral;
+	public static final int kTiltPosScaleBack 		= 325 + kTiltPosNeutral;
 	
 	public static final int kTilterDesiredVelocityNu = 40;
 	public static final int kTilterDesiredAccelerationNu = 90;

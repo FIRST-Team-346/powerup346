@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Preferences;
 
+/*
+ * Read the comments on DriveFollow before these. DriveFollow is actually nicely organized and written,
+ * as opposed to the mess here. They follow similar concepts, but this one uses PIDs, which always makes
+ * things more complicated.
+ */
 public class RotateThread implements Runnable {
 
 	private Drive sDrive;
@@ -81,7 +86,7 @@ public class RotateThread implements Runnable {
 		this.timeOutSec = 3.;
 		this.updateFreq = 0.02;
 		this.thresholdAngleTimeOutSec = 0.05;
-		this.thresholdVelTimeOutSec = 0.75;
+		this.thresholdVelTimeOutSec = 0.5;
 		this.thresholdVelocity = 0.01 * RobotMap.kDriveVelAverage;
 		this.thresholdAngle = 1.5;
 		
@@ -169,6 +174,10 @@ public class RotateThread implements Runnable {
 		}
 	}
 	
+	/*
+	 * This is similar to the velocity setting in DriveFollow. See which side is rotating which direction
+	 * and then set their velocities based on that. If it's within the threshold, set velocities to 0.
+	 */
 	private void setDriveVelocity(double _courseOutput) {
 		this.checkDisabled();
 		
@@ -202,6 +211,12 @@ public class RotateThread implements Runnable {
 		this.sDrive.drive(DriveMode.PERCENT_VELOCITY, this.velocitySetLeft, this.velocitySetRight);
 	}
 	
+	/*
+	 * This is very similar to the velocity countdown in DriveFollow. If the robot has stopped within
+	 * an angle threshold for some time, then terminate. If the robot has stopped moving, or is moving
+	 * really slowly because it's super close to the angle threshold, then wait some threshold time and
+	 * stop regardless. This prevents a scenario where the bot is 1 degree off but waits 5 more seconds.
+	 */
 	private void checkCompletionVelocity() {
 		this.checkDisabled();
 		if(System.currentTimeMillis()/1000. - this.timeZero < 0.5) {

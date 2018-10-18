@@ -10,6 +10,12 @@ import org.usfirst.frc.team346.subsystems.Tilter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 
+/*
+ * This is the class where we added a bunch of miscellaneous actions
+ * that were getting used between plans, but that weren't universal
+ * like the ones in AutoPlan. Stuff that had to set raw values to the
+ * subsystems was put in here with simpler methods for quick repetition.
+ */
 public class ActionRunner {
 	
 	private Tilter mTilter;
@@ -25,36 +31,6 @@ public class ActionRunner {
 		this.mIntake = Intake.getInstance();
 		this.mLoader = Loader.getInstance();
 		this.mOuttake = Outtake.getInstance();
-	}
-	
-	public void shootToScaleFront() {
-		if(this.isDisabled()) return;
-		new Thread(new ShootToScaleFront()).run();
-	}
-	
-	public void shootToScaleBack() {
-		if(this.isDisabled()) return;
-		new Thread(new ShootToScaleBack()).run();
-	}
-	
-	public void tilterToSwitchBack() {
-		if(this.isDisabled()) return;
-		this.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
-	}
-	
-	public void shootToSwitchBack() {
-		if(this.isDisabled()) return;
-		new Thread(new ShootToSwitchBack()).run();
-	}
-	
-	public void shootToSwitchFront() {
-		if(this.isDisabled()) return;
-		new Thread(new ShootToSwitchFront()).run();
-	}
-	
-	public void openIntake() {
-		if(this.isDisabled()) return;
-		new Thread(new OpenIntakeArms()).run();
 	}
 	
 	public void setTilterPosNu(int _tiltPosNu) {
@@ -91,20 +67,25 @@ public class ActionRunner {
 		this.mOuttake.setSpeedFront(_percentFront);
 	}
 	
-	public void setJustIntakeIn(double _percentIn) {
+	public void startOpenIntake() {
 		if(this.isDisabled()) return;
-		this.mIntake.setSpeedIn(_percentIn);
+		this.mIntake.setSpeedIn(-1);
 	}
 	
-	public void setIntakeIn(double _percentIn) {
+	public void stopOpenIntake() {
+		if(this.isDisabled()) return;
+		this.mIntake.setSpeedIn(0);
+	}
+	
+	public void startIntakeCube() {
 		if(this.isDisabled()) return;
 		this.setTilterPosNu(RobotMap.kTiltPosNeutral);
-		this.mIntake.setSpeedIn(_percentIn);
-		this.mLoader.setSpeedIn(_percentIn >= 0 ? 1.0 : 0.0);
-		this.mShooter.setPercentFront(_percentIn >= 0 ? -0.5 : 0.5);
+		this.mIntake.setSpeedIn(1.0);
+		this.mLoader.setSpeedIn(1.0);
+		this.mShooter.setPercentFront(-0.5);
 	}
 	
-	public void setIntakeOff() {
+	public void stopIntakeCube() {
 		if(this.isDisabled()) return;
 		this.mIntake.setSpeedIn(0.0);
 		this.mLoader.setSpeedIn(0.0);

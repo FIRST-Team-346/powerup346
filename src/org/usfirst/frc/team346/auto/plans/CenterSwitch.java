@@ -18,7 +18,7 @@ public class CenterSwitch extends AutoPlan {
 	private double startingOnLeft, switchLeft, scaleLeft;
 	
 	public String getGoal() {
-		return "good scale" + this.startingOnLeft;
+		return "center switch" + this.startingOnLeft;
 	}
 	
 	public void run(double _startingLeft, double _switchLeft, double _scaleLeft) {
@@ -38,42 +38,41 @@ public class CenterSwitch extends AutoPlan {
 	
 	public void leftSwitch() {
 			//LEFT SWITCH
-		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
 		
 		super.rotateUsingRT(Hand.kLeft, -45);
 		
-		this.sAction.setJustIntakeIn(-1);
+		this.sAction.startOpenIntake();
 		super.driveUsingDF(-9);
-		this.sAction.setJustIntakeIn(0);
+		this.sAction.stopOpenIntake();
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		super.rotateUsingRT(45);
 		
 		super.driveUsingDF(-7.0);
 		this.sAction.setOuttakePercentFront(-1);
-		super.waitTime(0.2);
+		super.waitTime(0.8);
 		this.sAction.setOuttakePercentFront(0);
 		
 		
 			//VAULT
+		super.driveUsingDF(5);
+		
+		super.rotateUsingRT(-90);
+		
+		this.sAction.startIntakeCube();
 		super.driveUsingDF(7);
-		
-		super.rotateUsingRT(90);
-		
-//		super.driveUsingDF(-6);
-//		
-//		super.rotateUsingRT(90);
-//		
-//		this.sAction.setIntakeIn(1);
-//		super.driveUsingDF(3);
-//		this.sAction.setIntakeIn(0);
 	}
 	
 	public void rightSwitch() {
 			//RIGHT SWITCH
+<<<<<<< HEAD
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
 		super.waitTime(0.2);
+=======
+		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleMid);
+>>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
 		
 		super.rotateUsingRT(Hand.kRight, 45.0);
 		super.waitTime(0.2);
@@ -81,11 +80,17 @@ public class CenterSwitch extends AutoPlan {
 		super.driveUsingDF(-7.5);
 		super.waitTime(0.2);
 		
+<<<<<<< HEAD
 		this.sAction.setJustIntakeIn(-1);
 
 		super.rotateUsingRT(-45.0);
+=======
+		this.sAction.startOpenIntake();
 		
-		this.sAction.setJustIntakeIn(0);
+		super.rotateUsingRT(-45);
+>>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
+		
+		this.sAction.stopOpenIntake();
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		super.waitTime(0.2);
@@ -93,22 +98,23 @@ public class CenterSwitch extends AutoPlan {
 		super.driveUsingDF(-7.5);
 		
 		this.sAction.setOuttakePercentFront(-1);
-		super.waitTime(0.2);
+		super.waitTime(0.8);
 		this.sAction.setOuttakePercentFront(0);
 		
 		
 		
 			//VAULT
+<<<<<<< HEAD
 		//super.driveUsingDF(7);
 		
 		//super.rotateUsingRT(-90);
+=======
+		super.driveUsingDF(5);
 		
-//		super.driveUsingDF(-6);
-//		
-//		super.rotateUsingRT(-90);
-//		
-//		this.sAction.setIntakeIn(1);
-//		super.driveUsingDF(3);
-//		this.sAction.setIntakeIn(0);
+		super.rotateUsingRT(90);
+>>>>>>> d0721b8a512f9c5d32c75ac88170549a695a58ba
+		
+		this.sAction.startIntakeCube();
+		super.driveUsingDF(7);
 	}
 }

@@ -10,8 +10,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive implements Subsystem{
+public class Drive implements Subsystem {
 	
+	/*
+	 * You need to initialize things at the beginning of every class because
+	 * you can't give them values till the robot is turned on, which is done in the init 
+	 * method, but you need them to be initialized not in a method or other places won't
+	 * kniw they exist
+	 */
 	private TalonSRX mDriveLeftMaster, mDriveLeftSlave1, mDriveLeftSlave2;
 	private TalonSRX mDriveRightMaster, mDriveRightSlave1, mDriveRightSlave2;
 	
@@ -22,6 +28,15 @@ public class Drive implements Subsystem{
 	
 	private double leftMaxVel = 0, rightMaxVel = 0, mPrevTime, mPrevVel = 0, mPrevAccel = 0;
 	
+	/*
+	 * So enums are a very useful way to optimize your method input. Try just googling
+	 * what they are and how to use them. Here each variable of the enum makes it so the 
+	 * drive() method controls the drive train in a different way.
+	 * 
+	 * It's essentially like having an int variable "mode", and setting the drive train
+	 *  to "mode 1", "mode 2", etc., but instead of non-descriptive names like 1 and 2,
+	 *  you can use actual names like PERCENT and VELOCITY.
+	 */
 	public enum DriveMode {
 		PERCENT,
 		PERCENT_VELOCITY,
@@ -29,28 +44,55 @@ public class Drive implements Subsystem{
 		POSITION;
 	}
 	
+	/* This getInstance() things is a singleton.
+	 * We use singletons for the subsystems to prevent something from accidentally
+	 *  creating two of the same subsystem. We don't want the "auto drivetrain" and the
+	 *  "teleop drivetrain" to be two systems that could potentially interfere with
+	 *  each other. Instead, singletons make it impossible to create two of the same system,
+	 *  and any time you need to use the system, you request the already existing instance.
+	 */
 	private static Drive sDriveInstance = new Drive();
 	public static Drive getInstance() {
 		return sDriveInstance;
 	}
 	
+	/*
+	 * So this is the Drive class. Each class will create an object of the same name.
+	 * When a version of the object is created it runs what is in this constructor.
+	 * We just have the constructor run all the inits.
+	 */
+
+	/*Every object will have a constructor. This is not a method.
+	 * It is protected because it is a singleton. The actual Drive object is created
+	 *  up there at line 54. That one Drive object is requested elsewhere by the
+	 *  public getInstance() method.
+	 */
 	protected Drive() {
 		this.initTalons();
 		this.initEncoders();
 		this.setSpeedPIDs();
 	}
 	
+	//This initializes all the talons...duh.
 	private void initTalons() {
-		this.mDriveLeftMaster = new TalonSRX(RobotMap.kDriveLeftMasterPort);
-		this.mDriveLeftMaster.set(ControlMode.PercentOutput, 0);
-		this.mDriveLeftMaster.setNeutralMode(NeutralMode.Brake);
-		this.mDriveLeftMaster.overrideLimitSwitchesEnable(true);
+		
+		this.mDriveLeftMaster = new TalonSRX(RobotMap.kDriveLeftMasterPort); //makes the talon with the id RobotMap.kDriveLeftMasterPort mDriveLeftMaster
+		this.mDriveLeftMaster.set(ControlMode.PercentOutput, 0);//This just sets the talon to 0V so it doesnt start out spinning
+		this.mDriveLeftMaster.setNeutralMode(NeutralMode.Brake);//This will make the talon try to stop the motor when it is told to turn off. Alternative is coast/
+		this.mDriveLeftMaster.overrideLimitSwitchesEnable(true);//These next 2 don't really need to be here they were just to test things don't know why we didn't get rid of them. 
 		this.mDriveLeftMaster.overrideSoftLimitsEnable(true);
 		
-		this.mDriveLeftSlave1 = new TalonSRX(RobotMap.kDriveLeftSlave1Port);
-		this.mDriveLeftSlave1.set(ControlMode.Follower, RobotMap.kDriveLeftMasterPort);
+		/*
+		 * All of the motors that are on the same side of the drive just need to do the same thing.
+		 * Because of that it would be a waste to tell all three to do thing same thing every time
+		 * we want them to do something. So we have the master/slave methods(we didn't come up with 
+		 * that it's just a thing don't be offended). We set the slaves to follow(the master) then all
+		 * we have to do is tell the master to do things and the slaves will just do the exact same thing
+		 */
+		this.mDriveLeftSlave1 = new TalonSRX(RobotMap.kDriveLeftSlave1Port);//creates talon name on id x
+		this.mDriveLeftSlave1.set(ControlMode.Follower, RobotMap.kDriveLeftMasterPort);//Makes this talon follow - aka do exactly what - its master talon is 
 		this.mDriveLeftSlave1.setNeutralMode(NeutralMode.Brake);
-		this.mDriveLeftSlave1.follow(mDriveLeftMaster);
+		this.mDriveLeftSlave1.follow(mDriveLeftMaster);//Same thing. tells it to follow another talon
 		this.mDriveLeftSlave1.overrideLimitSwitchesEnable(true);
 		this.mDriveLeftSlave1.overrideSoftLimitsEnable(true);
 		
@@ -81,6 +123,8 @@ public class Drive implements Subsystem{
 		this.mDriveRightSlave2.overrideLimitSwitchesEnable(true);
 		this.mDriveRightSlave2.overrideSoftLimitsEnable(true);
 		
+		//Here's a challenge look up the TalonSRX API and find out what these methods do
+		//(probably nothing, just making sure it stays the same so we don't have any accidents)
 		this.mDriveLeftMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveRightMaster.configClosedloopRamp(this.mSecondsFromNeutralToFull, 0);
 		this.mDriveLeftMaster.configOpenloopRamp(this.mSecondsFromNeutralToFull, 0);
@@ -89,8 +133,14 @@ public class Drive implements Subsystem{
 	
 	/**Initializes the encoders on the master CANTalons.**/
 	private void initEncoders() {
+		//This will init the encoder plugged into the Talon
 		this.mDriveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		this.mDriveRightMaster.setInverted(false);
+		/*
+		 * These are to make sure that forward is forward and that positive voltage is where
+		 * you want it to go. To figure these out you just have to run the talons and see
+		 * what direction they start outputting then changing these booleans as appropriate
+		 */
+		this.mDriveRightMaster.setInverted(false); 
 		this.mDriveRightMaster.setSensorPhase(false);
 		
 		this.mDriveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
@@ -111,6 +161,11 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.config_kF(PID_POS, RobotMap.kDrivePosRightF, 0);
 	}
 	
+	/*
+	 * You may notice we have seperate PIDs. Position mode and speed mode need different pids to get
+	 * good results but you can only have one set of values stored. Make sure to set the pids to the
+	 * desired drive method before running that drive methods.
+	 */
 	public void setSpeedPIDs() {
 		this.mDriveLeftMaster.config_kP(PID_VEL, RobotMap.kDriveVelLeftP, 0);
 		this.mDriveLeftMaster.config_kI(PID_VEL, RobotMap.kDriveVelLeftI, 0);
@@ -123,9 +178,21 @@ public class Drive implements Subsystem{
 		this.mDriveRightMaster.config_kF(PID_VEL, RobotMap.kDriveVelRightF, 0);
 	}
 	
+	/*
+	 *This is the method that actually drives the motors. This is where that DriveMode enum from
+	 *earlier comes into play. Based on what DriveMode is input when the method is called it will 
+	 *run a different method. It also takes in a left and right input which could be percentSpeed, Velocity,
+	 *PercentVelocity, or a position.
+	 */
 	public void drive(DriveMode _mode, double _left, double _right) {
 		switch(_mode) {
 			case PERCENT : {
+				/*
+				 * The .set() method is built into the talon. It takes in an enum of what controlMode
+				 * and what number to set that controlMode to. Kind of like our drive() method.
+				 * There are lots of controlModes built into the talons look into them in the
+				 * talon API. Api's are the best. 
+				 */
 				this.mDriveLeftMaster.set(ControlMode.PercentOutput, _left);
 				this.mDriveRightMaster.set(ControlMode.PercentOutput, -_right);
 			}; break;
@@ -151,9 +218,18 @@ public class Drive implements Subsystem{
 		}
 	}
 	
+	/*
+	 * So Bichael requested an alternate drive method like halfway through the build season so
+	 * the code for it is slightly a mess. Because it does not fit the standard left right input
+	 * that all the other drive methods do we put it in a separate method. Ask Bichael about his 
+	 * special drive method. This is how it works
+	 */
 	public void driveThrottleTurn(double _throttle, double _turn) {
-		this.mTurn = (Math.abs(_turn) <= 0.08)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
-		_throttle = (Math.abs(_throttle) <= 0.1)? 0 : _throttle;
+		//Math.abs([joystick input]) <= 0.1 is a very important deadzone trick to use if you
+		// find that the robot is drifting when the joysticks are neutral. If it is within
+		// [-0.1, 0.1] then the value is 0, otherwise it is the normal value.
+		this.mTurn = (Math.abs(_turn) <= 0.1)? 0. : _turn*RobotMap.kThrottleTurnRotationStrength;
+		_throttle = (Math.abs(_throttle) <= 0.12)? 0 : _throttle;
 		
 		this.mDriveLeftMaster.set(ControlMode.PercentOutput, _throttle + this.mTurn);
 		this.mDriveRightMaster.set(ControlMode.PercentOutput, -_throttle + this.mTurn);

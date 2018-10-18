@@ -20,6 +20,8 @@ public class Gyro implements Subsystem {
 	}
 	
 	public void initialize() {
+		//We've used multiple gyros so make sure to instantiate which gyro is actually on the bot.
+		
 //		this.mGyroscope = new ADXRS450_Gyro();
 		this.mGyroscope = new AnalogGyro(0);
 		this.mGyroscope.calibrate();
@@ -28,18 +30,19 @@ public class Gyro implements Subsystem {
 	
 	public double getAngle() {
 		return this.mGyroscope.getAngle();
-		//TODO fix angle between 0 and 360 or -180 and 180
 	}
 	
 	public void zeroGyro() {
+		//This makes the current angle be 0
 		this.mGyroscope.reset();
 	}
 	
 	public void calibrate() {
+		//Takes 5 seconds to run. Bot must be stationary while running. 
 		this.mGyroscope.calibrate();
 	}
 	
-	/**Prints gyroscope angle periodically, 0.5s to avoid greater drift.**/
+	/**Prints gyroscope angle periodically, 0.25s to avoid greater drift.**/
 	public void publishData() {
 		if(System.currentTimeMillis() - this.mLastGyroTime >= 250) {
 			SmartDashboard.putNumber("Gyroscope Angle", this.getAngle());

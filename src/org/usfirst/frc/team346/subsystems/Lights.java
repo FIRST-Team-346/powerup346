@@ -5,6 +5,9 @@ import org.usfirst.frc.team346.robot.RobotMap;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*
+ * Memes.
+ */
 public class Lights implements Subsystem{
 	
 	Solenoid leftPos;
