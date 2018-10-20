@@ -39,15 +39,19 @@ public class CenterSwitch extends AutoPlan {
 	public void leftSwitch() {
 			//LEFT SWITCH
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosScaleLow);
+		super.waitTime(0.2);
 		
 		super.rotateUsingRT(Hand.kLeft, -45);
+		super.waitTime(0.2);
 		
 		this.sAction.setJustIntakeIn(-1);
-		super.driveUsingDF(-9);
+		super.driveUsingDF(-9.0);
+		super.waitTime(0.2);
 		this.sAction.setJustIntakeIn(0);
 		
 		this.sAction.setTilterPosNu(RobotMap.kTiltPosSwitchBack);
 		super.rotateUsingRT(45);
+		super.waitTime(0.2);
 		
 		super.driveUsingDF(-7.0);
 		this.sAction.setOuttakePercentFront(-1);
@@ -56,9 +60,9 @@ public class CenterSwitch extends AutoPlan {
 		
 		
 			//VAULT
-		super.driveUsingDF(7);
+	//	super.driveUsingDF(7);
 		
-		super.rotateUsingRT(90);
+	//	super.rotateUsingRT(90);
 		
 //		super.driveUsingDF(-6);
 //		

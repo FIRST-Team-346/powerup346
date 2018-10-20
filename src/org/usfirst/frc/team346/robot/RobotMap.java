@@ -24,7 +24,7 @@ public class RobotMap {
 	
 	public static final int kTilterPort = 25;					//25-
 	
-	public static final int kShooterLeftPort = 15;				//09-
+	public static final int kShooterLeftPort = 2;				//09-
 	public static final int kShooterRightPort = 18;				//15-
 	
 	public static final int kClimberPort = 30;					//30
@@ -136,14 +136,14 @@ public class RobotMap {
 	public static final double kShooterRightD = 20.0;
 	public static final double kShooterRightF = 0.041;
 	
-	public static final int kShooterLeftSetpointNuLow = 11300;		//11650
-	public static final int kShooterRightSetpointNuLow = 11300;		//11500
-	public static final int kShooterLeftSetpointNuHigh = 14750;		//14750-13000
-	public static final int kShooterRightSetpointNuHigh = 14600;	//14600-13000
+	public static final int kShooterLeftSetpointNuLow = 11650;		//11650
+	public static final int kShooterRightSetpointNuLow = 11500;		//11500
+	public static final int kShooterLeftSetpointNuHigh = 14000;		//14750-13000
+	public static final int kShooterRightSetpointNuHigh = 14000;	//14600-13000
 	public static final int kShooterLeftSetpointNuBack = 10000;		//14750
 	public static final int kShooterRightSetpointNuBack = 10000;	//14600
-	public static final int kShooterLeftSetpointNuAutoMid = 12000;
-	public static final int kShooterRightSetpointNuAutoMid = 12000;
+	public static final int kShooterLeftSetpointNuAutoMid = 12250;
+	public static final int kShooterRightSetpointNuAutoMid = 12250;
 	
 	public static final int kShooterRampRateSeconds = 1;
 	
@@ -153,7 +153,7 @@ public class RobotMap {
 	public static final int kTiltPosRange 		= 373;
 	
 //	public static final int kTiltPosDrive		= 27  + kTiltPosNeutral;	//Not used currently
-	public static final int kTiltPosSwitchBack 	= 60  + kTiltPosNeutral;
+	public static final int kTiltPosSwitchBack 	= 56  + kTiltPosNeutral;//60
 	public static final int kTiltPosVault 		= 140 + kTiltPosNeutral;//150
 	public static final int kTiltPosScaleLow 	= 240 + kTiltPosNeutral;
 	public static final int kTiltPosScaleHigh 	= 250 + kTiltPosNeutral;//255
